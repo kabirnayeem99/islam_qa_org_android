@@ -1,25 +1,15 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.IslamQAOrg" parent="Theme.Material3.DayNight">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-    </style>
+    <style name="Theme.IslamQAOrg" parent="Theme.Material3.DynamicColors.Light" />
 
     <style name="Theme.IslamQAOrg.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.IslamQAOrg.AppBarOverlay" parent="ThemeOverlay.Material3.Dark.ActionBar" />
+    <style name="ActionBarTheme" parent="ThemeOverlay.Material3.DynamicColors.Dark">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:gravity">center</item>
+    </style>
 
-    <style name="Theme.IslamQAOrg.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
 </resources>

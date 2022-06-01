@@ -2,8 +2,8 @@ package io.github.kabirnayeem99.islamqaorg.data.repository
 
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaRemoteDataSource
-import io.github.kabirnayeem99.islamqaorg.domain.repository.HomeScreenRepository
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
+import io.github.kabirnayeem99.islamqaorg.domain.repository.HomeScreenRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,18 +20,20 @@ class HomeScreenRepositoryImpl
     private val inMemoryMutex = Mutex()
     private var inMemoryHomeScreenData = emptyList<Question>()
 
-    override suspend fun getHomeScreenData(): Flow<Resource<List<Question>>> {
+    override suspend fun getQuestionList(shouldRefresh: Boolean): Flow<Resource<List<Question>>> {
+        val cachedList = inMemoryMutex.withLock { inMemoryHomeScreenData }
         return flow {
-            try {
-                val homeScreen = remoteDataSource.getHomeScreenData()
-                inMemoryMutex.withLock { inMemoryHomeScreenData = homeScreen }
-                emit(Resource.Success(homeScreen))
-            } catch (e: Exception) {
-                Timber.e(e, "Failed to get home screen data -> ${e.localizedMessage}.")
-                emit(Resource.Error(e.localizedMessage ?: "Failed to get home screen data."))
+            if (shouldRefresh || cachedList.isEmpty()) {
+                try {
+                    val homeScreen = remoteDataSource.getHomeScreenData()
+                    inMemoryMutex.withLock { inMemoryHomeScreenData = homeScreen }
+                    emit(Resource.Success(homeScreen))
+                } catch (e: Exception) {
+                    Timber.e(e, "Failed to get home screen data -> ${e.localizedMessage}.")
+                    emit(Resource.Error(e.localizedMessage ?: "Failed to get home screen data."))
+                }
             }
         }.onStart {
-            val cachedList = inMemoryMutex.withLock { inMemoryHomeScreenData }
             if (cachedList.isNotEmpty())
                 emit(Resource.Success(cachedList))
             else Resource.Loading<List<Question>>()
