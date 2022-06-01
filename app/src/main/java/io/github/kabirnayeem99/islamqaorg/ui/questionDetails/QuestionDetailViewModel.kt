@@ -1,11 +1,12 @@
-package io.github.kabirnayeem99.islamqaorg.ui.home
+package io.github.kabirnayeem99.islamqaorg.ui.questionDetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
 import io.github.kabirnayeem99.islamqaorg.common.base.UserMessage
-import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetHomeScreenData
+import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
+import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetQuestionDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,19 +18,20 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val getHomeScreenData: GetHomeScreenData) :
-    ViewModel() {
+class QuestionDetailViewModel @Inject constructor(
+    private val getQuestionDetails: GetQuestionDetails
+) : ViewModel() {
 
-
-    private val _uiState = MutableStateFlow(HomeScreenUiState())
+    private val _uiState = MutableStateFlow(QuestionDetailsUiState())
     val uiState = _uiState.asStateFlow()
 
-    private var fetchHomeScreenDataJob: Job? = null
+    private var fetchQuestionDetailsJob: Job? = null
 
-    fun getHomeScreenData() {
-        fetchHomeScreenDataJob?.cancel()
-        fetchHomeScreenDataJob = viewModelScope.launch(Dispatchers.IO) {
-            getHomeScreenData.getHomeScreenData().distinctUntilChanged()
+    fun getQuestionsDetailsJob(url: String) {
+        fetchQuestionDetailsJob?.cancel()
+        fetchQuestionDetailsJob = viewModelScope.launch {
+            getQuestionDetails.getQuestionDetails(url)
+                .distinctUntilChanged()
                 .collect { res ->
                     when (res) {
                         is Resource.Loading -> toggleLoading(true)
@@ -39,8 +41,9 @@ class HomeViewModel @Inject constructor(private val getHomeScreenData: GetHomeSc
                         }
                         is Resource.Success -> {
                             toggleLoading(false)
-                            val questionAnswers = res.data ?: emptyList()
-                            _uiState.update { it.copy(questionAnswers = questionAnswers) }
+                            _uiState.update {
+                                it.copy(questionDetails = res.data ?: QuestionDetail())
+                            }
                         }
                     }
                 }

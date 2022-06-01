@@ -7,12 +7,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.common.base.BaseFragment
 import io.github.kabirnayeem99.islamqaorg.databinding.FragmentHomeBinding
+import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -62,12 +62,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             hasFixedSize()
             adapter = questionAdapter
         }
-
-        questionAdapter.setOnClickListener { navigateToQuestionDetailsScreen() }
+        questionAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
     }
 
-    private fun navigateToQuestionDetailsScreen() {
-        findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+    private fun navigateToQuestionDetailsScreen(question: Question) {
+        val url = question.url
+        val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(url)
+        navController.navigate(action)
     }
 
 }

@@ -3,6 +3,7 @@ package io.github.kabirnayeem99.islamqaorg.data.repository
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaRemoteDataSource
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
+import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
 import io.github.kabirnayeem99.islamqaorg.domain.repository.HomeScreenRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +37,25 @@ class HomeScreenRepositoryImpl
         }.onStart {
             if (cachedList.isNotEmpty())
                 emit(Resource.Success(cachedList))
-            else Resource.Loading<List<Question>>()
+            else emit(Resource.Loading())
+        }.flowOn(Dispatchers.IO)
+    }
+
+    private var inMemoryQuestionDetail = QuestionDetail()
+
+    override suspend fun getQuestionDetails(url: String): Flow<Resource<QuestionDetail>> {
+        val questionDetail = inMemoryMutex.withLock { inMemoryQuestionDetail }
+        return flow {
+            try {
+                val questionDetailed = remoteDataSource.getDetailedQuestionAndAnswer(url)
+                inMemoryMutex.withLock { inMemoryQuestionDetail = questionDetailed }
+                emit(Resource.Success(questionDetailed))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.localizedMessage ?: "Failed to get the detailed question."))
+            }
+        }.onStart {
+            if (questionDetail.originalLink == url) emit(Resource.Success(questionDetail))
+            else emit(Resource.Loading())
         }.flowOn(Dispatchers.IO)
     }
 }

@@ -14,4 +14,5 @@
     <string name="content_desc_settings">Go to settings</string>
     <string name="content_desc_sync">Sync questions</string>
     <string name="q_n_a"><![CDATA[Questions & Answers]]></string>
+    <string name="label_relevant_q_n_a"><![CDATA[Relevant Q&A]]></string>
 </resources>

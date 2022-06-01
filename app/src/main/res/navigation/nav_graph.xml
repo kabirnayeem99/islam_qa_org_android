@@ -11,7 +11,7 @@
         android:label="@string/home_fragment_label"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            android:id="@+id/action_HomeFragment_to_DetailsFragment"
             app:destination="@id/DetailsFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -25,12 +25,8 @@
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_question_details">
 
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/HomeFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+        <argument
+            android:name="url"
+            app:argType="string" />
     </fragment>
 </navigation>
