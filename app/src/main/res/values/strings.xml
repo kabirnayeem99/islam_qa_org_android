@@ -2,11 +2,17 @@
     <string name="app_name">IslamQAOrg</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="home_fragment_label">IslamQA</string>
+    <string name="second_fragment_label">Answer</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="content_desc_go_to_details">Go to details</string>
+    <string name="content_desc_app_logo">App logo</string>
+    <string name="content_desc_settings">Go to settings</string>
+    <string name="content_desc_sync">Sync questions</string>
+    <string name="q_n_a"><![CDATA[Questions & Answers]]></string>
+    <string name="label_relevant_q_n_a"><![CDATA[Relevant Q&A]]></string>
 </resources>
