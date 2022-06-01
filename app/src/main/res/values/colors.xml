@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_200">#bc83b5</color>
+    <color name="trans_purple_200">#eee6ed</color>
     <color name="purple_500">#833b79</color>
     <color name="purple_700">#75216a</color>
     <color name="teal_200">#FF03DAC5</color>
