@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
 import io.github.kabirnayeem99.islamqaorg.common.base.UserMessage
-import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetHomeScreenData
+import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetRandomQuestion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val getHomeScreenData: GetHomeScreenData) :
+class HomeViewModel @Inject constructor(private val getRandomQuestion: GetRandomQuestion) :
     ViewModel() {
 
 
@@ -29,7 +29,7 @@ class HomeViewModel @Inject constructor(private val getHomeScreenData: GetHomeSc
     fun getHomeScreenData(shouldRefresh: Boolean = false) {
         fetchHomeScreenDataJob?.cancel()
         fetchHomeScreenDataJob = viewModelScope.launch(Dispatchers.IO) {
-            getHomeScreenData.getHomeScreenData(shouldRefresh).distinctUntilChanged()
+            getRandomQuestion.getRandomQuestionList(shouldRefresh).distinctUntilChanged()
                 .collect { res ->
                     when (res) {
                         is Resource.Loading -> toggleLoading(true)

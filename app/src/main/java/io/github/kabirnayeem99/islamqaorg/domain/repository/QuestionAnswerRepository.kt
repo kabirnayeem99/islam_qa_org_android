@@ -5,7 +5,7 @@ import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
 import kotlinx.coroutines.flow.Flow
 
-interface HomeScreenRepository {
+interface QuestionAnswerRepository {
     /**
      * Fetches home screen data
      *
@@ -14,7 +14,7 @@ interface HomeScreenRepository {
      *
      * @return a flow of list of questions
      */
-    suspend fun getQuestionList(shouldRefresh: Boolean = false): Flow<Resource<List<Question>>>
+    suspend fun getRandomQuestionList(shouldRefresh: Boolean = false): Flow<Resource<List<Question>>>
 
     /**
      * Fetches detailed answer of the questions

@@ -4,21 +4,21 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import io.github.kabirnayeem99.islamqaorg.domain.repository.HomeScreenRepository
-import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetHomeScreenData
+import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerRepository
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetQuestionDetails
+import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetRandomQuestion
 
 @Module
 @InstallIn(ViewModelComponent::class)
 object UseCaseModule {
 
     @Provides
-    fun provideGetHomeScreenData(repository: HomeScreenRepository): GetHomeScreenData {
-        return GetHomeScreenData(repository)
+    fun provideGetHomeScreenData(repository: QuestionAnswerRepository): GetRandomQuestion {
+        return GetRandomQuestion(repository)
     }
 
     @Provides
-    fun provideGetQuestionDetails(repository: HomeScreenRepository): GetQuestionDetails {
+    fun provideGetQuestionDetails(repository: QuestionAnswerRepository): GetQuestionDetails {
         return GetQuestionDetails(repository)
     }
 }
