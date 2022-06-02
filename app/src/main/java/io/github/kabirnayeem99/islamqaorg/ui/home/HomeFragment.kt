@@ -7,7 +7,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
@@ -47,10 +46,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     @Inject
     lateinit var questionAdapter: QuestionAdapter
 
+    @Inject
+    lateinit var questionSliderAdapter: QuestionSliderAdapter
+
     private fun handleUiState(uiState: HomeScreenUiState) {
         uiState.apply {
             if (isLoading) loading.show() else loading.hide()
             questionAdapter.submitQuestionList(questionAnswers)
+            questionSliderAdapter.submitQuestionList(questionAnswers)
             messages.firstOrNull()?.let { userMessage ->
                 Toast.makeText(requireContext(), userMessage.message, Toast.LENGTH_SHORT).show()
                 homeViewModel.userMessageShown(userMessage.id)
@@ -61,9 +64,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun initViews() {
         binding.rvQuestions.apply {
-            layoutManager = GridLayoutManager(context, 1)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
             hasFixedSize()
-            adapter = questionAdapter
+            adapter = questionSliderAdapter
         }
 
         binding.rvLatestQuestions.apply {
@@ -73,6 +77,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
 
         questionAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
+        questionSliderAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
 
         (activity as MainActivity).setOnSyncButtonClickListener {
             showLoadingForAShortTimePeriod()
