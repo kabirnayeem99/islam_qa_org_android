@@ -1,9 +1,10 @@
 package io.github.kabirnayeem99.islamqaorg.data.repository
 
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
+import io.github.kabirnayeem99.islamqaorg.common.utility.NetworkUtil
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaLocalDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaRemoteDataSource
-import io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb.PreferenceDataSource
+import io.github.kabirnayeem99.islamqaorg.data.dataSource.PreferenceDataSource
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
 import io.github.kabirnayeem99.islamqaorg.domain.repository.HomeScreenRepository
@@ -22,7 +23,12 @@ class HomeScreenRepositoryImpl
     private val remoteDataSource: IslamQaRemoteDataSource,
     private val localDataSource: IslamQaLocalDataSource,
     private val preferenceDataSource: PreferenceDataSource,
+    private val networkUtil: NetworkUtil,
 ) : HomeScreenRepository {
+
+    private val isNetworkAvailable by lazy {
+        networkUtil.isNetworkAvailable
+    }
 
     private val inMemoryMutex = Mutex()
     private var inMemoryHomeScreenData = emptyList<Question>()
@@ -31,12 +37,12 @@ class HomeScreenRepositoryImpl
         val cachedList = inMemoryMutex.withLock { inMemoryHomeScreenData }
         return flow {
             val needRefresh = preferenceDataSource.checkIfNeedsRefreshing()
-            if (shouldRefresh || needRefresh) {
+            if ((shouldRefresh || needRefresh) && isNetworkAvailable) {
                 val remoteData = getQuestionListFromRemoteDataSource()
                 emit(remoteData)
             } else {
                 try {
-                    val homeScreen = localDataSource.getHomeScreenData()
+                    val homeScreen = localDataSource.getQuestionList()
                     inMemoryMutex.withLock { inMemoryHomeScreenData = homeScreen }
                     preferenceDataSource.updateNeedingToRefresh()
                     if (homeScreen.isEmpty()) {
@@ -60,7 +66,7 @@ class HomeScreenRepositoryImpl
         return try {
             val homeScreen = remoteDataSource.getHomeScreenData()
             inMemoryMutex.withLock { inMemoryHomeScreenData = homeScreen }
-            localDataSource.cacheHomeScreenData(homeScreen)
+            localDataSource.cacheQuestionList(homeScreen)
             preferenceDataSource.updateNeedingToRefresh()
             Resource.Success(homeScreen)
         } catch (e: Exception) {
@@ -75,9 +81,18 @@ class HomeScreenRepositoryImpl
         val questionDetail = inMemoryMutex.withLock { inMemoryQuestionDetail }
         return flow {
             try {
-                val questionDetailed = remoteDataSource.getDetailedQuestionAndAnswer(url)
-                inMemoryMutex.withLock { inMemoryQuestionDetail = questionDetailed }
-                emit(Resource.Success(questionDetailed))
+                val questionDetailLocal = localDataSource.getDetailedQuestionAndAnswer(url)
+                questionDetailLocal?.let {
+                    inMemoryMutex.withLock { inMemoryQuestionDetail = it }
+                    emit(Resource.Success(it))
+                }
+
+                if (isNetworkAvailable) {
+                    val questionDetailed = remoteDataSource.getDetailedQuestionAndAnswer(url)
+                    inMemoryMutex.withLock { inMemoryQuestionDetail = questionDetailed }
+                    localDataSource.cacheQuestionDetail(questionDetail)
+                    emit(Resource.Success(questionDetailed))
+                }
             } catch (e: Exception) {
                 emit(Resource.Error(e.localizedMessage ?: "Failed to get the detailed question."))
             }
