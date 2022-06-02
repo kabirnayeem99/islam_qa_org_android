@@ -10,7 +10,7 @@ import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetQuestionDetails
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class UseCaseModule {
+object UseCaseModule {
 
     @Provides
     fun provideGetHomeScreenData(repository: HomeScreenRepository): GetHomeScreenData {

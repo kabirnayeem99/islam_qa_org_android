@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="@{`Answered according to ` + questionDetail.fiqh + ` fiqh by ` +  questionDetail.source}"
+                android:text="@{`Answered according to ` + questionDetail.fiqh + ` by ` +  questionDetail.source}"
                 tools:text="Answered according to Hanafi Fiqh by Darulifta-Deoband.com" />
 
             <TextView
