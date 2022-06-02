@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.databinding.ActivityMainBinding
 
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -76,6 +77,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private var onSyncButtonClick: (() -> Unit) = {}
+
+    fun setOnSyncButtonClickListener(onClickParam: (() -> Unit)) {
+        onSyncButtonClick = onClickParam
+    }
 
     private fun onNavigatingToHomeFragment() {
         binding.apply {
@@ -90,9 +96,11 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                 }
             }
+            ivSyncButton.apply {
+                setOnClickListener { onSyncButtonClick() }
+            }
         }
     }
-
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)

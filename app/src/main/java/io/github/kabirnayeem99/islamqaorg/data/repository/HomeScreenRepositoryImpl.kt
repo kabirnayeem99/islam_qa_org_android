@@ -1,7 +1,9 @@
 package io.github.kabirnayeem99.islamqaorg.data.repository
 
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
+import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaLocalDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaRemoteDataSource
+import io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb.PreferenceDataSource
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
 import io.github.kabirnayeem99.islamqaorg.domain.repository.HomeScreenRepository
@@ -16,7 +18,11 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class HomeScreenRepositoryImpl
-@Inject constructor(private val remoteDataSource: IslamQaRemoteDataSource) : HomeScreenRepository {
+@Inject constructor(
+    private val remoteDataSource: IslamQaRemoteDataSource,
+    private val localDataSource: IslamQaLocalDataSource,
+    private val preferenceDataSource: PreferenceDataSource,
+) : HomeScreenRepository {
 
     private val inMemoryMutex = Mutex()
     private var inMemoryHomeScreenData = emptyList<Question>()
@@ -24,13 +30,22 @@ class HomeScreenRepositoryImpl
     override suspend fun getQuestionList(shouldRefresh: Boolean): Flow<Resource<List<Question>>> {
         val cachedList = inMemoryMutex.withLock { inMemoryHomeScreenData }
         return flow {
-            if (shouldRefresh || cachedList.isEmpty()) {
+            val needRefresh = preferenceDataSource.checkIfNeedsRefreshing()
+            if (shouldRefresh || needRefresh) {
+                val remoteData = getQuestionListFromRemoteDataSource()
+                emit(remoteData)
+            } else {
                 try {
-                    val homeScreen = remoteDataSource.getHomeScreenData()
+                    val homeScreen = localDataSource.getHomeScreenData()
                     inMemoryMutex.withLock { inMemoryHomeScreenData = homeScreen }
+                    preferenceDataSource.updateNeedingToRefresh()
+                    if (homeScreen.isEmpty()) {
+                        val remoteData = getQuestionListFromRemoteDataSource()
+                        emit(remoteData)
+                    }
                     emit(Resource.Success(homeScreen))
                 } catch (e: Exception) {
-                    Timber.e(e, "Failed to get home screen data -> ${e.localizedMessage}.")
+                    Timber.e(e, "Failed to get cached question list -> ${e.localizedMessage}.")
                     emit(Resource.Error(e.localizedMessage ?: "Failed to get home screen data."))
                 }
             }
@@ -39,6 +54,19 @@ class HomeScreenRepositoryImpl
                 emit(Resource.Success(cachedList))
             else emit(Resource.Loading())
         }.flowOn(Dispatchers.IO)
+    }
+
+    private suspend fun getQuestionListFromRemoteDataSource(): Resource<List<Question>> {
+        return try {
+            val homeScreen = remoteDataSource.getHomeScreenData()
+            inMemoryMutex.withLock { inMemoryHomeScreenData = homeScreen }
+            localDataSource.cacheHomeScreenData(homeScreen)
+            preferenceDataSource.updateNeedingToRefresh()
+            Resource.Success(homeScreen)
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to get home screen data -> ${e.localizedMessage}.")
+            Resource.Error(e.localizedMessage ?: "Failed to get home screen data.")
+        }
     }
 
     private var inMemoryQuestionDetail = QuestionDetail()

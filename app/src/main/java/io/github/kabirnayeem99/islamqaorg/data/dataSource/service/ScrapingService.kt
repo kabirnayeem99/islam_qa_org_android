@@ -1,7 +1,7 @@
 package io.github.kabirnayeem99.islamqaorg.data.dataSource.service
 
-import io.github.kabirnayeem99.islamqaorg.data.dto.IslamQaHomeDto
-import io.github.kabirnayeem99.islamqaorg.data.dto.QuestionDetailScreenDto
+import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.IslamQaHomeDto
+import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.QuestionDetailScreenDto
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import it.skrape.core.document
 import it.skrape.fetcher.HttpFetcher

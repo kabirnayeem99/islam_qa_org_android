@@ -4,11 +4,9 @@ import io.github.kabirnayeem99.islamqaorg.data.dataSource.service.ScrapingServic
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.random.Random
 
 class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: ScrapingService) {
     /**
@@ -43,19 +41,6 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
         return withContext(Dispatchers.IO) {
 
             Timber.d("Loading question answer of $url")
-
-            val questionList = mutableListOf<Question>()
-
-            for (i in 1..8) {
-                val question = Question(
-                    id = Random.nextInt(10),
-                    "Is zakat wajib on a student getting scholarship?",
-                    url
-                )
-                questionList.add(question)
-            }
-
-            delay(2000)
 
             val dto = scrapingService.parseQuestionDetailScreen(url)
 

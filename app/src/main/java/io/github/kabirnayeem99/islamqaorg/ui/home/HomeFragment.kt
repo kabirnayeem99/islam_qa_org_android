@@ -13,6 +13,8 @@ import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.common.base.BaseFragment
 import io.github.kabirnayeem99.islamqaorg.databinding.FragmentHomeBinding
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
+import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -63,6 +65,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             adapter = questionAdapter
         }
         questionAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
+
+        (activity as MainActivity).setOnSyncButtonClickListener {
+            showLoadingForAShortTimePeriod()
+            homeViewModel.getHomeScreenData(true)
+        }
+    }
+
+    private fun showLoadingForAShortTimePeriod() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            loading.show()
+            delay(2000)
+            loading.dismiss()
+        }
     }
 
     private fun navigateToQuestionDetailsScreen(question: Question) {

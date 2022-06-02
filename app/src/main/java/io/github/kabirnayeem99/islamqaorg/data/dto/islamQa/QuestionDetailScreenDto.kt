@@ -1,4 +1,4 @@
-package io.github.kabirnayeem99.islamqaorg.data.dto
+package io.github.kabirnayeem99.islamqaorg.data.dto.islamQa
 
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 

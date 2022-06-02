@@ -26,10 +26,10 @@ class HomeViewModel @Inject constructor(private val getHomeScreenData: GetHomeSc
 
     private var fetchHomeScreenDataJob: Job? = null
 
-    fun getHomeScreenData() {
+    fun getHomeScreenData(shouldRefresh: Boolean = false) {
         fetchHomeScreenDataJob?.cancel()
         fetchHomeScreenDataJob = viewModelScope.launch(Dispatchers.IO) {
-            getHomeScreenData.getHomeScreenData().distinctUntilChanged()
+            getHomeScreenData.getHomeScreenData(shouldRefresh).distinctUntilChanged()
                 .collect { res ->
                     when (res) {
                         is Resource.Loading -> toggleLoading(true)

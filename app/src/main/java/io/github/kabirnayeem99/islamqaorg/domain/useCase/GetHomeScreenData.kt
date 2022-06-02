@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class GetHomeScreenData
 @Inject constructor(private val homeScreenRepository: HomeScreenRepository) {
-    suspend fun getHomeScreenData(): Flow<Resource<List<Question>>> {
-        return homeScreenRepository.getQuestionList()
+    suspend fun getHomeScreenData(shouldRefresh: Boolean): Flow<Resource<List<Question>>> {
+        return homeScreenRepository.getQuestionList(shouldRefresh)
     }
 }
