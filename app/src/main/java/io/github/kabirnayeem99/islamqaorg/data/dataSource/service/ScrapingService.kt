@@ -2,6 +2,7 @@ package io.github.kabirnayeem99.islamqaorg.data.dataSource.service
 
 import io.github.kabirnayeem99.islamqaorg.data.dto.IslamQaHomeDto
 import io.github.kabirnayeem99.islamqaorg.data.dto.QuestionDetailScreenDto
+import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import it.skrape.core.document
 import it.skrape.fetcher.HttpFetcher
 import it.skrape.fetcher.Result
@@ -10,13 +11,11 @@ import it.skrape.fetcher.skrape
 import it.skrape.selects.eachHref
 import it.skrape.selects.eachText
 import it.skrape.selects.html
-import it.skrape.selects.html5.a
-import it.skrape.selects.html5.div
-import it.skrape.selects.html5.h1
-import it.skrape.selects.html5.li
+import it.skrape.selects.html5.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import kotlin.random.Random
 
 private const val homeScreenUrl = "https://islamqa.org/"
 
@@ -88,6 +87,49 @@ class ScrapingService {
                                 filter { it.className == "ddb-answer" }.eachText.joinToString(
                                     "\n"
                                 )
+                            }
+                        },
+                        fiqh = document.div { findAll { first { it.className == "et_pb_code_inner" && it.parent.id == "meta-1" }.a { findFirst { text } } } },
+                        source = document.div { findAll { first { it.className == "et_pb_code_inner" && it.parent.id == "meta-1" }.eachLink.keys.last() } },
+                        originalLink = link,
+                        nextQuestionLink = document.div {
+                            findAll {
+                                span {
+                                    findAll {
+                                        first { it.className == "nav-next" }.a {
+                                            findAll { eachHref.firstOrNull() ?: "" }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        previousQuestionLink = document.div {
+                            findAll {
+                                span {
+                                    findAll {
+                                        first { it.className == "nav-previous" }.a {
+                                            findAll { eachHref.firstOrNull() ?: "" }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        relevantQuestions = document.div {
+                            // crp_related_widget
+                            findAll {
+                                first { it.className == "crp_related_widget" }.ul {
+                                    li {
+                                        findAll {
+                                            map {
+                                                Question(
+                                                    id = Random.nextInt(50),
+                                                    question = it.text,
+                                                    url = it.eachHref.firstOrNull() ?: ""
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     )

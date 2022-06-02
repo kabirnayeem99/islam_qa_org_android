@@ -71,7 +71,7 @@ class QuestionDetailsFragment : BaseFragment<FragmentQuestionDetailsBinding>() {
 
             val detailedQuestion = uiState.questionDetails.detailedQuestion
             binding.tvDetailQuestion.text =
-                Html.fromHtml(detailedQuestion, Html.FROM_HTML_SEPARATOR_LINE_BREAK_DIV)
+                Html.fromHtml(detailedQuestion, Html.FROM_HTML_MODE_COMPACT)
         }
     }
 

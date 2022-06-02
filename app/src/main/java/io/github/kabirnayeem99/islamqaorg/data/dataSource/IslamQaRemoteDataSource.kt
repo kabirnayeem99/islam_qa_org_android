@@ -63,12 +63,12 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
                 questionTitle = dto.questionTitle,
                 detailedQuestion = dto.detailedQuestion,
                 detailedAnswer = dto.detailedAnswer,
-                fiqh = "Hanafi",
-                source = "Darulifta-Deoband.com",
-                originalLink = "https://islamqa.org/hanafi/darulifta-deoband/109885/i-am-a-phd-student-in-beijing-china-i-get-scholarship-from-september-2011-for-my-food-and-living-expenses-each-month-i-can-roughly-save-25-30000-pkr-money-from-last-two-years-from-my-scholarship-i/",
-                nextQuestionLink = "https://islamqa.org/hanafi/darulifta-deoband/109888/i-had-ihtilam-in-night-and-i-perform-fajr-salah-by-washing-only-my-sharmgah-is-it-right-or-i-have-to-do-full-ghusl/",
-                previousQuestionLink = "https://islamqa.org/hanafi/darulifta-deoband/109883/can-a-woman-slaughter-an-animal-on-the-occasion-of-eid-ul-azha-and-other-occasions-please-reply-in-light-of-quran-and-sunnah/",
-                relevantQuestions = questionList
+                fiqh = dto.fiqh,
+                source = dto.source,
+                originalLink = dto.originalLink,
+                nextQuestionLink = dto.nextQuestionLink,
+                previousQuestionLink = dto.previousQuestionLink,
+                relevantQuestions = dto.relevantQuestions,
             )
 
             Timber.d(detail.toString())
