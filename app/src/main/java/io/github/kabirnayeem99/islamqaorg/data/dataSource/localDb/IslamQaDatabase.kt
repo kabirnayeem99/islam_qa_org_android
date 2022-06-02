@@ -11,6 +11,7 @@ import io.github.kabirnayeem99.islamqaorg.data.dto.room.QuestionEntity
     version = BuildConfig.VERSION_CODE + 4,
     exportSchema = false
 )
+
 abstract class IslamQaDatabase : RoomDatabase() {
     abstract fun getQuestionListDao(): QuestionListDao
     abstract fun getQuestionDetailDao(): QuestionDetailDao

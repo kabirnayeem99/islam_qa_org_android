@@ -1,6 +1,7 @@
 package io.github.kabirnayeem99.islamqaorg.data.repository
 
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
+import io.github.kabirnayeem99.islamqaorg.common.utility.NetworkUtil
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaLocalDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaRemoteDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.PreferenceDataSource
@@ -22,7 +23,12 @@ class HomeScreenRepositoryImpl
     private val remoteDataSource: IslamQaRemoteDataSource,
     private val localDataSource: IslamQaLocalDataSource,
     private val preferenceDataSource: PreferenceDataSource,
+    private val networkUtil: NetworkUtil,
 ) : HomeScreenRepository {
+
+    private val isNetworkAvailable by lazy {
+        networkUtil.isNetworkAvailable
+    }
 
     private val inMemoryMutex = Mutex()
     private var inMemoryHomeScreenData = emptyList<Question>()
@@ -31,7 +37,7 @@ class HomeScreenRepositoryImpl
         val cachedList = inMemoryMutex.withLock { inMemoryHomeScreenData }
         return flow {
             val needRefresh = preferenceDataSource.checkIfNeedsRefreshing()
-            if (shouldRefresh || needRefresh) {
+            if ((shouldRefresh || needRefresh) && isNetworkAvailable) {
                 val remoteData = getQuestionListFromRemoteDataSource()
                 emit(remoteData)
             } else {
@@ -75,17 +81,18 @@ class HomeScreenRepositoryImpl
         val questionDetail = inMemoryMutex.withLock { inMemoryQuestionDetail }
         return flow {
             try {
-
                 val questionDetailLocal = localDataSource.getDetailedQuestionAndAnswer(url)
                 questionDetailLocal?.let {
                     inMemoryMutex.withLock { inMemoryQuestionDetail = it }
                     emit(Resource.Success(it))
                 }
 
-                val questionDetailed = remoteDataSource.getDetailedQuestionAndAnswer(url)
-                inMemoryMutex.withLock { inMemoryQuestionDetail = questionDetailed }
-                localDataSource.cacheQuestionDetail(questionDetail)
-                emit(Resource.Success(questionDetailed))
+                if (isNetworkAvailable) {
+                    val questionDetailed = remoteDataSource.getDetailedQuestionAndAnswer(url)
+                    inMemoryMutex.withLock { inMemoryQuestionDetail = questionDetailed }
+                    localDataSource.cacheQuestionDetail(questionDetail)
+                    emit(Resource.Success(questionDetailed))
+                }
             } catch (e: Exception) {
                 emit(Resource.Error(e.localizedMessage ?: "Failed to get the detailed question."))
             }
