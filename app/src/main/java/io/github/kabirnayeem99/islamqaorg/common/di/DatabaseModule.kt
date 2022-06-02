@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb.IslamQaDatabase
+import io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb.QuestionDetailDao
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb.QuestionListDao
 import javax.inject.Singleton
 
@@ -28,5 +29,10 @@ object DatabaseModule {
     @Provides
     fun provideQuestionListDao(db: IslamQaDatabase): QuestionListDao {
         return db.getQuestionListDao()
+    }
+
+    @Provides
+    fun provideQuestionDetailDao(db: IslamQaDatabase): QuestionDetailDao {
+        return db.getQuestionDetailDao()
     }
 }

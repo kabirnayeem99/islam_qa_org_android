@@ -1,4 +1,4 @@
-package io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb
+package io.github.kabirnayeem99.islamqaorg.data.dataSource
 
 import android.content.Context
 import androidx.datastore.core.DataStore
