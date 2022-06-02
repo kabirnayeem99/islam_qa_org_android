@@ -2,9 +2,9 @@ package io.github.kabirnayeem99.islamqaorg.ui
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -40,11 +41,13 @@ class MainActivity : AppCompatActivity() {
         ContextCompat.getDrawable(this, R.drawable.ic_settings)
     }
 
+    private lateinit var navController: NavController
+
     /**
      * Sets up the navigation for the app.
      */
     private fun setUpNavigation() {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        navController = findNavController(R.id.nav_host_fragment_content_main)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             configureMenuIconBasedOnCurrentFragment(destination, navController)
         }
@@ -79,7 +82,13 @@ class MainActivity : AppCompatActivity() {
 
     private var onSyncButtonClick: (() -> Unit) = {}
 
+    private var onSettingsButtonClick: (() -> Unit) = {}
+
     fun setOnSyncButtonClickListener(onClickParam: (() -> Unit)) {
+        onSyncButtonClick = onClickParam
+    }
+
+    fun setOnSettingButtonClickListener(onClickParam: (() -> Unit)) {
         onSyncButtonClick = onClickParam
     }
 
@@ -89,11 +98,7 @@ class MainActivity : AppCompatActivity() {
                 setImageDrawable(settingsIconDrawable)
                 ivFilterButton.visibility = View.VISIBLE
                 setOnClickListener {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Should open settings",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    navController.navigate(R.id.action_HomeFragment_to_settingsFragment)
                 }
             }
             ivSyncButton.apply {

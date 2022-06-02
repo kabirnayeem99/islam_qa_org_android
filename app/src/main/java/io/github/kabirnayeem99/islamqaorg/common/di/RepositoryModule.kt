@@ -8,8 +8,8 @@ import io.github.kabirnayeem99.islamqaorg.common.utility.NetworkUtil
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaLocalDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaRemoteDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.PreferenceDataSource
-import io.github.kabirnayeem99.islamqaorg.data.repository.HomeScreenRepositoryImpl
-import io.github.kabirnayeem99.islamqaorg.domain.repository.HomeScreenRepository
+import io.github.kabirnayeem99.islamqaorg.data.repository.QuestionAnswerRepositoryImpl
+import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerRepository
 import javax.inject.Singleton
 
 @Module
@@ -22,7 +22,7 @@ object RepositoryModule {
         localDataSource: IslamQaLocalDataSource,
         preferenceDataSource: PreferenceDataSource,
         networkUtil: NetworkUtil,
-    ): HomeScreenRepository {
-        return HomeScreenRepositoryImpl(remoteDataSource, localDataSource, preferenceDataSource,networkUtil)
+    ): QuestionAnswerRepository {
+        return QuestionAnswerRepositoryImpl(remoteDataSource, localDataSource, preferenceDataSource,networkUtil)
     }
 }
