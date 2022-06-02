@@ -24,8 +24,10 @@
                 android:id="@+id/tv_question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/cardo_bold"
                 android:text="@{questionDetail.questionTitle}"
-                android:textSize="18sp"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 tools:text="Is zakat wajib on a student getting scholarship?" />
 
@@ -34,7 +36,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:fontFamily="@font/cardo_italic"
                 android:text="@{`Answered according to ` + questionDetail.fiqh + ` by ` +  questionDetail.source}"
+                android:textColor="?android:textColorSecondary"
                 tools:text="Answered according to Hanafi Fiqh by Darulifta-Deoband.com" />
 
             <TextView
@@ -42,6 +46,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:fontFamily="@font/cardo_regular"
+                android:textColor="?android:textColorPrimary"
                 tools:text="I am a PhD student in Beijing China. I get scholarship from September 2011 for my food and living expenses. Each month I can roughly save 25-30000 PKR money from last two years from my scholarship. I send some money to my home, I visit to my country. I remember after 2 years total saved money in my account was 150000. In this last two years I did not pay any zakah. Being a student I will pay zakah? If I need to pay how much zakah I will pay as one lunar year is compulsory for zakah? My saving start from September 2011, now how much zakah I will pay. Whether I will calculate zakah on my current money or I check history of my account and pay zakah for September 2012 and 2013." />
 
             <TextView
@@ -49,17 +55,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:fontFamily="@font/cardo_regular"
                 android:text="@{questionDetail.detailedAnswer}"
+                android:textColor="?android:textColorPrimary"
                 tools:text="(Fatwa: 1433/1112/D=01/1434)\n\nWhen the amount equal to 612 gram silver was saved in your account then you became owner of nisab. You will have to pay 2.5% as zakah on the said amount after completion one lunar year. Likewise, next year when the year completes as per lunar calendar then you will pay the zakah of the amount available into your account. When you are the owner of the amount available into your account then zakah became fardh on you. It shall not be exempted merely on account of being a student. However, if you were minor then zakah would not have become fardh on you.\nAllah knows Best!\n\nDarul Ifta,\nDarul Uloom Deoband" />
 
             <TextView
                 android:id="@+id/tv_relevant_q_n_a_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="6dp"
+                android:layout_marginTop="22dp"
+                android:fontFamily="@font/cardo_italic"
                 android:text="@string/label_relevant_q_n_a"
-                android:textSize="16sp"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView

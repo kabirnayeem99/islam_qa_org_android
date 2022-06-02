@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
@@ -60,15 +61,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun initViews() {
         binding.rvQuestions.apply {
+            layoutManager = GridLayoutManager(context, 1)
+            hasFixedSize()
+            adapter = questionAdapter
+        }
+
+        binding.rvLatestQuestions.apply {
             layoutManager = LinearLayoutManager(context)
             hasFixedSize()
             adapter = questionAdapter
         }
+
         questionAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
 
         (activity as MainActivity).setOnSyncButtonClickListener {
             showLoadingForAShortTimePeriod()
             homeViewModel.getHomeScreenData(true)
+        }
+
+        (activity as MainActivity).setOnSettingButtonClickListener {
+            navController.navigate(R.id.action_HomeFragment_to_settingsFragment)
         }
     }
 

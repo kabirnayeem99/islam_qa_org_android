@@ -5,6 +5,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
     id "com.google.protobuf" version "0.8.17"
+    id 'com.google.android.gms.oss-licenses-plugin'
 }
 
 android {
@@ -54,6 +55,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
     implementation "it.skrape:skrapeit:1.2.1"
 
     // Coroutines
@@ -89,6 +91,11 @@ dependencies {
     implementation "androidx.datastore:datastore:1.0.0"
     implementation "com.google.protobuf:protobuf-javalite:3.19.2"
 
+    // Expandible layout
+    implementation "com.github.skydoves:expandablelayout:1.0.7"
+
+    // Library
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 }
 
 protobuf {

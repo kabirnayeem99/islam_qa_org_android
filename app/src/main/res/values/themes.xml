@@ -12,4 +12,12 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="Theme.IslamQAOrg.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="backgroundColor">?android:colorPrimaryDark</item>
+        <item name="windowSplashScreenBackground">?android:colorPrimaryDark</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.IslamQAOrg.NoActionBar</item>
+    </style>
+
 </resources>

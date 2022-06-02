@@ -7,8 +7,9 @@ import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream
 
-/* It's a serializer that can read and write `UserPreferences` objects from and to an `InputStream` and
-`OutputStream` respectively */
+/**
+ * Serialiser for user preferences
+ */
 object UserPreferencesSerializer : Serializer<UserPreferences> {
     override val defaultValue: UserPreferences
         get() = UserPreferences.getDefaultInstance()
