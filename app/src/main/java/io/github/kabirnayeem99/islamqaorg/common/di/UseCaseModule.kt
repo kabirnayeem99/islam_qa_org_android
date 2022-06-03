@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerRepository
+import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetFiqhBasedQuestions
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetQuestionDetails
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetRandomQuestion
 
@@ -20,5 +21,10 @@ object UseCaseModule {
     @Provides
     fun provideGetQuestionDetails(repository: QuestionAnswerRepository): GetQuestionDetails {
         return GetQuestionDetails(repository)
+    }
+
+    @Provides
+    fun provideGetFiqhBasedQuestions(repository: QuestionAnswerRepository): GetFiqhBasedQuestions {
+        return GetFiqhBasedQuestions(repository)
     }
 }

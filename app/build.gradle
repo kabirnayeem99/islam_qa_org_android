@@ -96,6 +96,9 @@ dependencies {
 
     // Library
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+
+    // Faker
+    implementation "io.github.serpro69:kotlin-faker:1.11.0"
 }
 
 protobuf {

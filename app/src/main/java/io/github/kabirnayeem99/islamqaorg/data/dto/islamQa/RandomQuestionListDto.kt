@@ -1,6 +1,6 @@
 package io.github.kabirnayeem99.islamqaorg.data.dto.islamQa
 
-data class IslamQaHomeDto(
+data class RandomQuestionListDto(
     val httpStatusCode: Int,
     val httpStatusMessage: String,
     val questions: List<String>,

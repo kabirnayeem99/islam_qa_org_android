@@ -34,7 +34,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun subscribeToData() {
         homeViewModel.apply {
-            getHomeScreenData()
+            getRandomQuestions()
+            getFiqhBasedQuestions()
             viewLifecycleOwner.lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     uiState.collect(::handleUiState)
@@ -52,8 +53,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun handleUiState(uiState: HomeScreenUiState) {
         uiState.apply {
             if (isLoading) loading.show() else loading.hide()
-            questionAdapter.submitQuestionList(questionAnswers)
-            questionSliderAdapter.submitQuestionList(questionAnswers)
+            questionAdapter.submitQuestionList(fiqhBasedQuestions)
+            questionSliderAdapter.submitQuestionList(randomQuestions)
             messages.firstOrNull()?.let { userMessage ->
                 binding.root.showUserMessage(userMessage.message)
                 homeViewModel.userMessageShown(userMessage.id)
@@ -63,17 +64,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
 
     private fun initViews() {
+
+        val horizontalLinearLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        val linearLayoutManager = LinearLayoutManager(context)
+
         binding.rvQuestions.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
-            hasFixedSize()
             adapter = questionSliderAdapter
+            layoutManager = horizontalLinearLayoutManager
+            hasFixedSize()
         }
 
         binding.rvLatestQuestions.apply {
-            layoutManager = LinearLayoutManager(context)
-            hasFixedSize()
             adapter = questionAdapter
+            layoutManager = linearLayoutManager
+            hasFixedSize()
         }
 
         questionAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
@@ -81,7 +86,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
         (activity as MainActivity).setOnSyncButtonClickListener {
             showLoadingForAShortTimePeriod()
-            homeViewModel.getHomeScreenData(true)
+            homeViewModel.getRandomQuestions(true)
         }
 
         (activity as MainActivity).setOnSettingButtonClickListener {

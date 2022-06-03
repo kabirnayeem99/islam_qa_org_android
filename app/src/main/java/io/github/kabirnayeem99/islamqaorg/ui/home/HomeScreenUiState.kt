@@ -6,5 +6,7 @@ import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 data class HomeScreenUiState(
     val isLoading: Boolean = false,
     val messages: List<UserMessage> = emptyList(),
-    val questionAnswers: List<Question> = emptyList(),
+    val randomQuestions: List<Question> = emptyList(),
+    val fiqhBasedQuestions: List<Question> = emptyList(),
+    val currentPage: Int = 1,
 )

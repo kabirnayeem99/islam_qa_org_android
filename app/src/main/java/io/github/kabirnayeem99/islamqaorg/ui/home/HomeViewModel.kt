@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
 import io.github.kabirnayeem99.islamqaorg.common.base.UserMessage
+import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetFiqhBasedQuestions
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetRandomQuestion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -17,18 +18,20 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val getRandomQuestion: GetRandomQuestion) :
-    ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val getRandomQuestion: GetRandomQuestion,
+    private val getFiqhBasedQuestions: GetFiqhBasedQuestions,
+) : ViewModel() {
 
 
     private val _uiState = MutableStateFlow(HomeScreenUiState())
     val uiState = _uiState.asStateFlow()
 
-    private var fetchHomeScreenDataJob: Job? = null
+    private var fetchRandomQuestionJob: Job? = null
 
-    fun getHomeScreenData(shouldRefresh: Boolean = false) {
-        fetchHomeScreenDataJob?.cancel()
-        fetchHomeScreenDataJob = viewModelScope.launch(Dispatchers.IO) {
+    fun getRandomQuestions(shouldRefresh: Boolean = false) {
+        fetchRandomQuestionJob?.cancel()
+        fetchRandomQuestionJob = viewModelScope.launch(Dispatchers.IO) {
             getRandomQuestion.getRandomQuestionList(shouldRefresh).distinctUntilChanged()
                 .collect { res ->
                     when (res) {
@@ -40,7 +43,32 @@ class HomeViewModel @Inject constructor(private val getRandomQuestion: GetRandom
                         is Resource.Success -> {
                             toggleLoading(false)
                             val questionAnswers = res.data ?: emptyList()
-                            _uiState.update { it.copy(questionAnswers = questionAnswers) }
+                            _uiState.update { it.copy(randomQuestions = questionAnswers) }
+                        }
+                    }
+                }
+        }
+    }
+
+    private var fetchFiqhBasedQuestionJob: Job? = null
+
+    fun getFiqhBasedQuestions(shouldRefresh: Boolean = false) {
+        fetchFiqhBasedQuestionJob?.cancel()
+        fetchFiqhBasedQuestionJob = viewModelScope.launch(Dispatchers.IO) {
+            val currentPage = uiState.value.currentPage
+            getFiqhBasedQuestions.getFiqhBasedQuestionList(currentPage, shouldRefresh)
+                .distinctUntilChanged()
+                .collect { res ->
+                    when (res) {
+                        is Resource.Loading -> toggleLoading(true)
+                        is Resource.Error -> {
+                            toggleLoading(false)
+                            makeUserMessage(res.message ?: "")
+                        }
+                        is Resource.Success -> {
+                            toggleLoading(false)
+                            val questionAnswers = res.data ?: emptyList()
+                            _uiState.update { it.copy(fiqhBasedQuestions = questionAnswers) }
                         }
                     }
                 }
