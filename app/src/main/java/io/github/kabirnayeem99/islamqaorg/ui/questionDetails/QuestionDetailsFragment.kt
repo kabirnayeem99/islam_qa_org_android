@@ -40,16 +40,19 @@ class QuestionDetailsFragment : BaseFragment<FragmentQuestionDetailsBinding>() {
             rvRelatedQuestions.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = questionAdapter
+                hasFixedSize()
             }
+
+            questionAdapter.setOnClickListener { subscribeToData(it.url) }
         }
     }
 
     private val args: QuestionDetailsFragmentArgs by navArgs()
 
-    private fun subscribeToData() {
+    private fun subscribeToData(url: String = "") {
         viewLifecycleOwner.lifecycleScope.launch {
             questionDetailViewModel.apply {
-                getQuestionsDetailsJob(url = args.url)
+                getQuestionsDetailsJob(url = url.ifBlank { args.url })
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     uiState.collect(::handleUiState)
                 }
@@ -60,8 +63,14 @@ class QuestionDetailsFragment : BaseFragment<FragmentQuestionDetailsBinding>() {
 
     private fun handleUiState(uiState: QuestionDetailsUiState) {
         uiState.apply {
-            if (isLoading) loading.show() else loading.dismiss()
+            if (isLoading) loading.show()
+            else {
+                loading.dismiss()
+                binding.nsvRoot.smoothScrollTo(0, 0)
+            }
+
             binding.questionDetail = uiState.questionDetails
+
             messages.firstOrNull()?.let { userMessage ->
                 Toast.makeText(requireContext(), userMessage.message, Toast.LENGTH_SHORT).show()
                 questionDetailViewModel.userMessageShown(userMessage.id)
