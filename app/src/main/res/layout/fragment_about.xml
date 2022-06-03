@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="22dp"
-                android:backgroundTint="?android:colorSecondary"
+                android:backgroundTint="?android:textColorTertiary"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_islamqa"
                 app:tint="?android:colorBackground" />
@@ -59,6 +59,7 @@
                 android:fontFamily="@font/cardo_italic"
                 android:gravity="center_vertical"
                 android:textColor="?android:colorBackground"
+                android:textStyle="bold"
                 tools:text="0.0.1" />
 
         </androidx.cardview.widget.CardView>

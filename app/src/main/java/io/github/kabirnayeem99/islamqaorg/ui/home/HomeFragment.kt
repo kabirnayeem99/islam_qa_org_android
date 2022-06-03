@@ -2,7 +2,6 @@ package io.github.kabirnayeem99.islamqaorg.ui.home
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -11,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.common.base.BaseFragment
+import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.showUserMessage
 import io.github.kabirnayeem99.islamqaorg.databinding.FragmentHomeBinding
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
@@ -55,7 +55,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             questionAdapter.submitQuestionList(questionAnswers)
             questionSliderAdapter.submitQuestionList(questionAnswers)
             messages.firstOrNull()?.let { userMessage ->
-                Toast.makeText(requireContext(), userMessage.message, Toast.LENGTH_SHORT).show()
+                binding.root.showUserMessage(userMessage.message)
                 homeViewModel.userMessageShown(userMessage.id)
             }
         }

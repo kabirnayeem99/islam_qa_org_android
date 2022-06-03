@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/logo_islamqa.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/activity_start.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.2520833333333333" />
         <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/fragment_about.xml" value="0.25104166666666666" />
