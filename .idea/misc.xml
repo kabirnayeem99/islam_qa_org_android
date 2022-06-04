@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/drawable/bg_loader.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/bg_question_gradient.xml" value="0.2235" />
         <entry key="app/src/main/res/drawable/bg_rounded_toolbar.xml" value="0.13" />
+        <entry key="app/src/main/res/drawable/bg_shimmer_placeholder.xml" value="0.2235" />
         <entry key="app/src/main/res/drawable/bg_tappable_rounded.xml" value="0.2235" />
         <entry key="app/src/main/res/drawable/ic_fiqh.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_github.xml" value="0.2235" />
@@ -21,7 +22,7 @@
         <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/fragment_about.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.23501199040767387" />
-        <entry key="app/src/main/res/layout/fragment_question_details.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_question_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.2520833333333333" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/list_question.xml" value="0.45" />

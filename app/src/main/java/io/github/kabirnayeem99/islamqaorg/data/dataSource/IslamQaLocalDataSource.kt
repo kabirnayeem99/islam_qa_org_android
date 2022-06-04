@@ -79,19 +79,22 @@ class IslamQaLocalDataSource @Inject constructor(
         return withContext(Dispatchers.IO) {
 
             try {
-                val dto = questionDetailDao.getQuestionByLink(url)
+                var detail: QuestionDetail? = null
 
-                val detail = QuestionDetail(
-                    questionTitle = dto.questionTitle,
-                    detailedQuestion = dto.detailedQuestion,
-                    detailedAnswer = dto.detailedAnswer,
-                    fiqh = dto.fiqh,
-                    source = dto.source,
-                    originalLink = dto.originalLink,
-                    nextQuestionLink = dto.nextQuestionLink,
-                    previousQuestionLink = dto.previousQuestionLink,
-                    relevantQuestions = getQuestionList(),
-                )
+                questionDetailDao.getQuestionByLink(url)?.let { dto ->
+
+                    detail = QuestionDetail(
+                        questionTitle = dto.questionTitle,
+                        detailedQuestion = dto.detailedQuestion,
+                        detailedAnswer = dto.detailedAnswer,
+                        fiqh = dto.fiqh,
+                        source = dto.source,
+                        originalLink = dto.originalLink,
+                        nextQuestionLink = dto.nextQuestionLink,
+                        previousQuestionLink = dto.previousQuestionLink,
+                        relevantQuestions = getQuestionList(),
+                    )
+                }
 
                 Timber.d(detail.toString())
 

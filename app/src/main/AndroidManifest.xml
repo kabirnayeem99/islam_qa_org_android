@@ -20,7 +20,8 @@
 
         <activity
             android:name=".ui.start.StartActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/StartTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
