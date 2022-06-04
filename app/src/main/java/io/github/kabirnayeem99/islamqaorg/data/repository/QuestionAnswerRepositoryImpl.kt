@@ -91,7 +91,6 @@ class QuestionAnswerRepositoryImpl
         }
     }
 
-    private var inMemoryQuestionDetail = QuestionDetail()
 
     /**
      * Fetches the question details based on the URL
@@ -107,28 +106,24 @@ class QuestionAnswerRepositoryImpl
      * @return A flow of resources.
      */
     override suspend fun getQuestionDetails(url: String): Flow<Resource<QuestionDetail>> {
-        val questionDetail = inMemoryMutex.withLock { inMemoryQuestionDetail }
         return flow {
             try {
+                emit(Resource.Loading())
                 val questionDetailLocal = localDataSource.getDetailedQuestionAndAnswer(url)
                 questionDetailLocal?.let {
-                    inMemoryMutex.withLock { inMemoryQuestionDetail = it }
+                    kotlinx.coroutines.delay(1600)
                     emit(Resource.Success(it))
                 }
 
                 if (isNetworkAvailable) {
                     val questionDetailed = remoteDataSource.getDetailedQuestionAndAnswer(url)
-                    inMemoryMutex.withLock { inMemoryQuestionDetail = questionDetailed }
-                    localDataSource.cacheQuestionDetail(questionDetail)
+                    localDataSource.cacheQuestionDetail(questionDetailed)
                     emit(Resource.Success(questionDetailed))
                 }
             } catch (e: Exception) {
                 Timber.e(e, "Failed to get the detailed question -> ${e.message}.")
                 emit(Resource.Error(e.localizedMessage ?: "Failed to get the detailed question."))
             }
-        }.onStart {
-            if (questionDetail.originalLink == url) emit(Resource.Success(questionDetail))
-            else emit(Resource.Loading())
         }.flowOn(Dispatchers.IO)
     }
 
