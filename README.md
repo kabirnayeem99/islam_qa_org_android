@@ -3,9 +3,9 @@
 Native Android Application to show the data on https://islamqa.org/.
 
 # 🔥 IN-EARLY-DEVELOPMENT-STAGE 🔥
+<a href="https://ibb.co/s1n33f5"><img src="https://i.ibb.co/pKcXX7W/demo-home-screen.png" alt="demo-home-screen" border="0" height="500"></a>
+<a href="https://ibb.co/PZWxGz4"><img src="https://i.ibb.co/4ZSWRgM/demo-details-page.png" alt="demo-details-page" border="0"  height="500"></a>
 
-<img src="https://github.com/kabirnayeem99/islam_qa_org_android/blob/dev/doc/images/demo_home_screen.png" height="500">
-<img src="https://github.com/kabirnayeem99/islam_qa_org_android/blob/dev/doc/images/demo_details_page.png" height="500">
 
 
 <a href="https://www.freepik.com/vectors/islamic-graphic">Islamic graphic vector created by
