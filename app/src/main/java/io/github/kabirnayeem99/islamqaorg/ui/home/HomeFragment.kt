@@ -10,11 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.common.base.BaseFragment
+import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.rotateViewOneEighty
 import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.showUserMessage
 import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.viewVisibility
 import io.github.kabirnayeem99.islamqaorg.databinding.FragmentHomeBinding
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -51,20 +54,45 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     @Inject
     lateinit var questionSliderAdapter: QuestionSliderAdapter
 
+
     private fun handleUiState(uiState: HomeScreenUiState) {
         uiState.apply {
+
             questionAdapter.submitQuestionList(fiqhBasedQuestions)
             questionSliderAdapter.submitQuestionList(randomQuestions)
+
             messages.firstOrNull()?.let { userMessage ->
                 binding.root.showUserMessage(userMessage.message)
                 homeViewModel.userMessageShown(userMessage.id)
             }
 
             binding.apply {
-                sflRandomQuestionLoading.viewVisibility(if (isRandomQuestionLoading) View.VISIBLE else View.GONE)
-                rvQuestions.viewVisibility(if (isRandomQuestionLoading) View.GONE else View.VISIBLE)
-                sflFiqhBasedQuestionLoading.viewVisibility(if (isFiqhBasedQuestionsLoading) View.VISIBLE else View.GONE)
-                rvLatestQuestions.viewVisibility(if (isFiqhBasedQuestionsLoading) View.GONE else View.VISIBLE)
+                sflRandomQuestionLoading.viewVisibility(if (isRandomQuestionLoading) View.VISIBLE else View.INVISIBLE)
+                rvQuestions.viewVisibility(if (isRandomQuestionLoading) View.INVISIBLE else View.VISIBLE)
+                sflFiqhBasedQuestionLoading.viewVisibility(if (isFiqhBasedQuestionsLoading) View.VISIBLE else View.INVISIBLE)
+                rvLatestQuestions.viewVisibility(if (isFiqhBasedQuestionsLoading) View.INVISIBLE else View.VISIBLE)
+            }
+
+            slideShowRandomQuestionList(randomQuestions)
+        }
+    }
+
+    private var adapterScrollingJob: Job? = null
+
+    /**
+     * Smooth scrolls through recyclerview items, to give a feeling of slide show
+     *
+     * @param randomQuestions List<Question>
+     */
+    private fun slideShowRandomQuestionList(randomQuestions: List<Question>) {
+        adapterScrollingJob?.cancel()
+        adapterScrollingJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            randomQuestions.forEachIndexed { index, _ ->
+                binding.rvQuestions.smoothScrollToPosition(index)
+                delay(2000)
+                binding.ivDesignGeometry.rotateViewOneEighty(3000)
+
+                delay(3000)
             }
         }
     }
@@ -99,6 +127,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         (activity as MainActivity).setOnSettingButtonClickListener {
             navController.navigate(R.id.action_HomeFragment_to_settingsFragment)
         }
+
     }
 
     private fun showLoadingForAShortTimePeriod() {

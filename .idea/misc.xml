@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1525" />
+        <entry key="app/src/main/res/drawable/bg_home.xml" value="0.2235" />
         <entry key="app/src/main/res/drawable/bg_home_gradient.xml" value="0.2235" />
         <entry key="app/src/main/res/drawable/bg_icon_rounded.xml" value="0.2235" />
         <entry key="app/src/main/res/drawable/bg_loader.xml" value="0.1525" />
@@ -13,11 +14,12 @@
         <entry key="app/src/main/res/drawable/bg_tappable_rounded.xml" value="0.2235" />
         <entry key="app/src/main/res/drawable/ic_fiqh.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_github.xml" value="0.2235" />
+        <entry key="app/src/main/res/drawable/ic_islamic_geometric.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_islamqa.xml" value="0.2235" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/logo_islamqa.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.45" />
-        <entry key="app/src/main/res/layout/activity_start.xml" value="0.25104166666666666" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.4279835390946502" />
+        <entry key="app/src/main/res/layout/activity_start.xml" value="0.4279835390946502" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.2520833333333333" />
         <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/fragment_about.xml" value="0.25104166666666666" />
@@ -25,13 +27,14 @@
         <entry key="app/src/main/res/layout/fragment_question_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.2520833333333333" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.25104166666666666" />
-        <entry key="app/src/main/res/layout/list_question.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/list_question.xml" value="0.4279835390946502" />
         <entry key="app/src/main/res/layout/list_question_placeholder.xml" value="0.2520833333333333" />
         <entry key="app/src/main/res/layout/slide_question.xml" value="0.45" />
         <entry key="app/src/main/res/layout/slide_question_placeholder.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/spin_item_fiqh.xml" value="0.2520833333333333" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.2520833333333333" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2235" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1175" />
       </map>
     </option>
   </component>

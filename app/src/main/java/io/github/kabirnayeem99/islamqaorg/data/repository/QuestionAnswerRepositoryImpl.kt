@@ -123,6 +123,7 @@ class QuestionAnswerRepositoryImpl
                     emit(Resource.Success(questionDetailed))
                 }
             } catch (e: Exception) {
+                Timber.e(e, "Failed to get the detailed question -> ${e.message}.")
                 emit(Resource.Error(e.localizedMessage ?: "Failed to get the detailed question."))
             }
         }.onStart {
@@ -133,7 +134,12 @@ class QuestionAnswerRepositoryImpl
 
 
     private suspend fun getCurrentlySelectedFiqh(): Fiqh {
-        return preferenceDataSource.getPreferredFiqh()
+        val preferredFiqh = preferenceDataSource.getPreferredFiqh()
+        if (preferredFiqh == Fiqh.UNKNOWN) {
+            preferenceDataSource.savePreferredFiqh(Fiqh.HANAFI)
+            return Fiqh.HANAFI
+        }
+        return preferredFiqh
     }
 
     private var inMemoryFiqhBasedQuestionList = emptyList<Question>()

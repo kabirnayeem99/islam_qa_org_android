@@ -6,10 +6,13 @@ import io.github.kabirnayeem99.islamqaorg.BuildConfig
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.common.base.BaseActivity
 import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.gotoActivity
+import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.rotateViewOneEighty
 import io.github.kabirnayeem99.islamqaorg.databinding.ActivityStartBinding
 import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+const val SPLASH_SCREEN_DURATION: Long = 3000L
 
 class StartActivity : BaseActivity<ActivityStartBinding>() {
     override val layout: Int
@@ -21,13 +24,17 @@ class StartActivity : BaseActivity<ActivityStartBinding>() {
     }
 
     private fun initViews() {
-        binding.tvAppVersionName.text = BuildConfig.VERSION_NAME
+        binding.apply {
+            tvAppVersionName.text = BuildConfig.VERSION_NAME
+            ivBackgroundGeometry.rotateViewOneEighty(SPLASH_SCREEN_DURATION)
+        }
         navigateToOtherScreen()
     }
 
+
     private fun navigateToOtherScreen() {
         lifecycleScope.launch {
-            delay(3000)
+            delay(SPLASH_SCREEN_DURATION)
             gotoActivity(MainActivity::class.java, true)
         }
     }

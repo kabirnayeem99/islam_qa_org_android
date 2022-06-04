@@ -12,4 +12,5 @@ data class Question(
     val id: Int = 0,
     val question: String = "",
     val url: String = "",
+    val fiqh: String = "",
 )

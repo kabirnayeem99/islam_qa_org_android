@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.databinding.SlideQuestionBinding
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 
@@ -51,6 +53,7 @@ class QuestionSliderAdapter : RecyclerView.Adapter<QuestionSliderAdapter.Questio
         holder.binding.apply {
             question = currentQuestion
             executePendingBindings()
+            Glide.with(root.context).load(R.drawable.bg_banner).into(ivBackground)
             if (onClick != null) root.setOnClickListener {
                 onClick!!(currentQuestion)
             }

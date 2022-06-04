@@ -23,8 +23,9 @@
     <string name="latest_q_n_a"><![CDATA[Latest Q&A]]></string>
     <string name="about_app"><![CDATA[This app is a native android frontend of IslamQA.org, which is a repository of Islamic answers. They have collected over 93,950 Islamic Q&A from the official websites of various scholars and Islamic educational institutions around the world.]]></string>
     <string name="label_fiqh">Fiqh</string>
-    <string name="hint_fiqh">Select your preferred Fiqh</string>
+    <string name="hint_fiqh">Select your preferred madhab.</string>
     <string name="hint_about">Learn more about this application</string>
     <string name="label_info">Info</string>
     <string name="label_preferences">Preferences</string>
+    <string name="label_madhab">Madhab</string>
 </resources>

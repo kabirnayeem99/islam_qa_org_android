@@ -7,10 +7,10 @@ package io.github.kabirnayeem99.islamqaorg.domain.entity
  *
  * @property paramName String - the name of the Fiqh to pass to IslamQA
  */
-enum class Fiqh(val paramName: String) {
-    HANAFI("hanafi"),
-    MALIKI("maliki"),
-    SHAFII("shafii"),
-    HANBALI("hanbali"),
-    UNKNOWN(""),
+enum class Fiqh(val paramName: String, val displayName: String) {
+    HANAFI("hanafi", "Hanafi"),
+    MALIKI("maliki", "Maliki"),
+    SHAFII("shafii", "Shafii"),
+    HANBALI("hanbali", "Hanbali"),
+    UNKNOWN("", ""),
 }

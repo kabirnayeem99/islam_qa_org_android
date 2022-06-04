@@ -35,11 +35,29 @@
                 android:textColor="?android:textColorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_arrow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Is zakat wajib on a student getting scholarship?" />
+
+            <TextView
+                android:id="@+id/tv_selected_fiqh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_tappable_rounded"
+                android:drawablePadding="8dp"
+                android:fontFamily="@font/arabian_onenighlsland"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="2dp"
+                android:text="@{question.fiqh}"
+                android:textColor="@color/md_theme_dark_onTertiary"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_question"
+                tools:text="Hanafi" />
 
             <ImageView
                 android:id="@+id/iv_arrow"
