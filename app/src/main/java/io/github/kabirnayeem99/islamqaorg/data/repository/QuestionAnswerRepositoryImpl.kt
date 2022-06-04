@@ -138,6 +138,13 @@ class QuestionAnswerRepositoryImpl
 
     private var inMemoryFiqhBasedQuestionList = emptyList<Question>()
 
+    /**
+     * Gets questions list based on the preferred [Fiqh] of the user
+     *
+     * @param pageNumber Int - the page number from which the questions will be loaded.
+     * @param shouldRefresh Boolean - whether the data should be fetched from website or from local cache
+     * @return a flow of the [Question] list wrapped in a [Resource] class.
+     */
     override suspend fun getFiqhBasedQuestionList(
         pageNumber: Int,
         shouldRefresh: Boolean,

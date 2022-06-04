@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.common.base.BaseFragment
 import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.showUserMessage
+import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.viewVisibility
 import io.github.kabirnayeem99.islamqaorg.databinding.FragmentQuestionDetailsBinding
 import io.github.kabirnayeem99.islamqaorg.ui.home.QuestionAdapter
 import kotlinx.coroutines.launch
@@ -63,11 +64,9 @@ class QuestionDetailsFragment : BaseFragment<FragmentQuestionDetailsBinding>() {
 
     private fun handleUiState(uiState: QuestionDetailsUiState) {
         uiState.apply {
-            if (isLoading) loading.show()
-            else {
-                loading.dismiss()
-                binding.nsvRoot.smoothScrollTo(0, 0)
-            }
+
+            binding.sflLoading.viewVisibility(if (isLoading) View.VISIBLE else View.GONE)
+            binding.llContent.viewVisibility(if (isLoading) View.GONE else View.VISIBLE)
 
             binding.questionDetail = uiState.questionDetails
 

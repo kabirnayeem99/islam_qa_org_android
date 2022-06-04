@@ -28,7 +28,7 @@
                 android:layout_width="0dp"
                 android:layout_height="10dp"
                 android:layout_marginEnd="100dp"
-                android:background="#aaaaaaaa"
+                android:background="@drawable/bg_shimmer_placeholder"
                 android:gravity="center_vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_arrow"

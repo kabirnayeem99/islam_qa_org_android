@@ -3,6 +3,7 @@ package io.github.kabirnayeem99.islamqaorg.ui.settings
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +31,12 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                 navController.navigate(R.id.action_settingsFragment_to_aboutFragment)
             }
             spinFiqh.prompt = getString(R.string.hint_fiqh)
+            spinFiqh.setPopupBackgroundDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.bg_tappable_rounded
+                )
+            )
             val fiqhAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.fiqh_array,
