@@ -11,7 +11,18 @@ class IslamQaApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        setUpDynamicColors()
         setUpTimber()
+    }
+
+    /**
+     * Sets up the dynamic colors for the app.
+     */
+    private fun setUpDynamicColors() {
+//        val dynamicOptions = DynamicColorsOptions.Builder()
+//            .setThemeOverlay(R.style.Theme_IslamQAOrg_NoActionBar)
+//            .build()
+//        DynamicColors.applyToActivitiesIfAvailable(this, dynamicOptions)
     }
 
     /**

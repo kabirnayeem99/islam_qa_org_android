@@ -16,9 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
         app:cardCornerRadius="12dp"
-        app:cardElevation="0.8dp"
-        app:strokeColor="?android:colorPrimary"
-        app:strokeWidth="0.8dp">
+        app:cardElevation="0.8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -44,15 +42,17 @@
 
             <ImageView
                 android:id="@+id/iv_arrow"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_icon_rounded"
                 android:contentDescription="@string/content_desc_go_to_details"
+                android:padding="5dp"
                 android:src="@drawable/ic_arrow_forward"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="?colorPrimary" />
+                app:tint="?android:textColorPrimary" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 

@@ -2,16 +2,16 @@ package io.github.kabirnayeem99.islamqaorg.ui.home
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.common.base.BaseFragment
+import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.showUserMessage
+import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.viewVisibility
 import io.github.kabirnayeem99.islamqaorg.databinding.FragmentHomeBinding
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
@@ -35,7 +35,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun subscribeToData() {
         homeViewModel.apply {
-            getHomeScreenData()
+            getRandomQuestions()
+            getFiqhBasedQuestions()
             viewLifecycleOwner.lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     uiState.collect(::handleUiState)
@@ -47,36 +48,52 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     @Inject
     lateinit var questionAdapter: QuestionAdapter
 
+    @Inject
+    lateinit var questionSliderAdapter: QuestionSliderAdapter
+
     private fun handleUiState(uiState: HomeScreenUiState) {
         uiState.apply {
-            if (isLoading) loading.show() else loading.hide()
-            questionAdapter.submitQuestionList(questionAnswers)
+            questionAdapter.submitQuestionList(fiqhBasedQuestions)
+            questionSliderAdapter.submitQuestionList(randomQuestions)
             messages.firstOrNull()?.let { userMessage ->
-                Toast.makeText(requireContext(), userMessage.message, Toast.LENGTH_SHORT).show()
+                binding.root.showUserMessage(userMessage.message)
                 homeViewModel.userMessageShown(userMessage.id)
+            }
+
+            binding.apply {
+                sflRandomQuestionLoading.viewVisibility(if (isRandomQuestionLoading) View.VISIBLE else View.GONE)
+                rvQuestions.viewVisibility(if (isRandomQuestionLoading) View.GONE else View.VISIBLE)
+                sflFiqhBasedQuestionLoading.viewVisibility(if (isFiqhBasedQuestionsLoading) View.VISIBLE else View.GONE)
+                rvLatestQuestions.viewVisibility(if (isFiqhBasedQuestionsLoading) View.GONE else View.VISIBLE)
             }
         }
     }
 
 
     private fun initViews() {
+
+        val horizontalLinearLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        val linearLayoutManager = LinearLayoutManager(context)
+
         binding.rvQuestions.apply {
-            layoutManager = GridLayoutManager(context, 1)
+            adapter = questionSliderAdapter
+            layoutManager = horizontalLinearLayoutManager
             hasFixedSize()
-            adapter = questionAdapter
         }
 
         binding.rvLatestQuestions.apply {
-            layoutManager = LinearLayoutManager(context)
-            hasFixedSize()
             adapter = questionAdapter
+            layoutManager = linearLayoutManager
+            hasFixedSize()
         }
 
         questionAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
+        questionSliderAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
 
         (activity as MainActivity).setOnSyncButtonClickListener {
             showLoadingForAShortTimePeriod()
-            homeViewModel.getHomeScreenData(true)
+            homeViewModel.getRandomQuestions(true)
         }
 
         (activity as MainActivity).setOnSettingButtonClickListener {

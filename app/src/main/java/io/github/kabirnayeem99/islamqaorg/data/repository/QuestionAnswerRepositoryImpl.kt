@@ -5,6 +5,7 @@ import io.github.kabirnayeem99.islamqaorg.common.utility.NetworkUtil
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaLocalDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaRemoteDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.PreferenceDataSource
+import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
 import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerRepository
@@ -46,7 +47,7 @@ class QuestionAnswerRepositoryImpl
         val cachedRandomQuestionList = inMemoryMutex.withLock { inMemoryRandomQuestionList }
         return flow {
             val needRefresh = preferenceDataSource.checkIfNeedsRefreshing()
-            if ((shouldRefresh || needRefresh) && isNetworkAvailable) {
+            if (isNetworkAvailable) {
                 val remoteData = getRandomQuestionListFromRemoteDataSource()
                 emit(remoteData)
             } else {
@@ -79,7 +80,7 @@ class QuestionAnswerRepositoryImpl
      */
     private suspend fun getRandomQuestionListFromRemoteDataSource(): Resource<List<Question>> {
         return try {
-            val homeScreen = remoteDataSource.getHomeScreenData()
+            val homeScreen = remoteDataSource.getRandomQuestionsList()
             inMemoryMutex.withLock { inMemoryRandomQuestionList = homeScreen }
             localDataSource.cacheQuestionList(homeScreen)
             preferenceDataSource.updateNeedingToRefresh()
@@ -128,5 +129,67 @@ class QuestionAnswerRepositoryImpl
             if (questionDetail.originalLink == url) emit(Resource.Success(questionDetail))
             else emit(Resource.Loading())
         }.flowOn(Dispatchers.IO)
+    }
+
+
+    private suspend fun getCurrentlySelectedFiqh(): Fiqh {
+        return preferenceDataSource.getPreferredFiqh()
+    }
+
+    private var inMemoryFiqhBasedQuestionList = emptyList<Question>()
+
+    override suspend fun getFiqhBasedQuestionList(
+        pageNumber: Int,
+        shouldRefresh: Boolean,
+    ): Flow<Resource<List<Question>>> {
+        val cachedFiqhBasedQuestionList = inMemoryMutex.withLock { inMemoryFiqhBasedQuestionList }
+        return flow {
+            val fiqh = getCurrentlySelectedFiqh()
+            kotlinx.coroutines.delay(2000)
+            if (isNetworkAvailable) {
+                val remoteData = getFiqhBasedQuestionListFromRemoteDataSource(fiqh, pageNumber)
+                emit(remoteData)
+            } else {
+                try {
+                    val localQuestionList = localDataSource.getQuestionList()
+                    if (localQuestionList.isEmpty()) {
+                        val remoteData = getRandomQuestionListFromRemoteDataSource()
+                        emit(remoteData)
+                    }
+                    inMemoryMutex.withLock { inMemoryFiqhBasedQuestionList = localQuestionList }
+                    preferenceDataSource.updateNeedingToRefresh()
+                    emit(Resource.Success(localQuestionList))
+                } catch (e: Exception) {
+                    Timber.e(e, "getFiqhBasedQuestionList failed -> ${e.localizedMessage}.")
+                    emit(Resource.Error(e.localizedMessage ?: "Failed to get questions."))
+                }
+            }
+        }.onStart {
+            if (cachedFiqhBasedQuestionList.isNotEmpty())
+                emit(Resource.Success(cachedFiqhBasedQuestionList))
+            else emit(Resource.Loading())
+        }.flowOn(Dispatchers.IO)
+    }
+
+    /**
+     * Fetches the data from the remote data source, caches it in the local data source, and then
+     * returns the data to the caller
+     *
+     * @return A Resource object that contains a list of Question objects.
+     */
+    private suspend fun getFiqhBasedQuestionListFromRemoteDataSource(
+        fiqh: Fiqh,
+        pageNumber: Int
+    ): Resource<List<Question>> {
+        return try {
+            val qList = remoteDataSource.getFiqhBasedQuestionsList(fiqh, pageNumber)
+            inMemoryMutex.withLock { inMemoryFiqhBasedQuestionList = qList }
+            localDataSource.cacheQuestionList(qList)
+            preferenceDataSource.updateNeedingToRefresh()
+            Resource.Success(qList)
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to get fiqh based question data -> ${e.localizedMessage}.")
+            Resource.Error(e.localizedMessage ?: "Failed to get home screen data.")
+        }
     }
 }

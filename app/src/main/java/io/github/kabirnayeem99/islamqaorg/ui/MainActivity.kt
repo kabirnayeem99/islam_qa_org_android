@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setOnSettingButtonClickListener(onClickParam: (() -> Unit)) {
-        onSyncButtonClick = onClickParam
+        onSettingsButtonClick = onClickParam
     }
 
     private fun onNavigatingToHomeFragment() {

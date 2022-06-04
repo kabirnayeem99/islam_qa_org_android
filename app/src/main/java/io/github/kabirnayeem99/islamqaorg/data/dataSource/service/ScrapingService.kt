@@ -1,8 +1,12 @@
 package io.github.kabirnayeem99.islamqaorg.data.dataSource.service
 
-import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.IslamQaHomeDto
+import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.FiqhBasedQuestionListDto
 import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.QuestionDetailScreenDto
+import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.RandomQuestionListDto
+import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
+import io.github.serpro69.kfaker.Faker
+import io.github.serpro69.kfaker.faker
 import it.skrape.core.document
 import it.skrape.fetcher.HttpFetcher
 import it.skrape.fetcher.Result
@@ -22,11 +26,11 @@ private const val homeScreenUrl = "https://islamqa.org/"
 class ScrapingService {
 
     /**
-     * Fetches the home screen of islamqa.org, parses it, and converts it to a [IslamQaHomeDto] object.
+     * Fetches the home screen of islamqa.org, parses it, and converts it to a [RandomQuestionListDto] object.
      *
      * @return A `IslamQaHomeDto` object.
      */
-    suspend fun parseHomeScreen(): IslamQaHomeDto {
+    suspend fun parseRandomQuestionList(): RandomQuestionListDto {
         return withContext(Dispatchers.IO) {
 
             val islamQaHomeDto = skrape(HttpFetcher) {
@@ -41,9 +45,9 @@ class ScrapingService {
     }
 
     /**
-     * Parses the HTML response and returns [IslamQaHomeDto] class.
+     * Parses the HTML response and returns [RandomQuestionListDto] class.
      */
-    private fun Result.getIslamQaHomeDtoOutOfResponse() = IslamQaHomeDto(
+    private fun Result.getIslamQaHomeDtoOutOfResponse() = RandomQuestionListDto(
         httpStatusCode = status { code },
         httpStatusMessage = status { message },
         questions = document.findAll("li")
@@ -150,22 +154,51 @@ class ScrapingService {
      * Finds all the `div` elements with the class name `crp_related_widget` and then find all the
      * `li` elements within the `ul` element and then map the `li` elements to a `Question` object
      */
-    private fun Result.getRelevantQuestionsFromQuestionDetails() = document.div {
-        findAll {
-            first { it.className == "crp_related_widget" }.ul {
-                li {
-                    findAll {
-                        map {
-                            Question(
-                                id = Random.nextInt(50),
-                                question = it.text,
-                                url = it.eachHref.firstOrNull() ?: ""
-                            )
+    private fun Result.getRelevantQuestionsFromQuestionDetails(): List<Question> {
+        return document.div {
+            findAll {
+                first { it.className == "crp_related_widget" }.ul {
+                    li {
+                        findAll {
+                            map {
+                                Question(
+                                    id = Random.nextInt(50),
+                                    question = it.text,
+                                    url = it.eachHref.firstOrNull() ?: ""
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+
+    private val faker: Faker by lazy {
+        faker {}
+    }
+
+    fun parseFiqhBasedQuestionsList(fiqh: Fiqh, pageNumber: Int): FiqhBasedQuestionListDto {
+
+        val listOfQuestions = mutableListOf<String>()
+        val listOfQuestionLinks = mutableListOf<String>()
+
+        Timber.d("Getting list of $fiqh based questions with page $pageNumber")
+
+        for (index in 1..18) {
+            val question = "Ulema of Deoband $index"
+            val questionLink = "https://islamqa.org/hanafi/muftionline/95119/ulema-of-deoband/"
+            listOfQuestions.add(question)
+            listOfQuestionLinks.add(questionLink)
+        }
+
+        return FiqhBasedQuestionListDto(
+            200,
+            "No problem",
+            listOfQuestions,
+            listOfQuestionLinks,
+        )
     }
 
 }
