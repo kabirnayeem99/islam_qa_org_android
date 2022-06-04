@@ -5,8 +5,6 @@ import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.QuestionDetailScreenD
 import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.RandomQuestionListDto
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
-import io.github.serpro69.kfaker.Faker
-import io.github.serpro69.kfaker.faker
 import it.skrape.core.document
 import it.skrape.fetcher.HttpFetcher
 import it.skrape.fetcher.Result
@@ -35,7 +33,7 @@ class ScrapingService {
 
             val islamQaHomeDto = skrape(HttpFetcher) {
                 request { url = homeScreenUrl }
-                response { getIslamQaHomeDtoOutOfResponse() }
+                response { getRandomQuestionListDtoOutOfResponse() }
             }
 
             Timber.d(islamQaHomeDto.toString())
@@ -47,13 +45,14 @@ class ScrapingService {
     /**
      * Parses the HTML response and returns [RandomQuestionListDto] class.
      */
-    private fun Result.getIslamQaHomeDtoOutOfResponse() = RandomQuestionListDto(
+    private fun Result.getRandomQuestionListDtoOutOfResponse() = RandomQuestionListDto(
         httpStatusCode = status { code },
         httpStatusMessage = status { message },
         questions = document.findAll("li")
             .filter { it.className == "arpw-li arpw-clearfix" }.eachText,
         questionLinks = document.li { a { findAll { filter { it.className == "arpw-title" }.eachHref } } }
     )
+
 
     /**
      * Fetches the details of a specific question from islamqa.org, parses it, and converts it to a
@@ -91,12 +90,17 @@ class ScrapingService {
     /**
      * Parses the detailed answer from IslamQA.org, if it exists
      */
-    private fun Result.getDetailedAnswer() = document.div {
-        findAll {
-            filter { it.className == "ddb-answer" }.eachText.joinToString(
-                "\n"
-            )
+    private fun Result.getDetailedAnswer() = try {
+        document.div {
+            findAll {
+                filter { it.className == "ddb-answer" }.eachText.joinToString(
+                    "\n"
+                )
+            }
         }
+    } catch (e: Exception) {
+        Timber.e(e, "Failed to get detailed answer")
+        ""
     }
 
     /**
@@ -107,11 +111,16 @@ class ScrapingService {
      * @receiver Result
      * @return String
      */
-    private fun Result.getDetailedQuestionAsHtmlText() = document.div {
-        findAll {
-            "<html>" + filter { it.id == "qna_only" }.html.removePrefix("<div id=\"qna_only\">")
-                .removeSuffix("</div>") + "</html>"
+    private fun Result.getDetailedQuestionAsHtmlText() = try {
+        document.div {
+            findAll {
+                "<html>" + filter { it.id == "qna_only" }.html.removePrefix("<div id=\"qna_only\">")
+                    .removeSuffix("</div>") + "</html>"
+            }
         }
+    } catch (e: Exception) {
+        Timber.e(e, "Failed to parse the detailed question -> ${e.message}")
+        "<html><p>No Questions found.</p></html>"
     }
 
     enum class Page {
@@ -130,21 +139,26 @@ class ScrapingService {
      */
     private fun Result.getPrevOrNextLink(prevOrNext: Page): String {
 
-        val classNameForPrevOrNext = when (prevOrNext) {
-            Page.PREV -> "nav-previous"
-            Page.NEXT -> "nav-next"
-        }
+        try {
+            val classNameForPrevOrNext = when (prevOrNext) {
+                Page.PREV -> "nav-previous"
+                Page.NEXT -> "nav-next"
+            }
 
-        return document.div {
-            findAll {
-                span {
-                    findAll {
-                        first { it.className == classNameForPrevOrNext }.a {
-                            findAll { eachHref.firstOrNull() ?: "" }
+            return document.div {
+                findAll {
+                    span {
+                        findAll {
+                            first { it.className == classNameForPrevOrNext }.a {
+                                findAll { eachHref.firstOrNull() ?: "" }
+                            }
                         }
                     }
                 }
             }
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to get $prevOrNext url -> ${e.message}.")
+            return ""
         }
     }
 
@@ -155,50 +169,102 @@ class ScrapingService {
      * `li` elements within the `ul` element and then map the `li` elements to a `Question` object
      */
     private fun Result.getRelevantQuestionsFromQuestionDetails(): List<Question> {
-        return document.div {
-            findAll {
-                first { it.className == "crp_related_widget" }.ul {
-                    li {
-                        findAll {
-                            map {
-                                Question(
-                                    id = Random.nextInt(50),
-                                    question = it.text,
-                                    url = it.eachHref.firstOrNull() ?: ""
-                                )
+        return try {
+            document.div {
+                findAll {
+                    first { it.className == "crp_related_widget" }.ul {
+                        li {
+                            findAll {
+                                map {
+                                    Question(
+                                        id = Random.nextInt(50),
+                                        question = it.text,
+                                        url = it.eachHref.firstOrNull() ?: ""
+                                    )
+                                }
                             }
                         }
                     }
                 }
             }
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to get relevant questions from $this -> ${e.message}")
+            emptyList()
         }
     }
 
 
-    private val faker: Faker by lazy {
-        faker {}
+    /**
+     * Makes a network call to the IslamQa.org, gets the html response, parses it
+     * and converts it into a [FiqhBasedQuestionListDto]
+     *
+     * @param fiqh Fiqh - The Fiqh for which the questions are to be fetched.
+     * @param pageNumber The page number of the questions list.
+     * @return A list of questions.
+     */
+    suspend fun parseFiqhBasedQuestionsList(fiqh: Fiqh, pageNumber: Int): FiqhBasedQuestionListDto {
+
+        return withContext(Dispatchers.IO) {
+
+            val fiqhParamName = if (fiqh == Fiqh.UNKNOWN) Fiqh.HANAFI.paramName else fiqh.paramName
+
+            Timber.d("Getting question for $fiqhParamName of page $pageNumber.")
+
+            val fiqhBasedQuestionUrl = "https://islamqa.org/category/${fiqhParamName}/"
+
+            Timber.d("URL is $fiqhBasedQuestionUrl")
+
+            val fiqhBasedQuestionListDto = skrape(HttpFetcher) {
+                request { url = fiqhBasedQuestionUrl }
+                response { getFiqhBasedQuestionListDtoOutOfResponse(fiqh) }
+            }
+
+            Timber.d(fiqhBasedQuestionListDto.toString())
+
+            fiqhBasedQuestionListDto
+        }
     }
 
-    fun parseFiqhBasedQuestionsList(fiqh: Fiqh, pageNumber: Int): FiqhBasedQuestionListDto {
-
-        val listOfQuestions = mutableListOf<String>()
-        val listOfQuestionLinks = mutableListOf<String>()
-
-        Timber.d("Getting list of $fiqh based questions with page $pageNumber")
-
-        for (index in 1..18) {
-            val question = "Ulema of Deoband $index"
-            val questionLink = "https://islamqa.org/hanafi/muftionline/95119/ulema-of-deoband/"
-            listOfQuestions.add(question)
-            listOfQuestionLinks.add(questionLink)
-        }
-
-        return FiqhBasedQuestionListDto(
-            200,
-            "No problem",
-            listOfQuestions,
-            listOfQuestionLinks,
+    /**
+     * Parses the HTML response and returns [FiqhBasedQuestionListDto] class.
+     */
+    private fun Result.getFiqhBasedQuestionListDtoOutOfResponse(fiqh: Fiqh): FiqhBasedQuestionListDto {
+        val dto = FiqhBasedQuestionListDto(
+            httpStatusCode = status { code },
+            httpStatusMessage = status { message },
+            questions = getFiqhBasedQuestionsFromResult(),
+            questionLinks = getQuestionLinksForFiqhBasedQuestions(),
+            fiqh = fiqh
         )
+
+        Timber.d("FiqhBasedQuestionListDto -> $dto")
+        return dto
+    }
+
+    private fun Result.getFiqhBasedQuestionsFromResult() = try {
+        document.h1 {
+            findAll {
+                filter { it.className == "entry-title" }.eachText
+                    .filterIndexed { index, _ -> index != 0 }
+            }
+        }
+    } catch (e: Exception) {
+        Timber.e(e, "Failed to get questions -> ${e.message}.")
+        emptyList()
+    }
+
+    private fun Result.getQuestionLinksForFiqhBasedQuestions() = try {
+        document.h1 {
+            findAll {
+                filter { it.className == "entry-title" }.map {
+                    it.eachHref.joinToString(",")
+                }.filterIndexed { index, _ -> index != 0 }
+
+            }
+        }
+    } catch (e: Exception) {
+        Timber.e(e, "Failed to get question links -> ${e.message}.")
+        emptyList()
     }
 
 }

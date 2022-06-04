@@ -28,9 +28,8 @@
                 android:layout_width="0dp"
                 android:layout_height="10dp"
                 android:layout_marginEnd="100dp"
-                android:background="#aaaaaaaa"
+                android:background="@drawable/bg_shimmer_placeholder"
                 android:gravity="center_vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_arrow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -41,14 +40,30 @@
                 android:layout_height="22dp"
                 android:layout_marginEnd="6dp"
                 android:background="@drawable/bg_icon_rounded"
-                android:backgroundTint="#11aaaaaa"
+                android:backgroundTint="@color/trans_primary"
                 android:contentDescription="@string/content_desc_go_to_details"
                 android:padding="5dp"
                 android:src="@drawable/ic_arrow_forward"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="#aaaaaaaa" />
+                app:tint="@color/md_theme_light_primary" />
+
+            <View
+                android:id="@+id/tv_selected_fiqh"
+                android:layout_width="40dp"
+                android:layout_height="12dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_tappable_rounded"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="2dp"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_question" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 

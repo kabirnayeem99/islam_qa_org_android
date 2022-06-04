@@ -1,9 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
-        <item name="android:actionBarStyle">@style/ActionBarTheme</item>
-        <item name="android:windowActionBarOverlay">true</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
@@ -33,21 +32,7 @@
         <item name="colorColor42Container">#71f7ed</item>
         <item name="colorOnColor42Container">#00201e</item>
         <item name="harmonizeColor42">false</item>
-    </style>
+        <item name="android:windowSplashScreenBackground">@color/md_theme_light_primary</item>
 
-    <style name="SpinnerTheme">
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:fontFamily">@font/cardo_regular</item>
-    </style>
-
-    <style name="StartTheme" parent="AppTheme">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
-    <style name="ActionBarTheme" parent="Widget.Material3.Light.ActionBar.Solid">
-        <item name="android:background">@null</item>
-        <!-- Support library compatibility -->
-        <item name="background">@null</item>
     </style>
 </resources>

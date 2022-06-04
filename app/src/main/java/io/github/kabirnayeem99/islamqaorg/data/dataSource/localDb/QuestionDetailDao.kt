@@ -23,6 +23,6 @@ interface QuestionDetailDao {
      * @param link String
      */
     @Query("SELECT * FROM questiondetailentity WHERE originalLink=:link")
-    suspend fun getQuestionByLink(link: String): QuestionDetailEntity
+    suspend fun getQuestionByLink(link: String): QuestionDetailEntity?
 
 }

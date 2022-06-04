@@ -7,17 +7,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.common.base.BaseFragment
+import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.rotateViewOneEighty
 import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.showUserMessage
 import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.viewVisibility
 import io.github.kabirnayeem99.islamqaorg.databinding.FragmentHomeBinding
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
@@ -51,20 +53,51 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     @Inject
     lateinit var questionSliderAdapter: QuestionSliderAdapter
 
+
     private fun handleUiState(uiState: HomeScreenUiState) {
         uiState.apply {
+
             questionAdapter.submitQuestionList(fiqhBasedQuestions)
             questionSliderAdapter.submitQuestionList(randomQuestions)
+
+            if (!isRandomQuestionLoading && !isFiqhBasedQuestionsLoading) {
+                showRotatingGeometryForever()
+            }
+
             messages.firstOrNull()?.let { userMessage ->
                 binding.root.showUserMessage(userMessage.message)
                 homeViewModel.userMessageShown(userMessage.id)
             }
 
             binding.apply {
-                sflRandomQuestionLoading.viewVisibility(if (isRandomQuestionLoading) View.VISIBLE else View.GONE)
-                rvQuestions.viewVisibility(if (isRandomQuestionLoading) View.GONE else View.VISIBLE)
-                sflFiqhBasedQuestionLoading.viewVisibility(if (isFiqhBasedQuestionsLoading) View.VISIBLE else View.GONE)
-                rvLatestQuestions.viewVisibility(if (isFiqhBasedQuestionsLoading) View.GONE else View.VISIBLE)
+                sflRandomQuestionLoading.viewVisibility(if (isRandomQuestionLoading) View.VISIBLE else View.INVISIBLE)
+                rvQuestions.viewVisibility(if (isRandomQuestionLoading) View.INVISIBLE else View.VISIBLE)
+                sflFiqhBasedQuestionLoading.viewVisibility(if (isFiqhBasedQuestionsLoading) View.VISIBLE else View.INVISIBLE)
+                rvLatestQuestions.viewVisibility(if (isFiqhBasedQuestionsLoading) View.INVISIBLE else View.VISIBLE)
+            }
+
+            slideShowRandomQuestionList(randomQuestions)
+        }
+    }
+
+
+    private val factory by lazy {
+        DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+    }
+
+    private var adapterScrollingJob: Job? = null
+
+    /**
+     * Smooth scrolls through recyclerview items, to give a feeling of slide show
+     *
+     * @param randomQuestions List<Question>
+     */
+    private fun slideShowRandomQuestionList(randomQuestions: List<Question>) {
+        adapterScrollingJob?.cancel()
+        adapterScrollingJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            randomQuestions.forEachIndexed { index, _ ->
+                binding.rvQuestions.smoothScrollToPosition(index)
+                delay(5000)
             }
         }
     }
@@ -92,20 +125,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         questionSliderAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
 
         (activity as MainActivity).setOnSyncButtonClickListener {
-            showLoadingForAShortTimePeriod()
+            showRotatingGeometryForever()
             homeViewModel.getRandomQuestions(true)
         }
 
         (activity as MainActivity).setOnSettingButtonClickListener {
             navController.navigate(R.id.action_HomeFragment_to_settingsFragment)
         }
+
     }
 
-    private fun showLoadingForAShortTimePeriod() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            loading.show()
-            delay(2000)
-            loading.dismiss()
+    private fun showRotatingGeometryForever() {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            while (viewLifecycleOwner.lifecycleScope.isActive) {
+                binding.ivDesignGeometry.rotateViewOneEighty(4000)
+                delay(4000)
+            }
         }
     }
 

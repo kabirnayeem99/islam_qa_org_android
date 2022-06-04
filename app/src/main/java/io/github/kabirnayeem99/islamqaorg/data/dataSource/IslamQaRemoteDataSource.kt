@@ -64,7 +64,7 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
             val questionAnswer = mutableListOf<Question>()
             qList.questions.forEachIndexed { index, question ->
                 val answerLink = qList.questionLinks[index]
-                questionAnswer.add(Question(index, question, answerLink))
+                questionAnswer.add(Question(index, question, answerLink, fiqh.displayName))
             }
             questionAnswer.ifEmpty { throw Exception("Failed to parse links of the questions") }
         }
@@ -96,7 +96,7 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
                 relevantQuestions = dto.relevantQuestions,
             )
 
-            Timber.d(detail.toString())
+            Timber.d("getDetailedQuestionAndAnswer -> $detail")
 
             detail
         }
