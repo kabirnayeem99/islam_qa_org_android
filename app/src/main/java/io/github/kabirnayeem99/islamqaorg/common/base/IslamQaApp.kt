@@ -1,7 +1,6 @@
 package io.github.kabirnayeem99.islamqaorg.common.base
 
 import android.app.Application
-import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import io.github.kabirnayeem99.islamqaorg.BuildConfig
 import timber.log.Timber.DebugTree
@@ -16,8 +15,14 @@ class IslamQaApp : Application() {
         setUpTimber()
     }
 
+    /**
+     * Sets up the dynamic colors for the app.
+     */
     private fun setUpDynamicColors() {
-        DynamicColors.applyToActivitiesIfAvailable(this)
+//        val dynamicOptions = DynamicColorsOptions.Builder()
+//            .setThemeOverlay(R.style.Theme_IslamQAOrg_NoActionBar)
+//            .build()
+//        DynamicColors.applyToActivitiesIfAvailable(this, dynamicOptions)
     }
 
     /**

@@ -6,6 +6,7 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
     id "com.google.protobuf" version "0.8.17"
     id 'com.google.android.gms.oss-licenses-plugin'
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -59,7 +60,7 @@ dependencies {
     implementation "it.skrape:skrapeit:1.2.1"
 
     // Coroutines
-    def coroutines_version = '1.6.1'
+    def coroutines_version = '1.6.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
@@ -86,33 +87,16 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
 
-    // Protobuf - new and improved data storage solution aimed at replacing SharedPreferences
-    implementation "androidx.datastore:datastore-core:1.0.0"
-    implementation "androidx.datastore:datastore:1.0.0"
-    implementation "com.google.protobuf:protobuf-javalite:3.19.2"
-
     // Expandible layout
     implementation "com.github.skydoves:expandablelayout:1.0.7"
 
-    // Library
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
-
     // Faker
     implementation "io.github.serpro69:kotlin-faker:1.11.0"
-}
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.19.4"
-    }
+    // Shimmer
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
-    generateProtoTasks {
-        all().each { task ->
-            task.builtins {
-                java {
-                    option 'lite'
-                }
-            }
-        }
-    }
+    implementation 'androidx.preference:preference:1.2.0'
+
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
 }

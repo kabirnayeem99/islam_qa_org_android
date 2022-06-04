@@ -11,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.common.base.BaseFragment
 import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.showUserMessage
+import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.viewVisibility
 import io.github.kabirnayeem99.islamqaorg.databinding.FragmentHomeBinding
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
@@ -52,12 +53,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun handleUiState(uiState: HomeScreenUiState) {
         uiState.apply {
-            if (isLoading) loading.show() else loading.hide()
             questionAdapter.submitQuestionList(fiqhBasedQuestions)
             questionSliderAdapter.submitQuestionList(randomQuestions)
             messages.firstOrNull()?.let { userMessage ->
                 binding.root.showUserMessage(userMessage.message)
                 homeViewModel.userMessageShown(userMessage.id)
+            }
+
+            binding.apply {
+                sflRandomQuestionLoading.viewVisibility(if (isRandomQuestionLoading) View.VISIBLE else View.GONE)
+                rvQuestions.viewVisibility(if (isRandomQuestionLoading) View.GONE else View.VISIBLE)
+                sflFiqhBasedQuestionLoading.viewVisibility(if (isFiqhBasedQuestionsLoading) View.VISIBLE else View.GONE)
+                rvLatestQuestions.viewVisibility(if (isFiqhBasedQuestionsLoading) View.GONE else View.VISIBLE)
             }
         }
     }

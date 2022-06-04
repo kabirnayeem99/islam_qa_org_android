@@ -132,8 +132,8 @@ class QuestionAnswerRepositoryImpl
     }
 
 
-    private fun getCurrentlySelectedFiqh(): Fiqh {
-        return Fiqh.HANAFI
+    private suspend fun getCurrentlySelectedFiqh(): Fiqh {
+        return preferenceDataSource.getPreferredFiqh()
     }
 
     private var inMemoryFiqhBasedQuestionList = emptyList<Question>()
@@ -145,6 +145,7 @@ class QuestionAnswerRepositoryImpl
         val cachedFiqhBasedQuestionList = inMemoryMutex.withLock { inMemoryFiqhBasedQuestionList }
         return flow {
             val fiqh = getCurrentlySelectedFiqh()
+            kotlinx.coroutines.delay(2000)
             if (isNetworkAvailable) {
                 val remoteData = getFiqhBasedQuestionListFromRemoteDataSource(fiqh, pageNumber)
                 emit(remoteData)

@@ -27,43 +27,139 @@
                 android:textColor="?android:textColorPrimary"
                 android:textSize="46sp" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_about"
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="52dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:fontFamily="@font/cardo_bold"
+                android:text="@string/label_info"
+                android:textColor="?android:colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_about_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0.8dp"
-                app:strokeColor="?android:colorPrimary"
-                app:strokeWidth="0.8dp">
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginVertical="12dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/iv_about_info_indicator"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_icon_rounded"
+                    android:contentDescription="@string/label_about"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_info"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_about_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_about_label"
+                    app:tint="?android:textColorPrimary" />
+
+                <TextView
+                    android:id="@+id/tv_about_label"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="12dp">
+                    android:layout_marginStart="24dp"
+                    android:fontFamily="@font/cardo_bold"
+                    android:text="@string/label_about"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toEndOf="@id/iv_about_info_indicator"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/label_about"
-                        android:src="@drawable/ic_info"
-                        app:tint="?android:textColorPrimary" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cardo_regular"
+                    android:text="@string/hint_about"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="@id/tv_about_label"
+                    app:layout_constraintTop_toBottomOf="@id/tv_about_label" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:fontFamily="@font/cardo_bold"
-                        android:text="@string/label_about"
-                        android:textColor="?android:textColorPrimary"
-                        android:textSize="20sp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </LinearLayout>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="22dp" />
 
-            </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:fontFamily="@font/cardo_bold"
+                android:text="@string/label_preferences"
+                android:textColor="?android:colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginVertical="12dp">
+
+                <ImageView
+                    android:id="@+id/iv_fiqh_indicator_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_icon_rounded"
+                    android:contentDescription="@string/label_about"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_fiqh"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_fiqh_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_fiqh_label"
+                    app:tint="?android:textColorPrimary" />
+
+                <TextView
+                    android:id="@+id/tv_fiqh_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:fontFamily="@font/cardo_bold"
+                    android:text="@string/label_fiqh"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@id/iv_fiqh_indicator_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Spinner
+                    android:id="@+id/spin_fiqh"
+                    style="@style/SpinnerTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_tappable_rounded"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintStart_toEndOf="@id/tv_fiqh_label"
+                    app:layout_constraintTop_toTopOf="@id/tv_fiqh_label"
+                    app:layout_constraintVertical_bias="0" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cardo_regular"
+                    android:text="@string/hint_fiqh"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/spin_fiqh"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="@id/tv_fiqh_label"
+                    app:layout_constraintTop_toBottomOf="@id/tv_fiqh_label" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
     </ScrollView>

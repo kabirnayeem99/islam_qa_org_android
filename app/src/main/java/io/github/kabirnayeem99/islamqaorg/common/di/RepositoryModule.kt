@@ -9,7 +9,9 @@ import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaLocalDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaRemoteDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.PreferenceDataSource
 import io.github.kabirnayeem99.islamqaorg.data.repository.QuestionAnswerRepositoryImpl
+import io.github.kabirnayeem99.islamqaorg.data.repository.SettingsRepositoryImpl
 import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerRepository
+import io.github.kabirnayeem99.islamqaorg.domain.repository.SettingsRepository
 import javax.inject.Singleton
 
 @Module
@@ -17,12 +19,26 @@ import javax.inject.Singleton
 object RepositoryModule {
     @Provides
     @Singleton
-    fun provideHomeScreenRepository(
+    fun provideQuestionAnswerRepository(
         remoteDataSource: IslamQaRemoteDataSource,
         localDataSource: IslamQaLocalDataSource,
         preferenceDataSource: PreferenceDataSource,
         networkUtil: NetworkUtil,
     ): QuestionAnswerRepository {
-        return QuestionAnswerRepositoryImpl(remoteDataSource, localDataSource, preferenceDataSource,networkUtil)
+        return QuestionAnswerRepositoryImpl(
+            remoteDataSource,
+            localDataSource,
+            preferenceDataSource,
+            networkUtil
+        )
     }
+
+    @Provides
+    @Singleton
+    fun provideSettingsRepository(
+        preferenceDataSource: PreferenceDataSource
+    ): SettingsRepository {
+        return SettingsRepositoryImpl(preferenceDataSource)
+    }
+
 }

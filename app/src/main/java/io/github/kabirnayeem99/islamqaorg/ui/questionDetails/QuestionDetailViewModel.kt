@@ -30,23 +30,21 @@ class QuestionDetailViewModel @Inject constructor(
     fun getQuestionsDetailsJob(url: String) {
         fetchQuestionDetailsJob?.cancel()
         fetchQuestionDetailsJob = viewModelScope.launch {
-            getQuestionDetails.getQuestionDetails(url)
-                .distinctUntilChanged()
-                .collect { res ->
-                    when (res) {
-                        is Resource.Loading -> toggleLoading(true)
-                        is Resource.Error -> {
-                            toggleLoading(false)
-                            makeUserMessage(res.message ?: "")
-                        }
-                        is Resource.Success -> {
-                            toggleLoading(false)
-                            _uiState.update {
-                                it.copy(questionDetails = res.data ?: QuestionDetail())
-                            }
+            getQuestionDetails(url).distinctUntilChanged().collect { res ->
+                when (res) {
+                    is Resource.Loading -> toggleLoading(true)
+                    is Resource.Error -> {
+                        toggleLoading(false)
+                        makeUserMessage(res.message ?: "")
+                    }
+                    is Resource.Success -> {
+                        toggleLoading(false)
+                        _uiState.update {
+                            it.copy(questionDetails = res.data ?: QuestionDetail())
                         }
                     }
                 }
+            }
         }
     }
 

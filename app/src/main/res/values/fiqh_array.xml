@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="fiqh_array">
+        <item>Hanafi Fiqh</item>
+        <item>Maliki Fiqh</item>
+        <item>Shafii Fiqh</item>
+        <item>Hanbali Fiqh</item>
+    </string-array>
+</resources>

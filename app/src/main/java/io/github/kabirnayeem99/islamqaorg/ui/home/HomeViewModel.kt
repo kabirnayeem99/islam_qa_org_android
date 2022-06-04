@@ -32,21 +32,26 @@ class HomeViewModel @Inject constructor(
     fun getRandomQuestions(shouldRefresh: Boolean = false) {
         fetchRandomQuestionJob?.cancel()
         fetchRandomQuestionJob = viewModelScope.launch(Dispatchers.IO) {
-            getRandomQuestion.getRandomQuestionList(shouldRefresh).distinctUntilChanged()
-                .collect { res ->
-                    when (res) {
-                        is Resource.Loading -> toggleLoading(true)
-                        is Resource.Error -> {
-                            toggleLoading(false)
-                            makeUserMessage(res.message ?: "")
-                        }
-                        is Resource.Success -> {
-                            toggleLoading(false)
-                            val questionAnswers = res.data ?: emptyList()
-                            _uiState.update { it.copy(randomQuestions = questionAnswers) }
+            getRandomQuestion(shouldRefresh).distinctUntilChanged().collect { res ->
+                when (res) {
+                    is Resource.Loading -> {
+                        _uiState.update { it.copy(isRandomQuestionLoading = true) }
+                    }
+                    is Resource.Error -> {
+                        _uiState.update { it.copy(isRandomQuestionLoading = false) }
+                        makeUserMessage(res.message ?: "")
+                    }
+                    is Resource.Success -> {
+                        val questionAnswers = res.data ?: emptyList()
+                        _uiState.update {
+                            it.copy(
+                                randomQuestions = questionAnswers,
+                                isRandomQuestionLoading = false,
+                            )
                         }
                     }
                 }
+            }
         }
     }
 
@@ -56,28 +61,31 @@ class HomeViewModel @Inject constructor(
         fetchFiqhBasedQuestionJob?.cancel()
         fetchFiqhBasedQuestionJob = viewModelScope.launch(Dispatchers.IO) {
             val currentPage = uiState.value.currentPage
-            getFiqhBasedQuestions.getFiqhBasedQuestionList(currentPage, shouldRefresh)
-                .distinctUntilChanged()
+            getFiqhBasedQuestions(currentPage, shouldRefresh).distinctUntilChanged()
                 .collect { res ->
                     when (res) {
-                        is Resource.Loading -> toggleLoading(true)
+                        is Resource.Loading -> {
+                            _uiState.update { it.copy(isFiqhBasedQuestionsLoading = true) }
+                        }
                         is Resource.Error -> {
-                            toggleLoading(false)
+                            _uiState.update { it.copy(isFiqhBasedQuestionsLoading = false) }
                             makeUserMessage(res.message ?: "")
                         }
                         is Resource.Success -> {
-                            toggleLoading(false)
+
                             val questionAnswers = res.data ?: emptyList()
-                            _uiState.update { it.copy(fiqhBasedQuestions = questionAnswers) }
+                            _uiState.update {
+                                it.copy(
+                                    fiqhBasedQuestions = questionAnswers,
+                                    isFiqhBasedQuestionsLoading = false,
+                                )
+                            }
                         }
                     }
                 }
         }
     }
 
-    private fun toggleLoading(shouldLoad: Boolean) {
-        _uiState.update { it.copy(isLoading = shouldLoad) }
-    }
 
     /**
      * Makes a new user message with a unique id and add it to the list of user messages.

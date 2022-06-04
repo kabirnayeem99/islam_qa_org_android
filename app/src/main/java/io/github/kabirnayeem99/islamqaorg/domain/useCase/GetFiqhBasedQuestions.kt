@@ -9,10 +9,12 @@ import javax.inject.Inject
 class GetFiqhBasedQuestions
 @Inject
 constructor(private val repository: QuestionAnswerRepository) {
-    suspend fun getFiqhBasedQuestionList(
+
+    suspend operator fun invoke(
         pageNumber: Int,
         shouldRefresh: Boolean,
     ): Flow<Resource<List<Question>>> {
         return repository.getFiqhBasedQuestionList(pageNumber, shouldRefresh)
     }
+
 }

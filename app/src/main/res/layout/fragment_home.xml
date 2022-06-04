@@ -37,7 +37,7 @@
                 android:layout_marginTop="22dp"
                 android:fontFamily="@font/cardo_bold"
                 android:text="@string/label_random_q_n_a"
-                android:textColor="?android:colorPrimaryDark"
+                android:textColor="?android:colorPrimary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -47,12 +47,40 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_title"
-                tools:itemCount="5"
-                tools:listitem="@layout/list_question" />
+                tools:itemCount="1"
+                tools:listitem="@layout/slide_question" />
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/sfl_random_question_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_title"
+                app:shimmer_base_alpha="0.3">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <include layout="@layout/slide_question_placeholder" />
+
+                    <include layout="@layout/slide_question_placeholder" />
+
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
 
             <TextView
                 android:id="@+id/tv_fiqh_label"
@@ -72,12 +100,44 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="12dp"
                 android:layout_marginTop="12dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_title"
                 tools:itemCount="5"
                 tools:listitem="@layout/list_question" />
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/sfl_fiqh_based_question_loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_title">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/list_question_placeholder" />
+
+                    <include layout="@layout/list_question_placeholder" />
+
+                    <include layout="@layout/list_question_placeholder" />
+
+                    <include layout="@layout/list_question_placeholder" />
+
+                    <include layout="@layout/list_question_placeholder" />
+
+                    <include layout="@layout/list_question_placeholder" />
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
