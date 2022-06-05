@@ -12,7 +12,7 @@
      Native android application built on top of https://islamqa.org/.
     <br />
     <br />
-    <a href="https://github.com/kabirnayeem99/islam_qa_org_android/issues">View Demo</a>
+    <a href="https://youtu.be/wzAcSdtiLfY">View Demo</a>
     ·
     <a href="https://github.com/kabirnayeem99/islam_qa_org_android/issues">Report Bug</a>
     ·
