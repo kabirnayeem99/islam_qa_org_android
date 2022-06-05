@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +38,7 @@ class SettingsViewModel @Inject constructor(
         getPreferredFiqhJob?.cancel()
         getPreferredFiqhJob = viewModelScope.launch {
             val fiqh = getPreferredFiqh()
+            Timber.d("Fiqh is $fiqh")
             _uiState.update { it.copy(selectedFiqh = fiqh) }
         }
     }

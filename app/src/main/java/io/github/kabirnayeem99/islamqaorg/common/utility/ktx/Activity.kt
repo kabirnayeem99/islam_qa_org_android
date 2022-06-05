@@ -1,6 +1,8 @@
 package io.github.kabirnayeem99.islamqaorg.common.utility.ktx
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 
 /**
@@ -14,4 +16,14 @@ import androidx.appcompat.app.AppCompatActivity
 fun <T> AppCompatActivity.gotoActivity(activity: Class<T>, finishCurrentActivity: Boolean = false) {
     startActivity(Intent(this.applicationContext, activity))
     if (finishCurrentActivity) this.finish()
+}
+
+fun Activity.openUrlInWebView(url: String) {
+    if (url.isBlank()) return
+
+    val browserIntent = Intent(
+        Intent.ACTION_VIEW,
+        Uri.parse(url)
+    )
+    startActivity(browserIntent)
 }

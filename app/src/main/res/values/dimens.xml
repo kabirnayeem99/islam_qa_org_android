@@ -1,3 +1,6 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="md_dialog_vertical_margin">32</dimen>
+    <dimen name="md_dialog_horizontal_margin">6</dimen>
+    <dimen name="md_dialog_max_width">500</dimen>
 </resources>
