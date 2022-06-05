@@ -104,6 +104,7 @@
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_madhab_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
@@ -134,26 +135,14 @@
                     app:layout_constraintStart_toEndOf="@id/iv_fiqh_indicator_icon"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Spinner
-                    android:id="@+id/spin_fiqh"
-                    style="@style/SpinnerTheme"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1"
-                    app:layout_constraintStart_toEndOf="@id/tv_fiqh_label"
-                    app:layout_constraintTop_toTopOf="@id/tv_fiqh_label"
-                    app:layout_constraintVertical_bias="0" />
 
                 <TextView
+                    android:id="@+id/tv_madhab_hint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cardo_regular"
                     android:text="@string/hint_fiqh"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/spin_fiqh"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="@id/tv_fiqh_label"
                     app:layout_constraintTop_toBottomOf="@id/tv_fiqh_label" />

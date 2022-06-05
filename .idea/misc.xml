@@ -27,8 +27,12 @@
         <entry key="app/src/main/res/layout/fragment_question_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.2520833333333333" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.25104166666666666" />
+        <entry key="app/src/main/res/layout/layout_madhab_selector.xml" value="0.25" />
         <entry key="app/src/main/res/layout/list_question.xml" value="0.4279835390946502" />
         <entry key="app/src/main/res/layout/list_question_placeholder.xml" value="0.2520833333333333" />
+        <entry key="app/src/main/res/layout/md_dialog_base_bottomsheet.xml" value="0.25104166666666666" />
+        <entry key="app/src/main/res/layout/md_dialog_base_no_buttons.xml" value="0.25104166666666666" />
+        <entry key="app/src/main/res/layout/md_griditem.xml" value="0.13518518518518519" />
         <entry key="app/src/main/res/layout/slide_question.xml" value="0.45" />
         <entry key="app/src/main/res/layout/slide_question_placeholder.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/spin_item_fiqh.xml" value="0.2520833333333333" />
