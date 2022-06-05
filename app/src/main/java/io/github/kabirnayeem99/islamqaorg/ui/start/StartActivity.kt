@@ -1,12 +1,15 @@
 package io.github.kabirnayeem99.islamqaorg.ui.start
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.lifecycleScope
 import io.github.kabirnayeem99.islamqaorg.BuildConfig
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.common.base.BaseActivity
 import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.gotoActivity
 import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.rotateViewOneEighty
+import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.slideInRight
+import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.viewVisibility
 import io.github.kabirnayeem99.islamqaorg.databinding.ActivityStartBinding
 import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
 import kotlinx.coroutines.delay
@@ -25,17 +28,20 @@ class StartActivity : BaseActivity<ActivityStartBinding>() {
 
     private fun initViews() {
         binding.apply {
-            tvAppVersionName.text = BuildConfig.VERSION_NAME
-            ivBackgroundGeometry.rotateViewOneEighty(SPLASH_SCREEN_DURATION)
+            lifecycleScope.launch {
+                tvAppVersionName.text = BuildConfig.VERSION_NAME
+                delay(SPLASH_SCREEN_DURATION / 3)
+                cvVersionName.viewVisibility(View.VISIBLE)
+                cvVersionName.slideInRight(SPLASH_SCREEN_DURATION / 4)
+                ivBackgroundGeometry.rotateViewOneEighty((SPLASH_SCREEN_DURATION * 2) / 3)
+                delay((SPLASH_SCREEN_DURATION * 2) / 3)
+                navigateToOtherScreen()
+            }
         }
-        navigateToOtherScreen()
     }
 
 
     private fun navigateToOtherScreen() {
-        lifecycleScope.launch {
-            delay(SPLASH_SCREEN_DURATION)
-            gotoActivity(MainActivity::class.java, true)
-        }
+        gotoActivity(MainActivity::class.java, true)
     }
 }

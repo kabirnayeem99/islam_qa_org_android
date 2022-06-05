@@ -64,7 +64,7 @@
                 android:fontFamily="@font/cardo_italic"
                 android:gravity="center_vertical"
                 android:textColor="@color/md_theme_light_onTertiary"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="0.0.1" />
 

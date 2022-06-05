@@ -7,7 +7,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.common.base.BaseFragment
@@ -35,11 +34,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private val homeViewModel: HomeViewModel by viewModels()
 
+    /**
+     * Subscribes to data changes and UI State changes
+     */
     private fun subscribeToData() {
-        homeViewModel.apply {
-            getRandomQuestions()
-            getFiqhBasedQuestions()
-            viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.apply {
+                getRandomQuestions()
+                getFiqhBasedQuestions()
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     uiState.collect(::handleUiState)
                 }
@@ -54,15 +56,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     lateinit var questionSliderAdapter: QuestionSliderAdapter
 
 
+    /**
+     * Takes a `HomeScreenUiState` object as a parameter and updates the UI based on the state of
+     * the object
+     *
+     * @param uiState HomeScreenUiState - This is the data class that contains all the data that needs
+     * to be displayed on the screen.
+     */
     private fun handleUiState(uiState: HomeScreenUiState) {
         uiState.apply {
 
             questionAdapter.submitQuestionList(fiqhBasedQuestions)
             questionSliderAdapter.submitQuestionList(randomQuestions)
-
-            if (!isRandomQuestionLoading && !isFiqhBasedQuestionsLoading) {
-                showRotatingGeometryForever()
-            }
 
             messages.firstOrNull()?.let { userMessage ->
                 binding.root.showUserMessage(userMessage.message)
@@ -80,10 +85,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
     }
 
-
-    private val factory by lazy {
-        DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
-    }
 
     private var adapterScrollingJob: Job? = null
 
@@ -103,29 +104,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
 
+    /**
+     * Initializes the views.
+     */
     private fun initViews() {
 
-        val horizontalLinearLayoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        val linearLayoutManager = LinearLayoutManager(context)
-
-        binding.rvQuestions.apply {
-            adapter = questionSliderAdapter
-            layoutManager = horizontalLinearLayoutManager
-            hasFixedSize()
-        }
-
-        binding.rvLatestQuestions.apply {
-            adapter = questionAdapter
-            layoutManager = linearLayoutManager
-            hasFixedSize()
-        }
-
-        questionAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
-        questionSliderAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
+        initRandomQuestionSliderView()
+        initFiqhBasedQuestionList()
+        showRotatingGeometryForever()
 
         (activity as MainActivity).setOnSyncButtonClickListener {
-            showRotatingGeometryForever()
             homeViewModel.getRandomQuestions(true)
         }
 
@@ -135,17 +123,60 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     }
 
+    /**
+     * Initializes the RecyclerView for Fiqh-based questions with the adapter
+     * and sets the layout manager.
+     */
+    private fun initFiqhBasedQuestionList() {
+        val linearLayoutManager = LinearLayoutManager(context)
+        binding.rvLatestQuestions.apply {
+            adapter = questionAdapter
+            layoutManager = linearLayoutManager
+            hasFixedSize()
+        }
+        questionAdapter.setOnClickListener { q -> navigateToQuestionDetailsScreen(q) }
+    }
+
+
+    /**
+     * Initializes the random question slider view.
+     */
+    private fun initRandomQuestionSliderView() {
+        val horizontalLinearLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        questionSliderAdapter.setOnClickListener { navigateToQuestionDetailsScreen(it) }
+        binding.rvQuestions.apply {
+            adapter = questionSliderAdapter
+            layoutManager = horizontalLinearLayoutManager
+            hasFixedSize()
+        }
+    }
+
+    /**
+     * Rotates (animate) the Islamic geometric design 180 degrees every 4 seconds, forever
+     */
     private fun showRotatingGeometryForever() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             while (viewLifecycleOwner.lifecycleScope.isActive) {
                 binding.ivDesignGeometry.rotateViewOneEighty(4000)
-                delay(4000)
+                delay(3950)
             }
         }
     }
 
+    /**
+     * Takes a question object as an argument and navigates to the details fragment by passing the
+     * question's url as an argument
+     *
+     * @param question Question - This is the question object that we want to pass to the details
+     * screen.
+     */
     private fun navigateToQuestionDetailsScreen(question: Question) {
         val url = question.url
+        if (url.isBlank()) {
+            binding.root.showUserMessage("Could not find the URL for this \"${question.question}\".")
+            return
+        }
         val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(url)
         navController.navigate(action)
     }

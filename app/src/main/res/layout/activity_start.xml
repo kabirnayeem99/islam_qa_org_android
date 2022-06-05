@@ -48,10 +48,12 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cv_version_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
             android:elevation="2dp"
+            android:visibility="invisible"
             app:cardBackgroundColor="@color/md_theme_dark_tertiary"
             app:cardCornerRadius="40dp"
             app:cardElevation="4dp"
