@@ -107,7 +107,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="22dp"
                 android:fontFamily="@font/cardo_bold"
-                android:text="@string/latest_q_n_a"
+                android:text="@string/label_latest_q_n_a"
                 android:textColor="?android:colorPrimary"
                 android:textSize="15sp"
                 android:textStyle="bold"

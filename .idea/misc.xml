@@ -5,6 +5,7 @@
       <map>
         <entry key="../../../../layout/compose-model-1654952580622.xml" value="0.5" />
         <entry key="../../../../layout/compose-model-1654953148095.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1654963387003.xml" value="0.375" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/bg_home.xml" value="0.2235" />
         <entry key="app/src/main/res/drawable/bg_home_gradient.xml" value="0.2235" />
@@ -36,7 +37,7 @@
         <entry key="app/src/main/res/layout/md_dialog_base_bottomsheet.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/md_dialog_base_no_buttons.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/md_griditem.xml" value="0.13518518518518519" />
-        <entry key="app/src/main/res/layout/slide_question.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/slide_question.xml" value="0.38309859154929576" />
         <entry key="app/src/main/res/layout/slide_question_placeholder.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/spin_item_fiqh.xml" value="0.2520833333333333" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.2520833333333333" />

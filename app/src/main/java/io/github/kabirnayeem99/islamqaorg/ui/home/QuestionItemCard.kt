@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,7 +29,7 @@ fun QuestionItemCard(question: Question) {
 
     Card(
         modifier = Modifier
-            .padding(vertical = 8.dp)
+            .padding(vertical = 8.dp, horizontal = 24.dp)
             .fillMaxWidth(),
         border = BorderStroke(
             width = 0.8.dp,
@@ -88,11 +89,13 @@ fun QuestionItemCard(question: Question) {
                     painter = painterResource(id = R.drawable.ic_arrow_forward),
                     contentDescription = stringResource(id = R.string.content_desc_go_to_details),
                     contentScale = ContentScale.Fit,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
                     alignment = Alignment.Center,
                     modifier = Modifier
                         .background(
                             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5F)
                         )
+
                         .fillMaxWidth()
                         .fillMaxWidth()
                         .padding(5.dp)
@@ -109,7 +112,7 @@ fun QuestionItemCard(question: Question) {
 fun QuestionItemPlaceholder() {
     Card(
         modifier = Modifier
-            .padding(vertical = 8.dp)
+            .padding(vertical = 8.dp, horizontal = 24.dp)
             .fillMaxWidth()
             .shimmer(),
         border = BorderStroke(
