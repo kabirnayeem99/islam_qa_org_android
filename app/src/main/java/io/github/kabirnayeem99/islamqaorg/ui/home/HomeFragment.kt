@@ -43,7 +43,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 getRandomQuestions()
                 getFiqhBasedQuestions()
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    uiState.collect(::handleUiState)
+//                    uiState.collect(::handleUiState)
                 }
             }
         }

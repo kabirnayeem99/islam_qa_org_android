@@ -27,6 +27,7 @@
     <color name="md_theme_light_inverseSurface">#342F32</color>
     <color name="md_theme_light_inversePrimary">#FFACEC</color>
     <color name="md_theme_light_shadow">#000000</color>
+
     <color name="md_theme_dark_primary">#FFACEC</color>
     <color name="md_theme_dark_primary_trans">#AAFFACEC</color>
     <color name="md_theme_dark_onPrimary">#5C0454</color>

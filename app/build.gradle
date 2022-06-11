@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "io.github.kabirnayeem99.islamqaorg"
-        minSdk 25
+        minSdk 26
         targetSdk 32
         versionCode 1
         versionName "1.1.0-alpha"
@@ -37,7 +37,7 @@ android {
         jvmTarget = '1.8'
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.1.1'
+        kotlinCompilerExtensionVersion = "1.2.0-beta03"
     }
     buildFeatures {
         viewBinding true
@@ -68,15 +68,25 @@ dependencies {
     // Integration with activities
     implementation 'androidx.activity:activity-compose:1.4.0'
     // Compose Material Design
-    implementation 'androidx.compose.material:material:1.1.1'
+    implementation 'androidx.compose.material:material:1.2.0-beta03'
     // Animations
-    implementation 'androidx.compose.animation:animation:1.1.1'
+    implementation 'androidx.compose.animation:animation:1.2.0-beta03'
     // Tooling support (Previews, etc.)
-    implementation 'androidx.compose.ui:ui-tooling:1.1.1'
+    implementation 'androidx.compose.ui:ui-tooling:1.2.0-beta03'
     // Integration with ViewModels
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
     // UI Tests
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.2.0-beta03'
+    // For use of Material3 in Compose
+    implementation 'androidx.compose.material3:material3:1.0.0-alpha13'
+    // System UI Controller provides easy-to-use utilities for updating the System UI bar colors within Jetpack Compose.
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.24.10-beta"
+    // Navigation
+    def nav_version = "2.4.2"
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+    implementation "androidx.compose.material3:material3-window-size-class:1.0.0-alpha13"
+    implementation 'com.valentinilk.shimmer:compose-shimmer:1.0.3'
 
     // Coroutines
     def coroutines_version = '1.6.2'

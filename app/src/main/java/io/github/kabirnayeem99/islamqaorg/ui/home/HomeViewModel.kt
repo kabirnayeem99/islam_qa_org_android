@@ -1,5 +1,8 @@
 package io.github.kabirnayeem99.islamqaorg.ui.home
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,10 +12,7 @@ import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetFiqhBasedQuestions
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetRandomQuestion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -23,9 +23,9 @@ class HomeViewModel @Inject constructor(
     private val getFiqhBasedQuestions: GetFiqhBasedQuestions,
 ) : ViewModel() {
 
+    var uiState by mutableStateOf(HomeScreenUiState())
+        private set
 
-    private val _uiState = MutableStateFlow(HomeScreenUiState())
-    val uiState = _uiState.asStateFlow()
 
     private var fetchRandomQuestionJob: Job? = null
 
@@ -35,20 +35,20 @@ class HomeViewModel @Inject constructor(
             getRandomQuestion(shouldRefresh).distinctUntilChanged().collect { res ->
                 when (res) {
                     is Resource.Loading -> {
-                        _uiState.update { it.copy(isRandomQuestionLoading = true) }
+                        uiState = uiState.copy(isRandomQuestionLoading = true)
                     }
                     is Resource.Error -> {
-                        _uiState.update { it.copy(isRandomQuestionLoading = false) }
+                        uiState = uiState.copy(isRandomQuestionLoading = false)
                         makeUserMessage(res.message ?: "")
                     }
                     is Resource.Success -> {
+
                         val questionAnswers = res.data ?: emptyList()
-                        _uiState.update {
-                            it.copy(
-                                randomQuestions = questionAnswers,
-                                isRandomQuestionLoading = false,
-                            )
-                        }
+                        uiState = uiState.copy(
+                            randomQuestions = questionAnswers,
+                            isRandomQuestionLoading = false
+                        )
+                        makeUserMessage("Loaded successfully ${questionAnswers.size} questions.")
                     }
                 }
             }
@@ -60,26 +60,24 @@ class HomeViewModel @Inject constructor(
     fun getFiqhBasedQuestions(shouldRefresh: Boolean = false) {
         fetchFiqhBasedQuestionJob?.cancel()
         fetchFiqhBasedQuestionJob = viewModelScope.launch(Dispatchers.IO) {
-            val currentPage = uiState.value.currentPage
+            val currentPage = uiState.currentPage
             getFiqhBasedQuestions(currentPage, shouldRefresh).distinctUntilChanged()
                 .collect { res ->
                     when (res) {
                         is Resource.Loading -> {
-                            _uiState.update { it.copy(isFiqhBasedQuestionsLoading = true) }
+                            uiState = uiState.copy(isFiqhBasedQuestionsLoading = true)
                         }
                         is Resource.Error -> {
-                            _uiState.update { it.copy(isFiqhBasedQuestionsLoading = false) }
+                            uiState = uiState.copy(isFiqhBasedQuestionsLoading = false)
                             makeUserMessage(res.message ?: "")
                         }
                         is Resource.Success -> {
 
                             val questionAnswers = res.data ?: emptyList()
-                            _uiState.update {
-                                it.copy(
-                                    fiqhBasedQuestions = questionAnswers,
-                                    isFiqhBasedQuestionsLoading = false,
-                                )
-                            }
+                            uiState = uiState.copy(
+                                fiqhBasedQuestions = questionAnswers,
+                                isFiqhBasedQuestionsLoading = false,
+                            )
                         }
                     }
                 }
@@ -97,13 +95,11 @@ class HomeViewModel @Inject constructor(
 
         if (messageText.isBlank()) return
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update {
-                val messages = it.messages + UserMessage(
-                    id = UUID.randomUUID().mostSignificantBits,
-                    message = messageText
-                )
-                it.copy(messages = messages)
-            }
+            val messages = uiState.messages + UserMessage(
+                id = UUID.randomUUID().mostSignificantBits,
+                message = messageText
+            )
+            uiState = uiState.copy(messages = messages)
         }
     }
 
@@ -114,11 +110,8 @@ class HomeViewModel @Inject constructor(
      */
     fun userMessageShown(messageId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update { currentUiState ->
-                val messages = currentUiState.messages.filterNot { it.id == messageId }
-                currentUiState.copy(messages = messages)
-            }
-
+            val messages = uiState.messages.filterNot { it.id == messageId }
+            uiState = uiState.copy(messages = messages)
         }
     }
 }

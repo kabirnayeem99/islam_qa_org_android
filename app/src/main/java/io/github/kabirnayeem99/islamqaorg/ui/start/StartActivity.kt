@@ -15,7 +15,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-const val SPLASH_SCREEN_DURATION: Long = 3000L
+const val SPLASH_SCREEN_DURATION: Long = 1000L
 
 class StartActivity : BaseActivity<ActivityStartBinding>() {
     override val layout: Int
