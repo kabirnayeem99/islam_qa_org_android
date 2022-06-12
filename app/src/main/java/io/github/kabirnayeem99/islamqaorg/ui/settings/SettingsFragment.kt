@@ -39,7 +39,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
     private fun initViews() {
         binding.apply {
             clAboutButton.setOnClickListener {
-                navController.navigate(R.id.action_settingsFragment_to_aboutFragment)
+//                navController.navigate(R.id.action_settingsFragment_to_aboutFragment)
             }
 
             clMadhabButton.setOnClickListener {

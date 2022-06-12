@@ -7,7 +7,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.R
@@ -48,14 +47,13 @@ class QuestionDetailsFragment : BaseFragment<FragmentQuestionDetailsBinding>() {
         }
     }
 
-    private val args: QuestionDetailsFragmentArgs by navArgs()
 
     private fun subscribeToData(url: String = "") {
         viewLifecycleOwner.lifecycleScope.launch {
             questionDetailViewModel.apply {
-                getQuestionsDetailsJob(url = url.ifBlank { args.url })
+//                getQuestionsDetailsJob(url = url.ifBlank { args.url })
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    uiState.collect(::handleUiState)
+//                    uiState.collect(::handleUiState)
                 }
             }
         }

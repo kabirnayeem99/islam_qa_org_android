@@ -8,6 +8,7 @@ plugins {
     id "com.google.protobuf" version "0.8.17"
     id 'com.google.android.gms.oss-licenses-plugin'
     id 'kotlinx-serialization'
+    id 'com.google.devtools.ksp' version '1.6.21-1.0.6'
 }
 
 android {
@@ -47,6 +48,14 @@ android {
     packagingOptions {
         resources.excludes.add("META-INF/*")
         resources.excludes.add("mozilla/*")
+    }
+
+    applicationVariants.all { variant ->
+        kotlin.sourceSets {
+            getByName(variant.name) {
+                kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+            }
+        }
     }
 }
 
@@ -90,6 +99,9 @@ dependencies {
 
     implementation "com.github.skydoves:landscapist-glide:1.5.2"
 
+
+    implementation 'androidx.ui:ui-foundation:0.1.0-dev03'
+
     // Coroutines
     def coroutines_version = '1.6.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
@@ -132,10 +144,14 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
 
     implementation 'com.github.bumptech.glide:glide:4.13.2'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
+    kapt 'com.github.bumptech.glide:compiler:4.13.2'
 
     implementation 'com.afollestad.material-dialogs:bottomsheets:3.3.0'
     implementation 'com.afollestad.material-dialogs:lifecycle:3.3.0'
 
     implementation 'com.github.giangpham96:ExpandableTextView:1.0.1'
+
+    implementation 'io.github.raamcosta.compose-destinations:core:1.5.10-beta'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.5.10-beta'
+
 }

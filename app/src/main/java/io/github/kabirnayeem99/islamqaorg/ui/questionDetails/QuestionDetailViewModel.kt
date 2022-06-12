@@ -1,5 +1,8 @@
 package io.github.kabirnayeem99.islamqaorg.ui.questionDetails
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,10 +12,7 @@ import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetQuestionDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -22,8 +22,9 @@ class QuestionDetailViewModel @Inject constructor(
     private val getQuestionDetails: GetQuestionDetails
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(QuestionDetailsUiState())
-    val uiState = _uiState.asStateFlow()
+
+    var uiState by mutableStateOf(QuestionDetailsUiState())
+        private set
 
     private var fetchQuestionDetailsJob: Job? = null
 
@@ -39,9 +40,7 @@ class QuestionDetailViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         toggleLoading(false)
-                        _uiState.update {
-                            it.copy(questionDetails = res.data ?: QuestionDetail())
-                        }
+                        uiState = uiState.copy(questionDetails = res.data ?: QuestionDetail())
                     }
                 }
             }
@@ -49,7 +48,7 @@ class QuestionDetailViewModel @Inject constructor(
     }
 
     private fun toggleLoading(shouldLoad: Boolean) {
-        _uiState.update { it.copy(isLoading = shouldLoad) }
+        uiState = uiState.copy(isLoading = shouldLoad)
     }
 
     /**
@@ -59,16 +58,13 @@ class QuestionDetailViewModel @Inject constructor(
      * @return Nothing.
      */
     private fun makeUserMessage(messageText: String) {
-
         if (messageText.isBlank()) return
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update {
-                val messages = it.messages + UserMessage(
-                    id = UUID.randomUUID().mostSignificantBits,
-                    message = messageText
-                )
-                it.copy(messages = messages)
-            }
+            val messages = uiState.messages + UserMessage(
+                id = UUID.randomUUID().mostSignificantBits,
+                message = messageText
+            )
+            uiState = uiState.copy(messages = messages)
         }
     }
 
@@ -79,11 +75,8 @@ class QuestionDetailViewModel @Inject constructor(
      */
     fun userMessageShown(messageId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update { currentUiState ->
-                val messages = currentUiState.messages.filterNot { it.id == messageId }
-                currentUiState.copy(messages = messages)
-            }
-
+            val messages = uiState.messages.filterNot { it.id == messageId }
+            uiState = uiState.copy(messages = messages)
         }
     }
 }

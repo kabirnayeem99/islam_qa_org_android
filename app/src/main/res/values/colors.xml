@@ -1,6 +1,7 @@
 <resources>
     <color name="md_theme_light_primary">#933C87</color>
     <color name="trans_primary">#66933C87</color>
+    <color name="white">#FFFFFF</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
     <color name="md_theme_light_primaryContainer">#FFD7F2</color>
     <color name="md_theme_light_onPrimaryContainer">#390034</color>

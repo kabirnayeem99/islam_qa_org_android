@@ -25,11 +25,15 @@ import io.github.kabirnayeem99.islamqaorg.ui.theme.ArabicFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuestionItemCard(question: Question) {
+fun QuestionItemCard(
+    question: Question,
+    shouldHavePadding: Boolean = true,
+    onClick: () -> Unit = {}
+) {
 
     Card(
         modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 24.dp)
+            .padding(vertical = 8.dp, horizontal = if (shouldHavePadding) 24.dp else 0.dp)
             .fillMaxWidth(),
         border = BorderStroke(
             width = 0.8.dp,
@@ -39,7 +43,8 @@ fun QuestionItemCard(question: Question) {
             containerColor = MaterialTheme.colorScheme.surfaceTint.copy(
                 alpha = 0.10F
             ),
-        )
+        ),
+        onClick = { onClick() }
     ) {
         Row(
             modifier = Modifier
@@ -109,10 +114,10 @@ fun QuestionItemCard(question: Question) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuestionItemPlaceholder() {
+fun QuestionItemPlaceholder(shouldHavePadding: Boolean = true) {
     Card(
         modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 24.dp)
+            .padding(vertical = 8.dp, horizontal = if (shouldHavePadding) 24.dp else 0.dp)
             .fillMaxWidth()
             .shimmer(),
         border = BorderStroke(

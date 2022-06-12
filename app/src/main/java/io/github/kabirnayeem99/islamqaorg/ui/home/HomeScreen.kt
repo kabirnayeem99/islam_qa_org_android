@@ -17,22 +17,31 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
+import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
+@RootNavGraph(start = true)
+@Destination
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(
+    navigator: DestinationsNavigator
+) {
 
+    val viewModel: HomeViewModel = hiltViewModel()
 
-    val context = LocalContext.current
-
+    val uiState = viewModel.uiState
 
     LaunchedEffect(true) {
         viewModel.getRandomQuestions()
@@ -44,49 +53,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
             .fillMaxWidth()
             .fillMaxHeight(),
 
-        topBar = {
-            TopAppBar(
-                backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6F),
-                modifier = Modifier.padding(top = 12.dp),
-                elevation = 0.dp,
-            ) {
-                IconButton(
-                    modifier = Modifier.padding(top = 18.dp, start = 12.dp, bottom = 8.dp),
-                    onClick = {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.content_desc_settings),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_settings),
-                        contentDescription = stringResource(id = R.string.content_desc_settings),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-                    )
-                }
-                Spacer(modifier = Modifier.weight(0.9F))
-                IconButton(
-                    modifier = Modifier.padding(top = 18.dp, end = 12.dp, bottom = 8.dp),
-                    onClick = {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.content_desc_sync),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_sync),
-                        contentDescription = stringResource(id = R.string.content_desc_sync),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-
-                        )
-                }
-
-            }
-        }
+        topBar = { HomeScreenTopAppBar() }
     ) {
-
 
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -106,10 +74,11 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 val randomQuestionListHeading = stringResource(id = R.string.label_random_q_n_a)
                 QuestionListHeading(randomQuestionListHeading)
                 Spacer(modifier = Modifier.height(12.dp))
-                if (viewModel.uiState.isRandomQuestionLoading) {
+                if (uiState.isRandomQuestionLoading) {
                     RandomQuestionLoadingIndicator()
+                    Spacer(modifier = Modifier.height(12.dp))
                 } else {
-                    val randomQuestions: List<Question> = viewModel.uiState.randomQuestions
+                    val randomQuestions: List<Question> = uiState.randomQuestions
                     RandomQuestionSlider(randomQuestions)
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -121,15 +90,58 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 QuestionListHeading(latestQuestionListHeading)
                 Spacer(modifier = Modifier.height(12.dp))
             }
-            if (viewModel.uiState.isFiqhBasedQuestionsLoading)
+            if (uiState.isFiqhBasedQuestionsLoading)
                 items(10) { QuestionItemPlaceholder() }
             else {
-                val fiqhBasedQuestions: List<Question> = viewModel.uiState.fiqhBasedQuestions
-                itemsIndexed(fiqhBasedQuestions) { _, question -> QuestionItemCard(question = question) }
+                val fiqhBasedQuestions: List<Question> = uiState.fiqhBasedQuestions
+                itemsIndexed(fiqhBasedQuestions) { _, question ->
+                    QuestionItemCard(question = question) {
+                        navigator.navigate(QuestionDetailsScreenDestination(question.url))
+                    }
+                }
             }
         }
     }
 
+}
+
+@Composable
+private fun HomeScreenTopAppBar() {
+    val context = LocalContext.current
+    TopAppBar(
+        backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6F),
+        modifier = Modifier.padding(top = 12.dp),
+        elevation = 0.dp,
+    ) {
+        TopBarActionButton(
+            painterResource(id = R.drawable.ic_settings),
+            stringResource(id = R.string.content_desc_settings)
+        ) {
+            Toast.makeText(context, "Go to settings", Toast.LENGTH_SHORT).show()
+        }
+        Spacer(modifier = Modifier.weight(0.9F))
+
+        TopBarActionButton(
+            painterResource(id = R.drawable.ic_sync),
+            stringResource(id = R.string.content_desc_sync)
+        ) {
+            Toast.makeText(context, "Sync contents.", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+}
+
+@Composable
+private fun TopBarActionButton(painter: Painter, contentDescription: String, onClick: () -> Unit) {
+    IconButton(
+        modifier = Modifier.padding(top = 18.dp, start = 12.dp, bottom = 8.dp),
+        onClick = { onClick() }) {
+        Image(
+            painter = painter,
+            contentDescription = contentDescription,
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+        )
+    }
 }
 
 @Composable
@@ -184,32 +196,6 @@ private fun QuestionListHeading(headingLabel: String) {
     )
 }
 
-@Composable
-private fun FiqhBasedQuestionListLoadingIndicator() {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp),
-    ) {
-        items(10) {
-            QuestionItemPlaceholder()
-        }
-    }
-}
 
-@Composable
-private fun FiqhBasedQuestionList(questions: List<Question>) {
-    if (questions.isNotEmpty()) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-        ) {
-            itemsIndexed(questions) { _, question ->
-                QuestionItemCard(question = question)
-            }
-        }
-    }
-}
 
 

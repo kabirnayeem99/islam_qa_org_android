@@ -1,11 +1,11 @@
 package io.github.kabirnayeem99.islamqaorg.ui
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.ramcosta.composedestinations.DestinationsNavHost
 import io.github.kabirnayeem99.islamqaorg.ui.theme.IslamQaTheme
 
 @Composable
@@ -16,18 +16,6 @@ fun IslamQaRoot() {
         SideEffect {
             systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = shouldUseDarkIcon)
         }
-        val navController = rememberNavController()
-        val navigationActions = remember(navController) {
-            NavigationActions(navController)
-        }
-
-        val coroutineScope = rememberCoroutineScope()
-
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute =
-            navBackStackEntry?.destination?.route ?: IslamQaDestinations.HOME_ROUTE
-
-        IslamQaNavGraph(navController = navController)
-
+        DestinationsNavHost(navGraph = NavGraphs.root)
     }
 }

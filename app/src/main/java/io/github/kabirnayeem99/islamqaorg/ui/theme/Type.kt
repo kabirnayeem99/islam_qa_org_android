@@ -45,6 +45,7 @@ val Typography = Typography(
     headlineLarge = TextStyle(
         fontFamily = IslamQaFontFamily,
         fontWeight = FontWeight.Bold,
+        fontStyle = FontStyle.Italic,
         fontSize = 22.sp
     ),
     headlineMedium = TextStyle(
