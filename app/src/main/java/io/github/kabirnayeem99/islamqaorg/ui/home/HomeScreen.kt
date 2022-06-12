@@ -1,13 +1,14 @@
 package io.github.kabirnayeem99.islamqaorg.ui.home
 
-import android.widget.Toast
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.IconButton
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -16,10 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -29,7 +26,10 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
+import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
+import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
+import io.github.kabirnayeem99.islamqaorg.ui.destinations.SettingsScreenDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)
@@ -50,10 +50,10 @@ fun HomeScreen(
 
     Scaffold(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxSize()
+            .padding(top = 12.dp),
 
-        topBar = { HomeScreenTopAppBar() }
+        topBar = { HomeScreenTopAppBar(navigator, viewModel) }
     ) {
 
         LazyColumn(
@@ -106,43 +106,32 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeScreenTopAppBar() {
-    val context = LocalContext.current
+private fun HomeScreenTopAppBar(navigator: DestinationsNavigator, homeViewModel: HomeViewModel) {
     TopAppBar(
         backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6F),
-        modifier = Modifier.padding(top = 12.dp),
+        modifier = Modifier
+            .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.6F)),
         elevation = 0.dp,
     ) {
         TopBarActionButton(
-            painterResource(id = R.drawable.ic_settings),
+            Icons.Outlined.Settings,
             stringResource(id = R.string.content_desc_settings)
         ) {
-            Toast.makeText(context, "Go to settings", Toast.LENGTH_SHORT).show()
+            navigator.navigate(SettingsScreenDestination())
         }
         Spacer(modifier = Modifier.weight(0.9F))
 
         TopBarActionButton(
-            painterResource(id = R.drawable.ic_sync),
+            Icons.Outlined.Refresh,
             stringResource(id = R.string.content_desc_sync)
         ) {
-            Toast.makeText(context, "Sync contents.", Toast.LENGTH_SHORT).show()
+            homeViewModel.getFiqhBasedQuestions(true)
+            homeViewModel.getRandomQuestions(true)
         }
 
     }
 }
 
-@Composable
-private fun TopBarActionButton(painter: Painter, contentDescription: String, onClick: () -> Unit) {
-    IconButton(
-        modifier = Modifier.padding(top = 18.dp, start = 12.dp, bottom = 8.dp),
-        onClick = { onClick() }) {
-        Image(
-            painter = painter,
-            contentDescription = contentDescription,
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-        )
-    }
-}
 
 @Composable
 private fun RandomQuestionSlider(randomQuestions: List<Question>) {
@@ -171,17 +160,6 @@ private fun RandomQuestionLoadingIndicator() {
     }
 }
 
-@Composable
-private fun ScreenTitle(homePageTitle: String) {
-    Text(
-        text = homePageTitle,
-        style = MaterialTheme.typography.titleLarge,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-    )
-}
 
 @Composable
 private fun QuestionListHeading(headingLabel: String) {

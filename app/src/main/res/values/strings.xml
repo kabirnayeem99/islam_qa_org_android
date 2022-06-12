@@ -35,4 +35,5 @@
     <string name="warning_fiqh">Default Madhab is set to Hanafi</string>
     <string name="hint_selected_fiqh">Your currently preferred madhab is %1$s Fiqh.</string>
     <string name="question_source_text">Answered according to %1$s by %2$s</string>
+    <string name="content_desc_go_back">Go back to previous screen</string>
 </resources>
