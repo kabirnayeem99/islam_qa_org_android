@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
+// Defining the color scheme for the light theme.
 private val LightThemeColors = lightColorScheme(
     primary = PurpleLight,
     onPrimary = White,
@@ -29,6 +30,8 @@ private val LightThemeColors = lightColorScheme(
     surface = Color(0xffFFFBFF),
     onSurface = Color(0xff1F1A1D),
 )
+
+// Defining the color scheme for the dark theme.
 private val DarkThemeColors = darkColorScheme(
     primary = PurpleDark,
     onPrimary = Color(0xff5C0454),
@@ -59,12 +62,16 @@ fun IslamQaTheme(
     content: @Composable () -> Unit
 ) {
 
-    val dynamicColor = isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    // Checking if the device is running on Android 10 or above.
+    // If it is, then it will use the dynamic color scheme.
+    val isDynamicColorSupported = isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+    // Checking if the theme is dark or light and then setting the color scheme accordingly.
     val colorScheme = when {
-        dynamicColor && isDarkTheme -> {
+        isDynamicColorSupported && isDarkTheme -> {
             dynamicDarkColorScheme(LocalContext.current)
         }
-        dynamicColor && !isDarkTheme -> {
+        isDynamicColorSupported && !isDarkTheme -> {
             dynamicLightColorScheme(LocalContext.current)
         }
         isDarkTheme -> DarkThemeColors
@@ -74,6 +81,7 @@ fun IslamQaTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        shapes = Shapes,
         content = content
     )
 }

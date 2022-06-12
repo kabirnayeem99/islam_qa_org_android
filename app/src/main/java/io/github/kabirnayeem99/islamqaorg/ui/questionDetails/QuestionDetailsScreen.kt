@@ -41,14 +41,9 @@ fun QuestionDetailsScreen(url: String) {
             }
             item {
                 Spacer(modifier = Modifier.height(22.dp))
-                Text(
-                    text = stringResource(id = R.string.label_relevant_q_n_a),
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.20F)
-                    )
-                )
+                RelevantQaLabelLoadingIndicator()
             }
-            items(8) {
+            items(6) {
                 QuestionItemPlaceholder(false)
             }
         } else {
@@ -74,6 +69,16 @@ fun QuestionDetailsScreen(url: String) {
         }
     }
 
+}
+
+@Composable
+private fun RelevantQaLabelLoadingIndicator() {
+    Text(
+        text = stringResource(id = R.string.label_relevant_q_n_a),
+        style = MaterialTheme.typography.headlineLarge.copy(
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.20F)
+        )
+    )
 }
 
 @Composable

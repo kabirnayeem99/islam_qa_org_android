@@ -40,9 +40,7 @@ fun QuestionItemCard(
             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4F)
         ),
         colors = CardDefaults.outlinedCardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceTint.copy(
-                alpha = 0.10F
-            ),
+            containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.10F),
         ),
         onClick = { onClick() }
     ) {
@@ -55,7 +53,9 @@ fun QuestionItemCard(
             Column(modifier = Modifier.weight(0.9F)) {
                 Text(
                     text = question.question,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 )
                 Spacer(modifier = Modifier.padding(top = 4.dp))
                 Card(
@@ -79,35 +79,39 @@ fun QuestionItemCard(
                 }
             }
             Spacer(modifier = Modifier.width(5.dp))
-            Box(
-                modifier = Modifier
-                    .height(22.dp)
-                    .width(22.dp)
-                    .border(
-                        0.8.dp,
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5F),
-                        CircleShape
-                    )
-                    .clip(CircleShape),
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_arrow_forward),
-                    contentDescription = stringResource(id = R.string.content_desc_go_to_details),
-                    contentScale = ContentScale.Fit,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
-                    alignment = Alignment.Center,
-                    modifier = Modifier
-                        .background(
-                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5F)
-                        )
-
-                        .fillMaxWidth()
-                        .fillMaxWidth()
-                        .padding(5.dp)
-
-                )
-            }
+            ForwardArrowIndicator()
         }
+    }
+}
+
+@Composable
+private fun ForwardArrowIndicator() {
+    Box(
+        modifier = Modifier
+            .height(22.dp)
+            .width(22.dp)
+            .border(
+                0.8.dp,
+                MaterialTheme.colorScheme.primary,
+                CircleShape
+            )
+            .clip(CircleShape),
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_arrow_forward),
+            contentDescription = stringResource(id = R.string.content_desc_go_to_details),
+            contentScale = ContentScale.Fit,
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
+            alignment = Alignment.Center,
+            modifier = Modifier
+                .background(
+                    color = MaterialTheme.colorScheme.primary
+                )
+                .fillMaxWidth()
+                .fillMaxWidth()
+                .padding(5.dp)
+
+        )
     }
 }
 
