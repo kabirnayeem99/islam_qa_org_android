@@ -4,19 +4,23 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -40,7 +44,6 @@ fun SettingsScreen(
         settingsViewModel.getFiqh()
     }
 
-    val selectedFiqh = settingsViewModel.uiState.selectedFiqh
 
     Scaffold(
         modifier = Modifier
@@ -49,15 +52,116 @@ fun SettingsScreen(
         topBar = { SettingsTopAppBar(navigator) },
     ) {
 
-
-        LazyColumn {
+        LazyColumn(modifier = Modifier.padding(horizontal = 24.dp)) {
             item {
                 Spacer(modifier = Modifier.height(62.dp))
                 val settingsLabel = stringResource(id = R.string.label_settings)
                 ScreenTitle(homePageTitle = settingsLabel)
                 Spacer(modifier = Modifier.height(52.dp))
+                MadhabSettingsItem(settingsViewModel)
+                Spacer(modifier = Modifier.height(22.dp))
+                AboutSettingsItem()
+            }
+        }
+    }
+}
+
+@Composable
+private fun MadhabSettingsItem(
+    settingsViewModel: SettingsViewModel
+) {
+    val selectedFiqh = settingsViewModel.uiState.selectedFiqh
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2F)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Outlined.Favorite,
+                        stringResource(id = R.string.hint_fiqh)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = stringResource(id = R.string.label_madhab),
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontStyle = FontStyle.Normal
+                        )
+                    )
+                }
                 FiqhSelectorDropDownMenu(selectedFiqh, settingsViewModel)
             }
+            Text(text = stringResource(id = R.string.hint_fiqh))
+        }
+    }
+}
+
+
+@Composable
+private fun AboutSettingsItem(
+) {
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2F)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Outlined.Info,
+                        stringResource(id = R.string.hint_fiqh)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = stringResource(id = R.string.label_about),
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontStyle = FontStyle.Normal
+                        )
+                    )
+                }
+                Icon(
+                    Icons.Outlined.ArrowForward,
+                    stringResource(id = R.string.hint_fiqh)
+                )
+            }
+            Text(text = stringResource(id = R.string.hint_about))
         }
     }
 }
@@ -70,28 +174,33 @@ private fun FiqhSelectorDropDownMenu(
     val fiqhList = Fiqh.values().filterNot { it.displayName.isBlank() }
     var expanded by remember { mutableStateOf(false) }
 
-    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier
+            .padding(top = 4.dp),
+        contentAlignment = Alignment.CenterEnd
+    ) {
         Row(
             Modifier
-                .padding(24.dp)
-                .clickable {
-                    expanded = !expanded
-                }
-                .padding(8.dp),
+                .clickable { expanded = !expanded }
+                .align(Alignment.Center),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = selectedFiqh.displayName,
-                fontSize = 18.sp,
-                modifier = Modifier.padding(end = 8.dp)
+                modifier = Modifier.padding(end = 8.dp),
+                style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onBackground)
             )
             Icon(
                 imageVector = Icons.Filled.ArrowDropDown,
                 contentDescription = stringResource(id = R.string.content_desc_select_fiqh)
             )
-            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            DropdownMenu(
+                modifier = Modifier.clip(RoundedCornerShape(12.dp)),
+                expanded = expanded,
+                onDismissRequest = { expanded = false }) {
                 fiqhList.forEach { fiqh ->
+                    val thisItemSelected = fiqh.paramName == selectedFiqh.paramName
                     DropdownMenuItem(onClick = {
                         Timber.d(fiqh.toString())
                         expanded = false
@@ -99,12 +208,17 @@ private fun FiqhSelectorDropDownMenu(
                     }) {
                         Row {
                             Icon(
-                                imageVector = Icons.Filled.FavoriteBorder,
-                                contentDescription = stringResource(id = R.string.hint_fiqh)
+                                imageVector = Icons.Outlined.Favorite,
+                                contentDescription = stringResource(id = R.string.hint_fiqh),
+                                tint = if (thisItemSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text(text = fiqh.displayName)
-
+                            Text(
+                                text = fiqh.displayName,
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    color = if (thisItemSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+                                ),
+                            )
                         }
                     }
                 }
