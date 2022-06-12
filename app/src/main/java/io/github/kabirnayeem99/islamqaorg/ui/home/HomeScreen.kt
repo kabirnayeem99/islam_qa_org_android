@@ -1,5 +1,6 @@
 package io.github.kabirnayeem99.islamqaorg.ui.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,20 +27,20 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
+import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.SettingsScreenDestination
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @RootNavGraph(start = true)
-@Destination
+@Destination(style = PageTransitionAnimation::class)
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
-
-    val viewModel: HomeViewModel = hiltViewModel()
 
     val uiState = viewModel.uiState
 
@@ -94,8 +95,11 @@ fun HomeScreen(
                 items(10) { QuestionItemPlaceholder() }
             else {
                 val fiqhBasedQuestions: List<Question> = uiState.fiqhBasedQuestions
-                itemsIndexed(fiqhBasedQuestions) { _, question ->
-                    QuestionItemCard(question = question) {
+                itemsIndexed(fiqhBasedQuestions, key = { _, item -> item.url }) { _, question ->
+                    QuestionItemCard(
+                        question = question,
+                        modifier = Modifier.animateItemPlacement()
+                    ) {
                         navigator.navigate(QuestionDetailsScreenDestination(question.url))
                     }
                 }

@@ -1,13 +1,18 @@
 package io.github.kabirnayeem99.islamqaorg.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import io.github.kabirnayeem99.islamqaorg.ui.theme.IslamQaTheme
 
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
 @Composable
 fun IslamQaRoot() {
     IslamQaTheme {
@@ -16,6 +21,12 @@ fun IslamQaRoot() {
         SideEffect {
             systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = shouldUseDarkIcon)
         }
-        DestinationsNavHost(navGraph = NavGraphs.root)
+        val navController = rememberAnimatedNavController()
+        val navHostEngine = rememberAnimatedNavHostEngine()
+        DestinationsNavHost(
+            navGraph = NavGraphs.root,
+            navController = navController,
+            engine = navHostEngine
+        )
     }
 }

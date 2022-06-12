@@ -151,7 +151,8 @@ dependencies {
 
     implementation 'com.github.giangpham96:ExpandableTextView:1.0.1'
 
-    implementation 'io.github.raamcosta.compose-destinations:core:1.5.10-beta'
+//    implementation 'io.github.raamcosta.compose-destinations:core:1.5.10-beta'
+    implementation 'io.github.raamcosta.compose-destinations:animations-core:1.5.10-beta'
     ksp 'io.github.raamcosta.compose-destinations:ksp:1.5.10-beta'
 
 }

@@ -1,5 +1,8 @@
 package io.github.kabirnayeem99.islamqaorg.ui.settings
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -7,9 +10,6 @@ import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetPreferredFiqh
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.SavePreferredFiqh
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -20,8 +20,8 @@ class SettingsViewModel @Inject constructor(
     private val getPreferredFiqh: GetPreferredFiqh,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SettingsUiState())
-    val uiState = _uiState.asStateFlow()
+    var uiState by mutableStateOf(SettingsUiState())
+        private set
 
     private var savePreferredFiqhJob: Job? = null
 
@@ -29,7 +29,7 @@ class SettingsViewModel @Inject constructor(
         savePreferredFiqhJob?.cancel()
         savePreferredFiqhJob = viewModelScope.launch {
             savePreferredFiqh(fiqh)
-            _uiState.update { it.copy(selectedFiqh = fiqh) }
+            uiState = uiState.copy(selectedFiqh = fiqh)
         }
     }
 
@@ -39,7 +39,7 @@ class SettingsViewModel @Inject constructor(
         getPreferredFiqhJob = viewModelScope.launch {
             val fiqh = getPreferredFiqh()
             Timber.d("Fiqh is $fiqh")
-            _uiState.update { it.copy(selectedFiqh = fiqh) }
+            uiState = uiState.copy(selectedFiqh = fiqh)
         }
     }
 }

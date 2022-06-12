@@ -28,11 +28,12 @@ import io.github.kabirnayeem99.islamqaorg.ui.theme.ArabicFontFamily
 fun QuestionItemCard(
     question: Question,
     shouldHavePadding: Boolean = true,
+    modifier: Modifier,
     onClick: () -> Unit = {}
 ) {
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(vertical = 8.dp, horizontal = if (shouldHavePadding) 24.dp else 0.dp)
             .fillMaxWidth(),
         border = BorderStroke(
