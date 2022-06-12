@@ -46,7 +46,6 @@ class QuestionAnswerRepositoryImpl
     override suspend fun getRandomQuestionList(shouldRefresh: Boolean): Flow<Resource<List<Question>>> {
         val cachedRandomQuestionList = inMemoryMutex.withLock { inMemoryRandomQuestionList }
         return flow {
-            val needRefresh = preferenceDataSource.checkIfNeedsRefreshing()
             if (isNetworkAvailable) {
                 val remoteData = getRandomQuestionListFromRemoteDataSource()
                 emit(remoteData)

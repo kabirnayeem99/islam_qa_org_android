@@ -1,4 +1,5 @@
 plugins {
+    id 'kotlin-android'
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
@@ -7,6 +8,7 @@ plugins {
     id "com.google.protobuf" version "0.8.17"
     id 'com.google.android.gms.oss-licenses-plugin'
     id 'kotlinx-serialization'
+    id 'com.google.devtools.ksp' version '1.6.21-1.0.6'
 }
 
 android {
@@ -14,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId "io.github.kabirnayeem99.islamqaorg"
-        minSdk 25
+        minSdk 26
         targetSdk 32
         versionCode 1
         versionName "1.1.0-alpha"
@@ -35,20 +37,32 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.2.0-beta03"
+    }
     buildFeatures {
         viewBinding true
         dataBinding true
+        compose true
     }
     packagingOptions {
         resources.excludes.add("META-INF/*")
         resources.excludes.add("mozilla/*")
     }
+
+    applicationVariants.all { variant ->
+        kotlin.sourceSets {
+            getByName(variant.name) {
+                kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+            }
+        }
+    }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
@@ -58,6 +72,35 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
     implementation "it.skrape:skrapeit:1.2.1"
+
+    // Jetpack Compose
+    // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.4.0'
+    // Compose Material Design
+    implementation 'androidx.compose.material:material:1.2.0-beta03'
+    // Animations
+    implementation 'androidx.compose.animation:animation:1.2.0-beta03'
+    // Tooling support (Previews, etc.)
+    implementation 'androidx.compose.ui:ui-tooling:1.2.0-beta03'
+    // Integration with ViewModels
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
+    // UI Tests
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.2.0-beta03'
+    // For use of Material3 in Compose
+    implementation 'androidx.compose.material3:material3:1.0.0-alpha13'
+    // System UI Controller provides easy-to-use utilities for updating the System UI bar colors within Jetpack Compose.
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.24.10-beta"
+    // Navigation
+    def nav_version = "2.4.2"
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+    implementation "androidx.compose.material3:material3-window-size-class:1.0.0-alpha13"
+    implementation 'com.valentinilk.shimmer:compose-shimmer:1.0.3'
+
+    implementation "com.github.skydoves:landscapist-glide:1.5.2"
+
+
+    implementation 'androidx.ui:ui-foundation:0.1.0-dev03'
 
     // Coroutines
     def coroutines_version = '1.6.2'
@@ -96,15 +139,20 @@ dependencies {
     // Shimmer
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
-    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
 
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
 
     implementation 'com.github.bumptech.glide:glide:4.13.2'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
+    kapt 'com.github.bumptech.glide:compiler:4.13.2'
 
     implementation 'com.afollestad.material-dialogs:bottomsheets:3.3.0'
     implementation 'com.afollestad.material-dialogs:lifecycle:3.3.0'
 
     implementation 'com.github.giangpham96:ExpandableTextView:1.0.1'
+
+//    implementation 'io.github.raamcosta.compose-destinations:core:1.5.10-beta'
+    implementation 'io.github.raamcosta.compose-destinations:animations-core:1.5.10-beta'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.5.10-beta'
+
 }

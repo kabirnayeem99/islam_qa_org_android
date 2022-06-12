@@ -1,47 +1,50 @@
 package io.github.kabirnayeem99.islamqaorg.ui.start
 
+import android.os.Build
 import android.os.Bundle
-import android.view.View
-import androidx.lifecycle.lifecycleScope
-import io.github.kabirnayeem99.islamqaorg.BuildConfig
-import io.github.kabirnayeem99.islamqaorg.R
-import io.github.kabirnayeem99.islamqaorg.common.base.BaseActivity
+import android.view.WindowInsets
+import android.view.WindowManager
+import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.gotoActivity
-import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.rotateViewOneEighty
-import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.slideInRight
-import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.viewVisibility
-import io.github.kabirnayeem99.islamqaorg.databinding.ActivityStartBinding
 import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import io.github.kabirnayeem99.islamqaorg.ui.theme.IslamQaTheme
+
 
 const val SPLASH_SCREEN_DURATION: Long = 3000L
 
-class StartActivity : BaseActivity<ActivityStartBinding>() {
-    override val layout: Int
-        get() = R.layout.activity_start
+class StartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViews()
-    }
-
-    private fun initViews() {
-        binding.apply {
-            lifecycleScope.launch {
-                tvAppVersionName.text = BuildConfig.VERSION_NAME
-                delay(SPLASH_SCREEN_DURATION / 3)
-                cvVersionName.viewVisibility(View.VISIBLE)
-                cvVersionName.slideInRight(SPLASH_SCREEN_DURATION / 4)
-                ivBackgroundGeometry.rotateViewOneEighty((SPLASH_SCREEN_DURATION * 2) / 3)
-                delay((SPLASH_SCREEN_DURATION * 2) / 3)
-                navigateToOtherScreen()
+        setContent {
+            IslamQaTheme {
+                StartScreen {
+                    navigateToOtherScreen()
+                }
             }
         }
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        makeFullScreen()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun makeFullScreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+        }
+    }
 
     private fun navigateToOtherScreen() {
         gotoActivity(MainActivity::class.java, true)
     }
 }
+
