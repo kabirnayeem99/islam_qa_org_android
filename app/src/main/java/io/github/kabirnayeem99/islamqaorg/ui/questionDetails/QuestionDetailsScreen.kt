@@ -30,6 +30,7 @@ import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.ui.common.HtmlText
 import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
+import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.home.QuestionItemCard
 import io.github.kabirnayeem99.islamqaorg.ui.home.QuestionItemPlaceholder
 import kotlinx.coroutines.launch
@@ -41,13 +42,20 @@ import timber.log.Timber
 fun QuestionDetailsScreen(
     url: String,
     questionDetailViewModel: QuestionDetailViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
 ) {
 
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
 
+    LaunchedEffect(url) {
+        questionDetailViewModel.getQuestionsDetailsJob(url)
+        Timber.d("Loading $url")
+    }
 
+    LaunchedEffect(questionDetailViewModel.uiState) {
+        scrollState.animateScrollTo(0)
+    }
 
     Scaffold(modifier = Modifier
         .fillMaxSize()
@@ -68,15 +76,6 @@ fun QuestionDetailsScreen(
             elevation = 0.dp,
         )
     }) {
-
-        LaunchedEffect(true) {
-            questionDetailViewModel.getQuestionsDetailsJob(url)
-            Timber.d("Loading $url")
-        }
-
-        LaunchedEffect(questionDetailViewModel.uiState) {
-            scrollState.animateScrollTo(0)
-        }
 
         LazyColumn(
             modifier = Modifier.padding(24.dp),
@@ -118,7 +117,8 @@ fun QuestionDetailsScreen(
                 itemsIndexed(questionDetail.relevantQuestions) { _, question ->
                     QuestionItemCard(question = question, shouldHavePadding = false, onClick = {
                         scope.launch {
-                            questionDetailViewModel.getQuestionsDetailsJob(question.url)
+                            navigator.navigate(QuestionDetailsScreenDestination(question.url))
+//                            questionDetailViewModel.getQuestionsDetailsJob(question.url)
                         }
                     }, modifier = Modifier.animateItemPlacement())
                 }

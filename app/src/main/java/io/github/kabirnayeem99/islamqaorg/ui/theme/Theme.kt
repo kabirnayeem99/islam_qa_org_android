@@ -1,9 +1,12 @@
 package io.github.kabirnayeem99.islamqaorg.ui.theme
 
 import android.os.Build
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.LocalOverScrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
@@ -55,6 +58,7 @@ private val DarkThemeColors = darkColorScheme(
     onSurface = Color(0xffEAE0E3),
 )
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IslamQaTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -82,6 +86,12 @@ fun IslamQaTheme(
         colorScheme = colorScheme,
         typography = Typography,
         shapes = Shapes,
-        content = content
+        content = {
+            // turning off over scroll effect
+            CompositionLocalProvider(
+                LocalOverScrollConfiguration provides null,
+                content = content
+            )
+        }
     )
 }

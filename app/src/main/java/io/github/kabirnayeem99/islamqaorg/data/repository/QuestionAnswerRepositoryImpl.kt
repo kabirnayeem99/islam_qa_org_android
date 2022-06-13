@@ -110,7 +110,6 @@ class QuestionAnswerRepositoryImpl
                 emit(Resource.Loading())
                 val questionDetailLocal = localDataSource.getDetailedQuestionAndAnswer(url)
                 questionDetailLocal?.let {
-                    kotlinx.coroutines.delay(1600)
                     emit(Resource.Success(it))
                 }
 
