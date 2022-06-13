@@ -55,7 +55,6 @@ fun StartScreen(onTimeUp: () -> Unit = {}) {
             appVersionVisibility = true
             delay(SPLASH_SCREEN_DURATION / 3)
             delay(SPLASH_SCREEN_DURATION / 3)
-
             onTimeUp()
         }
     }
@@ -70,8 +69,8 @@ fun StartScreen(onTimeUp: () -> Unit = {}) {
 
         AnimatedVisibility(
             visible = geometryVisibility,
-            enter = scaleIn(),
-            exit = scaleOut(),
+            enter = scaleIn() + fadeIn(),
+            exit = scaleOut() + fadeOut(),
         ) {
 
             Image(
@@ -93,8 +92,8 @@ fun StartScreen(onTimeUp: () -> Unit = {}) {
 
         AnimatedVisibility(
             visible = centerAppLogoVisibility,
-            enter = scaleIn(),
-            exit = scaleOut(),
+            enter = scaleIn() + fadeIn(),
+            exit = scaleOut() + fadeOut(),
         ) {
             Box(
                 modifier = Modifier
