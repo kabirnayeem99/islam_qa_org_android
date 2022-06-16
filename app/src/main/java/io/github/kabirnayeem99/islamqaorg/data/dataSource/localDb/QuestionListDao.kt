@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.github.kabirnayeem99.islamqaorg.data.dto.room.QuestionEntity
+import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 
 @Dao
 interface QuestionListDao {
@@ -15,4 +16,9 @@ interface QuestionListDao {
     @Query("SELECT * FROM questionentity ORDER BY timeInMillis desc LIMIT 10")
     suspend fun getAllQuestions(): List<QuestionEntity>
 
+    @Query("SELECT * FROM questionentity WHERE fiqh LIKE '%' || :fiqh || '%' ORDER BY timeInMillis desc LIMIT 10")
+    suspend fun getFiqhBasedQuestions(fiqh: String): List<QuestionEntity>
+
+    @Query("SELECT * FROM questionentity ORDER BY timeInMillis desc LIMIT 10")
+    suspend fun getRandomQuestions(): List<QuestionEntity>
 }

@@ -125,7 +125,11 @@ private fun AboutBoxItem(icon: ImageVector, title: String, onClick: () -> Unit) 
             .background(MaterialTheme.colorScheme.onPrimaryContainer)
             .clickable { onClick() }, contentAlignment = Alignment.Center
     ) {
-        Image(imageVector = icon, contentDescription = title)
+        Image(
+            imageVector = icon,
+            contentDescription = title,
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primaryContainer)
+        )
     }
 }
 
@@ -193,7 +197,6 @@ private fun AboutContent() {
                     rotationZ = angle
                 }
         )
-
 
         Box(
             modifier = Modifier

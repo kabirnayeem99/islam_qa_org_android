@@ -1,8 +1,10 @@
 package io.github.kabirnayeem99.islamqaorg.data.dto.room
 
+import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+@Keep
 @Entity
 data class QuestionDetailEntity(
     val questionTitle: String = "",

@@ -1,7 +1,9 @@
 package io.github.kabirnayeem99.islamqaorg.data.dto.islamQa
 
+import androidx.annotation.Keep
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 
+@Keep
 data class QuestionDetailScreenDto(
     val httpStatusCode: Int = 200,
     val httpStatusMessage: String = "",

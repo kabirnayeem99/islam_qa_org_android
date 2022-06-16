@@ -1,5 +1,7 @@
 package io.github.kabirnayeem99.islamqaorg.domain.entity
 
+import androidx.annotation.Keep
+
 /**
  * Fiqh is Islamic jurisprudence. Fiqh is often described as the human understanding and practices
  * of the sharia, that is human understanding of the divine Islamic law as revealed in the Quran
@@ -7,6 +9,7 @@ package io.github.kabirnayeem99.islamqaorg.domain.entity
  *
  * @property paramName String - the name of the Fiqh to pass to IslamQA
  */
+@Keep
 enum class Fiqh(val paramName: String, val displayName: String) {
     HANAFI("hanafi", "Hanafi"),
     MALIKI("maliki", "Maliki"),

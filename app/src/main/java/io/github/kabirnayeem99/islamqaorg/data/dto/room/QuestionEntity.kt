@@ -1,10 +1,12 @@
 package io.github.kabirnayeem99.islamqaorg.data.dto.room
 
+import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import java.util.*
 
+@Keep
 @Entity
 data class QuestionEntity(
     val id: Int = 0,

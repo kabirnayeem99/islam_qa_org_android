@@ -51,7 +51,7 @@ class QuestionAnswerRepositoryImpl
                 emit(remoteData)
             } else {
                 try {
-                    val localQuestionList = localDataSource.getQuestionList()
+                    val localQuestionList = localDataSource.getRandomQuestionList()
                     if (localQuestionList.isEmpty()) {
                         val remoteData = getRandomQuestionListFromRemoteDataSource()
                         emit(remoteData)
@@ -157,7 +157,7 @@ class QuestionAnswerRepositoryImpl
                 emit(remoteData)
             } else {
                 try {
-                    val localQuestionList = localDataSource.getQuestionList()
+                    val localQuestionList = localDataSource.getFiqhBasedQuestionList(fiqh)
                     if (localQuestionList.isEmpty()) {
                         val remoteData = getRandomQuestionListFromRemoteDataSource()
                         emit(remoteData)
@@ -190,7 +190,7 @@ class QuestionAnswerRepositoryImpl
         return try {
             val qList = remoteDataSource.getFiqhBasedQuestionsList(fiqh, pageNumber)
             inMemoryMutex.withLock { inMemoryFiqhBasedQuestionList = qList }
-            localDataSource.cacheQuestionList(qList)
+            localDataSource.cacheQuestionList(qList, fiqh)
             preferenceDataSource.updateNeedingToRefresh()
             Resource.Success(qList)
         } catch (e: Exception) {
