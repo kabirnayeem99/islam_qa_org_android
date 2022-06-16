@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.kabirnayeem99.islamqaorg.BuildConfig
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.ui.theme.ArabicFontFamily
@@ -29,7 +30,14 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalAnimationApi::class)
 @Preview
 @Composable
-fun StartScreen(onTimeUp: () -> Unit = {}) {
+fun StartScreen(
+    onTimeUp: () -> Unit = {},
+    viewModel: StartViewModel = hiltViewModel(),
+) {
+
+    LaunchedEffect(true) {
+        viewModel.syncQuestionsAndAnswers()
+    }
 
     val scope = rememberCoroutineScope()
 

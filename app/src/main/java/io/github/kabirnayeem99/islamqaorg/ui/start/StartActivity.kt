@@ -21,9 +21,7 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             IslamQaTheme {
-                StartScreen {
-                    navigateToOtherScreen()
-                }
+                StartScreen(onTimeUp = { navigateToOtherScreen() })
             }
         }
     }
