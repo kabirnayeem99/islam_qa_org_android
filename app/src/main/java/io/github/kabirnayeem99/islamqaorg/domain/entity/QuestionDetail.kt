@@ -1,5 +1,7 @@
 package io.github.kabirnayeem99.islamqaorg.domain.entity
 
+import androidx.annotation.Keep
+
 /**
  * `QuestionDetail` is a data class that contains a bunch of strings.
  *
@@ -14,6 +16,7 @@ package io.github.kabirnayeem99.islamqaorg.domain.entity
  * @property {String} previousQuestionLink - This is the link to the previous question in the list.
  * @property {List<Question>} relevantQuestions, questions and answers that are also relevant to it.
  */
+@Keep
 data class QuestionDetail(
     val questionTitle: String = "",
     val detailedQuestion: String = "",

@@ -61,11 +61,12 @@ fun HomeScreen(
         topBar = { HomeScreenTopAppBar(navigator, viewModel) }
     ) {
 
+        it.toString()
+
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-
-            ) {
+        ) {
 
             // Header Title
             item {

@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
  * @param finishCurrentActivity Finish current activity or not
  */
 fun <T> AppCompatActivity.gotoActivity(activity: Class<T>, finishCurrentActivity: Boolean = false) {
-    startActivity(Intent(this.applicationContext, activity))
+    startActivity(Intent(this, activity))
     if (finishCurrentActivity) this.finish()
 }
 

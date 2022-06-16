@@ -45,13 +45,33 @@ class ScrapingService {
     /**
      * Parses the HTML response and returns [RandomQuestionListDto] class.
      */
-    private fun Result.getRandomQuestionListDtoOutOfResponse() = RandomQuestionListDto(
-        httpStatusCode = status { code },
-        httpStatusMessage = status { message },
-        questions = document.findAll("li")
-            .filter { it.className == "arpw-li arpw-clearfix" }.eachText,
-        questionLinks = document.li { a { findAll { filter { it.className == "arpw-title" }.eachHref } } }
-    )
+    private fun Result.getRandomQuestionListDtoOutOfResponse(): RandomQuestionListDto {
+        return RandomQuestionListDto(
+            httpStatusCode = status { code },
+            httpStatusMessage = status { message },
+            questions = findRandomQuestionQuestionTexts(),
+            questionLinks = findRandomQuestionQuestionLinks()
+        )
+    }
+
+    private fun Result.findRandomQuestionQuestionLinks(): List<String> {
+        return try {
+            document.li { a { findAll { filter { it.className == "arpw-title" }.eachHref } } }
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to find RandomQuestion Question Links ")
+            emptyList()
+        }
+    }
+
+    private fun Result.findRandomQuestionQuestionTexts(): List<String> {
+        return try {
+            document.findAll("li")
+                .filter { it.className == "arpw-li arpw-clearfix" }.eachText
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to find the questions list")
+            emptyList()
+        }
+    }
 
 
     /**

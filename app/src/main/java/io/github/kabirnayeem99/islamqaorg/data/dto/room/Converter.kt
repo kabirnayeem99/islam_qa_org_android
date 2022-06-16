@@ -1,9 +1,11 @@
 package io.github.kabirnayeem99.islamqaorg.data.dto.room
 
+import androidx.annotation.Keep
 import androidx.room.TypeConverter
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import timber.log.Timber
 
+@Keep
 class Converter {
 
     @TypeConverter
