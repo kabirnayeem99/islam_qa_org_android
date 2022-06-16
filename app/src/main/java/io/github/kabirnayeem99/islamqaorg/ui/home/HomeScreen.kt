@@ -43,6 +43,11 @@ fun HomeScreen(
 ) {
 
     val uiState = viewModel.uiState
+    val randomQuestionListHeading = stringResource(id = R.string.label_random_q_n_a)
+    val homePageTitle = stringResource(id = R.string.q_n_a)
+    val latestQuestionListHeading = stringResource(id = R.string.label_latest_q_n_a)
+    val fiqhBasedQuestions: List<Question> = uiState.fiqhBasedQuestions
+    val randomQuestions: List<Question> = uiState.randomQuestions
 
     LaunchedEffect(true) {
         viewModel.getRandomQuestions()
@@ -53,33 +58,30 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 12.dp),
-
         topBar = { HomeScreenTopAppBar(navigator, viewModel) }
     ) {
 
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
+            verticalArrangement = Arrangement.Center,
+
+            ) {
 
             // Header Title
             item {
                 Spacer(modifier = Modifier.height(62.dp))
-                val homePageTitle = stringResource(id = R.string.q_n_a)
                 ScreenTitle(homePageTitle)
                 Spacer(modifier = Modifier.height(22.dp))
             }
 
             // Random Question Sliders Section
             item {
-                val randomQuestionListHeading = stringResource(id = R.string.label_random_q_n_a)
                 QuestionListHeading(randomQuestionListHeading)
                 Spacer(modifier = Modifier.height(12.dp))
                 if (uiState.isRandomQuestionLoading) {
                     RandomQuestionLoadingIndicator()
                     Spacer(modifier = Modifier.height(12.dp))
                 } else {
-                    val randomQuestions: List<Question> = uiState.randomQuestions
                     RandomQuestionSlider(randomQuestions)
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -87,14 +89,12 @@ fun HomeScreen(
 
             // Fiqh-based question list section
             item {
-                val latestQuestionListHeading = stringResource(id = R.string.label_latest_q_n_a)
                 QuestionListHeading(latestQuestionListHeading)
                 Spacer(modifier = Modifier.height(12.dp))
             }
             if (uiState.isFiqhBasedQuestionsLoading)
                 items(10) { QuestionItemPlaceholder() }
             else {
-                val fiqhBasedQuestions: List<Question> = uiState.fiqhBasedQuestions
                 itemsIndexed(fiqhBasedQuestions, key = { _, item -> item.url }) { _, question ->
                     QuestionItemCard(
                         question = question,
@@ -110,7 +110,10 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeScreenTopAppBar(navigator: DestinationsNavigator, homeViewModel: HomeViewModel) {
+private fun HomeScreenTopAppBar(
+    navigator: DestinationsNavigator,
+    homeViewModel: HomeViewModel
+) {
     TopAppBar(
         backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6F),
         modifier = Modifier
@@ -144,7 +147,7 @@ private fun RandomQuestionSlider(randomQuestions: List<Question>) {
             .fillMaxWidth()
             .height(200.dp),
     ) {
-        itemsIndexed(randomQuestions) { index, question ->
+        itemsIndexed(randomQuestions, key = { _, q -> q.url }) { index, question ->
             QuestionSliderItemCard(question = question, index = index)
         }
     }
@@ -167,6 +170,7 @@ private fun RandomQuestionLoadingIndicator() {
 
 @Composable
 private fun QuestionListHeading(headingLabel: String) {
+
     Text(
         text = headingLabel,
         style = MaterialTheme.typography.headlineSmall
@@ -176,6 +180,7 @@ private fun QuestionListHeading(headingLabel: String) {
             .fillMaxWidth()
             .padding(horizontal = 24.dp)
     )
+
 }
 
 

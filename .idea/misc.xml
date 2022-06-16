@@ -6,6 +6,8 @@
         <entry key="../../../../layout/compose-model-1654952580622.xml" value="0.5" />
         <entry key="../../../../layout/compose-model-1654953148095.xml" value="0.1" />
         <entry key="../../../../layout/compose-model-1654963387003.xml" value="0.375" />
+        <entry key="../../../../layout/compose-model-1655142116102.xml" value="0.165" />
+        <entry key="../../../../layout/compose-model-1655142217292.xml" value="0.17407407407407408" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/bg_home.xml" value="0.2235" />
         <entry key="app/src/main/res/drawable/bg_home_gradient.xml" value="0.2235" />
@@ -26,11 +28,11 @@
         <entry key="app/src/main/res/layout/activity_start.xml" value="0.3460559796437659" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.2520833333333333" />
         <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.25104166666666666" />
-        <entry key="app/src/main/res/layout/fragment_about.xml" value="0.25104166666666666" />
+        <entry key="app/src/main/res/layout/fragment_about.xml" value="0.1111111111111111" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.23501199040767387" />
         <entry key="app/src/main/res/layout/fragment_question_details.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.2520833333333333" />
-        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.25104166666666666" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/layout_madhab_selector.xml" value="0.25" />
         <entry key="app/src/main/res/layout/list_question.xml" value="0.2943722943722944" />
         <entry key="app/src/main/res/layout/list_question_placeholder.xml" value="0.2520833333333333" />

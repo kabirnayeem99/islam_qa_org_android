@@ -43,7 +43,7 @@ class HomeViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
 
-                        val questionAnswers = res.data ?: emptyList()
+                        val questionAnswers = res.data?.sortedBy { it.question } ?: emptyList()
                         uiState = uiState.copy(
                             randomQuestions = questionAnswers,
                             isRandomQuestionLoading = false

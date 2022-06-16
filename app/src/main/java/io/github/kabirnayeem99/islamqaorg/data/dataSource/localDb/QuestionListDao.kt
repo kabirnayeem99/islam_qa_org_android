@@ -12,7 +12,7 @@ interface QuestionListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllQuestions(list: List<QuestionEntity>)
 
-    @Query("SELECT * FROM questionentity ORDER BY timeInMillis desc")
+    @Query("SELECT * FROM questionentity ORDER BY timeInMillis desc LIMIT 10")
     suspend fun getAllQuestions(): List<QuestionEntity>
 
 }

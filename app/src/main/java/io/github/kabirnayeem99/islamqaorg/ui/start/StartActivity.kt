@@ -11,7 +11,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
 import io.github.kabirnayeem99.islamqaorg.ui.theme.IslamQaTheme
 
 
-const val SPLASH_SCREEN_DURATION: Long = 3000L
+const val SPLASH_SCREEN_DURATION: Long = 4000L
 
 class StartActivity : AppCompatActivity() {
 
