@@ -52,6 +52,7 @@ android {
         resources.excludes.add("mozilla/*")
     }
 
+    // required for generated code by compose-destination library
     applicationVariants.all { variant ->
         kotlin.sourceSets {
             getByName(variant.name) {
@@ -80,7 +81,9 @@ dependencies {
     implementation "androidx.compose.animation:animation:$compose_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
-    implementation 'androidx.compose.material3:material3:1.0.0-alpha13'
+    def material_3_version = "1.0.0-alpha13"
+    implementation "androidx.compose.material3:material3:$material_3_version"
+    implementation "androidx.compose.material3:material3-window-size-class:$material_3_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.24.10-beta"
 
     // Navigation
@@ -88,7 +91,6 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation "androidx.compose.material3:material3-window-size-class:1.0.0-alpha13"
 
     // Compose-shimmer - for shimmer loading animation
     implementation 'com.valentinilk.shimmer:compose-shimmer:1.0.3'
@@ -101,7 +103,6 @@ dependencies {
     // LifeCycle Components and Extensions
     def lifecycle_version = "2.4.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-    implementation "androidx.activity:activity-ktx:1.4.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
