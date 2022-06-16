@@ -6,6 +6,11 @@ import android.net.NetworkCapabilities
 import javax.inject.Inject
 
 
+/**
+ * Utility class to check if the device is connected to the internet or not
+ *
+ * @property isNetworkAvailable Boolean, whether the device is connected to network or not.
+ */
 class NetworkUtil @Inject constructor(private val applicationContext: Context) {
 
 
@@ -14,7 +19,7 @@ class NetworkUtil @Inject constructor(private val applicationContext: Context) {
     }
 
     /**
-     * Returns true if network is true
+     * Returns true if network is available
      */
     val isNetworkAvailable: Boolean
         get() {

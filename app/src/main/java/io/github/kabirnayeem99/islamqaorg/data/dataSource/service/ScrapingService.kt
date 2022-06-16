@@ -99,7 +99,7 @@ class ScrapingService {
             }
         }
     } catch (e: Exception) {
-        Timber.e(e, "Failed to get detailed answer")
+        Timber.e(e, "Failed to get detailed answer -> ${e.localizedMessage}")
         ""
     }
 
@@ -241,6 +241,11 @@ class ScrapingService {
         return dto
     }
 
+    /**
+     * Gets the questions from the result page
+     *
+     * @receiver [Result]
+     */
     private fun Result.getFiqhBasedQuestionsFromResult() = try {
         document.h1 {
             findAll {
@@ -253,6 +258,11 @@ class ScrapingService {
         emptyList()
     }
 
+    /**
+     * Gets the question links for the fiqh based questions
+     *
+     * @receiver [Result]
+     */
     private fun Result.getQuestionLinksForFiqhBasedQuestions() = try {
         document.h1 {
             findAll {
