@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -45,16 +44,11 @@ fun QuestionDetailsScreen(
     navigator: DestinationsNavigator,
 ) {
 
-    val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(url) {
+    LaunchedEffect(true) {
         questionDetailViewModel.getQuestionsDetailsJob(url)
         Timber.d("Loading $url")
-    }
-
-    LaunchedEffect(questionDetailViewModel.uiState) {
-        scrollState.animateScrollTo(0)
     }
 
     Scaffold(modifier = Modifier
@@ -77,12 +71,13 @@ fun QuestionDetailsScreen(
         )
     }) {
 
+        it.toString()
+
         LazyColumn(
             modifier = Modifier.padding(24.dp),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center,
         ) {
-
 
             item {
                 Spacer(modifier = Modifier.height(52.dp))
@@ -118,7 +113,6 @@ fun QuestionDetailsScreen(
                     QuestionItemCard(question = question, shouldHavePadding = false, onClick = {
                         scope.launch {
                             navigator.navigate(QuestionDetailsScreenDestination(question.url))
-//                            questionDetailViewModel.getQuestionsDetailsJob(question.url)
                         }
                     }, modifier = Modifier.animateItemPlacement())
                 }
@@ -162,7 +156,7 @@ private fun QuestionSourceText(fiqh: String, source: String) {
 @Composable
 private fun QuestionDetailText(questionDetail: String) {
     HtmlText(
-        text = questionDetail.ifBlank { "..." },
+        text = questionDetail,
         style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
     )
 }
@@ -170,7 +164,7 @@ private fun QuestionDetailText(questionDetail: String) {
 @Composable
 private fun QuestionAnswerText(questionAnswer: String) {
     HtmlText(
-        text = questionAnswer.ifBlank { "..." },
+        text = questionAnswer,
         style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground)
     )
 }

@@ -112,7 +112,6 @@ class QuestionAnswerRepositoryImpl
                 questionDetailLocal?.let {
                     emit(Resource.Success(it))
                 }
-
                 if (isNetworkAvailable) {
                     val questionDetailed = remoteDataSource.getDetailedQuestionAndAnswer(url)
                     localDataSource.cacheQuestionDetail(questionDetailed)

@@ -7,10 +7,13 @@ import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 private const val FETCH_COUNT = "fetch_count"
 private const val PREFERRED_FIQH = "preferred_fiqh"
+private const val LAST_SYNC_TIME = "last_sync_time"
+private const val SYNC_INTERVAL_TIME_IN_MILLIS = 604_800_000 // 7 days
 
 class PreferenceDataSource @Inject constructor(private val context: Context) {
 
@@ -62,6 +65,43 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
                 defaultPrefs.edit { it.putString(PREFERRED_FIQH, fiqhParamName) }
             } catch (e: Exception) {
                 Timber.e(e, "Failed to savePreferredFiqh -> ${e.message}")
+            }
+        }
+    }
+
+
+    /**
+     * Checks if the last sync time is greater than the sync interval time
+     *
+     * @return A Boolean value, whether needs syncing or not
+     */
+    suspend fun checkIfNeedsSyncing(): Boolean {
+        val doesNeedSyncing = try {
+            val lastSyncTimeInMillis = defaultPrefs.getLong(LAST_SYNC_TIME, 0)
+            val currentTimeInMillis = Date().time
+            val interval = currentTimeInMillis - lastSyncTimeInMillis
+            interval > SYNC_INTERVAL_TIME_IN_MILLIS
+        } catch (e: Exception) {
+            true
+        }
+        Timber.d("Needs syncing or not -> $doesNeedSyncing")
+        return doesNeedSyncing
+    }
+
+    /**
+     * Updates the last sync time in the preference data storage
+     */
+    suspend fun updateSyncingStatus() {
+        withContext(Dispatchers.IO) {
+            try {
+                val date = Date()
+                val dateInMillis = date.time
+                defaultPrefs
+                    .edit()
+                    .putLong(LAST_SYNC_TIME, dateInMillis)
+                    .apply()
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to update syncing status -> ${e.message}")
             }
         }
     }
