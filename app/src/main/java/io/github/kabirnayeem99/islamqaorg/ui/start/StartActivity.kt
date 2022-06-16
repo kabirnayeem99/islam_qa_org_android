@@ -6,6 +6,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.kabirnayeem99.islamqaorg.common.utility.ktx.gotoActivity
 import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
 import io.github.kabirnayeem99.islamqaorg.ui.theme.IslamQaTheme
@@ -13,6 +14,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.theme.IslamQaTheme
 
 const val SPLASH_SCREEN_DURATION: Long = 4000L
 
+@AndroidEntryPoint
 class StartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
