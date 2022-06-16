@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import io.github.kabirnayeem99.islamqaorg.BuildConfig
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
@@ -173,14 +174,14 @@ private fun AboutContent() {
 
             Box(
                 modifier = Modifier
-                    .padding(bottom = 200.dp, start = 200.dp, end = 0.dp)
+                    .padding(bottom = 180.dp, start = 180.dp, end = 0.dp)
                     .align(Alignment.CenterEnd)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.tertiaryContainer),
                 contentAlignment = Alignment.TopEnd,
             ) {
                 Text(
-                    text = "1.1.0-alpha",
+                    text = BuildConfig.VERSION_NAME,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         fontFamily = ArabicFontFamily,
