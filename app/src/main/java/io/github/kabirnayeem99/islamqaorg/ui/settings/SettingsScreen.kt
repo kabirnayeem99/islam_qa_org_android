@@ -1,9 +1,13 @@
 package io.github.kabirnayeem99.islamqaorg.ui.settings
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.TopAppBar
@@ -18,6 +22,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -29,6 +37,11 @@ import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
+import io.github.kabirnayeem99.islamqaorg.ui.destinations.AboutScreenDestination
+import io.github.kabirnayeem99.islamqaorg.ui.start.SPLASH_SCREEN_DURATION
+import io.github.kabirnayeem99.islamqaorg.ui.theme.ArabicFontFamily
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,11 +73,14 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(52.dp))
                 MadhabSettingsItem(settingsViewModel)
                 Spacer(modifier = Modifier.height(22.dp))
-                AboutSettingsItem()
+                AboutSettingsItem(navigator)
+
             }
         }
     }
 }
+
+
 
 @Composable
 private fun MadhabSettingsItem(
@@ -117,8 +133,7 @@ private fun MadhabSettingsItem(
 
 
 @Composable
-private fun AboutSettingsItem(
-) {
+private fun AboutSettingsItem(navigator: DestinationsNavigator) {
 
     Box(
         modifier = Modifier
@@ -126,7 +141,8 @@ private fun AboutSettingsItem(
             .clip(RoundedCornerShape(12.dp))
             .background(
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2F)
-            ),
+            )
+            .clickable { navigator.navigate(AboutScreenDestination()) },
         contentAlignment = Alignment.Center
     ) {
         Column(
