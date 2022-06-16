@@ -76,13 +76,15 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
      * @return A Boolean value, whether needs syncing or not
      */
     suspend fun checkIfNeedsSyncing(): Boolean {
-        val doesNeedSyncing = try {
-            val lastSyncTimeInMillis = defaultPrefs.getLong(LAST_SYNC_TIME, 0)
-            val currentTimeInMillis = Date().time
-            val interval = currentTimeInMillis - lastSyncTimeInMillis
-            interval > SYNC_INTERVAL_TIME_IN_MILLIS
-        } catch (e: Exception) {
-            true
+        val doesNeedSyncing = withContext(Dispatchers.IO) {
+            try {
+                val lastSyncTimeInMillis = defaultPrefs.getLong(LAST_SYNC_TIME, 0)
+                val currentTimeInMillis = Date().time
+                val interval = currentTimeInMillis - lastSyncTimeInMillis
+                interval > SYNC_INTERVAL_TIME_IN_MILLIS
+            } catch (e: Exception) {
+                true
+            }
         }
         Timber.d("Needs syncing or not -> $doesNeedSyncing")
         return doesNeedSyncing

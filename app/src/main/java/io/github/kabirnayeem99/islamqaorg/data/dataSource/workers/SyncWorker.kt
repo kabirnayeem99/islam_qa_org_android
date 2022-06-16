@@ -17,7 +17,6 @@ class SyncWorker @AssistedInject constructor(
     private val syncUtils: SyncUtils,
 ) : Worker(context, params) {
 
-
     override fun doWork(): Result {
         return runBlocking {
             val needSyncing = syncUtils.checkIfNeedsSyncing()

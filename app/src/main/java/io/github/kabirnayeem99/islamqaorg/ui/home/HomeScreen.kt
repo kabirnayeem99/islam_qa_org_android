@@ -83,7 +83,7 @@ fun HomeScreen(
                     RandomQuestionLoadingIndicator()
                     Spacer(modifier = Modifier.height(12.dp))
                 } else {
-                    RandomQuestionSlider(randomQuestions)
+                    RandomQuestionSlider(randomQuestions, navigator)
                     Spacer(modifier = Modifier.height(12.dp))
                 }
             }
@@ -142,14 +142,19 @@ private fun HomeScreenTopAppBar(
 
 
 @Composable
-private fun RandomQuestionSlider(randomQuestions: List<Question>) {
+private fun RandomQuestionSlider(
+    randomQuestions: List<Question>,
+    navigator: DestinationsNavigator
+) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp),
     ) {
         itemsIndexed(randomQuestions, key = { _, q -> q.url }) { index, question ->
-            QuestionSliderItemCard(question = question, index = index)
+            QuestionSliderItemCard(question = question, index = index, onClick = {
+                navigator.navigate(QuestionDetailsScreenDestination(question.url))
+            })
         }
     }
 }
