@@ -40,7 +40,6 @@ fun SettingsScreen(
     navigator: DestinationsNavigator
 ) {
 
-
     LaunchedEffect(true) {
         settingsViewModel.getFiqh()
     }
@@ -51,7 +50,7 @@ fun SettingsScreen(
             .padding(top = 12.dp),
         topBar = { SettingsTopAppBar(navigator) },
     ) {
-
+        it.toString()
         LazyColumn(modifier = Modifier.padding(horizontal = 24.dp)) {
             item {
                 Spacer(modifier = Modifier.height(62.dp))

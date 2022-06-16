@@ -92,7 +92,6 @@ class HomeViewModel @Inject constructor(
      * @return Nothing.
      */
     private fun makeUserMessage(messageText: String) {
-
         if (messageText.isBlank()) return
         viewModelScope.launch(Dispatchers.IO) {
             val messages = uiState.messages + UserMessage(
