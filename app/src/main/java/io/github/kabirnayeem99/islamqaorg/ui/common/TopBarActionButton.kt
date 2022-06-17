@@ -10,14 +10,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
- fun TopBarActionButton(
+fun TopBarActionButton(
     imageVector: ImageVector,
     contentDescription: String,
     onClick: () -> Unit
 ) {
     IconButton(
         modifier = Modifier.padding(top = 18.dp, start = 12.dp, bottom = 8.dp),
-        onClick = { onClick() }) {
+        onClick = { onClick() },
+    ) {
         Icon(
             imageVector = imageVector,
             contentDescription = contentDescription,

@@ -43,11 +43,13 @@ fun HomeScreen(
 ) {
 
     val uiState = viewModel.uiState
+
     val randomQuestionListHeading = stringResource(id = R.string.label_random_q_n_a)
     val homePageTitle = stringResource(id = R.string.q_n_a)
     val latestQuestionListHeading = stringResource(id = R.string.label_latest_q_n_a)
-    val fiqhBasedQuestions: List<Question> = uiState.fiqhBasedQuestions
-    val randomQuestions: List<Question> = uiState.randomQuestions
+
+    val fiqhBasedQuestions = uiState.fiqhBasedQuestions
+    val randomQuestions = uiState.randomQuestions
 
     LaunchedEffect(true) {
         viewModel.getRandomQuestions()
@@ -120,13 +122,15 @@ private fun HomeScreenTopAppBar(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.6F)),
         elevation = 0.dp,
-    ) {
+
+        ) {
         TopBarActionButton(
             Icons.Outlined.Settings,
             stringResource(id = R.string.content_desc_settings)
         ) {
             navigator.navigate(SettingsScreenDestination())
         }
+
         Spacer(modifier = Modifier.weight(0.9F))
 
         TopBarActionButton(

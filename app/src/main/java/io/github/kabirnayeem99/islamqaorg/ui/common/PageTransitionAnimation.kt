@@ -8,7 +8,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.appDestination
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.HomeScreenDestination
 
 
-const val ANIMATION_SPEC_TWEEN_DURATION = 350
+const val ANIMATION_SPEC_TWEEN_DURATION = 450
 
 @OptIn(ExperimentalAnimationApi::class)
 object PageTransitionAnimation : DestinationStyle.Animated {
@@ -19,9 +19,13 @@ object PageTransitionAnimation : DestinationStyle.Animated {
                 slideInHorizontally(
                     initialOffsetX = { 1080 },
                     animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
+                ) + fadeIn(
+                    animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
                 )
             else -> slideInHorizontally(
                 initialOffsetX = { 1080 },
+                animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
+            ) + fadeIn(
                 animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
             )
         }
@@ -33,9 +37,13 @@ object PageTransitionAnimation : DestinationStyle.Animated {
                 slideOutHorizontally(
                     targetOffsetX = { -1080 },
                     animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
+                ) + fadeOut(
+                    animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
                 )
             else -> slideOutHorizontally(
                 targetOffsetX = { -1080 },
+                animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
+            ) + fadeOut(
                 animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
             )
         }
@@ -47,9 +55,13 @@ object PageTransitionAnimation : DestinationStyle.Animated {
                 slideInHorizontally(
                     initialOffsetX = { -1080 },
                     animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
+                ) + fadeIn(
+                    animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
                 )
             else -> slideInHorizontally(
                 initialOffsetX = { -1080 },
+                animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
+            ) + fadeIn(
                 animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
             )
         }
@@ -62,9 +74,13 @@ object PageTransitionAnimation : DestinationStyle.Animated {
                 slideOutHorizontally(
                     targetOffsetX = { 1080 },
                     animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
+                ) + fadeOut(
+                    animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
                 )
             else -> slideOutHorizontally(
                 targetOffsetX = { 1080 },
+                animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
+            ) + fadeOut(
                 animationSpec = tween(ANIMATION_SPEC_TWEEN_DURATION)
             )
         }

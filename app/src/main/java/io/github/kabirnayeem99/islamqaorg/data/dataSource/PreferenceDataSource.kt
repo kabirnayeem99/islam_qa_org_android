@@ -23,23 +23,6 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
     }
 
     /**
-     * Checks if the user needs to refresh their data
-     *
-     * @return A Boolean
-     */
-    suspend fun checkIfNeedsRefreshing(): Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                val currentFetchCount = defaultPrefs.getInt(FETCH_COUNT, 1)
-                currentFetchCount % 10 == 0
-            } catch (e: Exception) {
-                Timber.e(e, "Failed to find checkIfNeedsRefreshing -> ${e.message}")
-                true
-            }
-        }
-    }
-
-    /**
      * Notifies whether the data needs to update or not
      */
     suspend fun updateNeedingToRefresh() {
@@ -48,7 +31,7 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
                 val currentFetchCount = defaultPrefs.getInt(FETCH_COUNT, 1)
                 defaultPrefs.edit { it.putInt(FETCH_COUNT, currentFetchCount + 1) }
             } catch (e: Exception) {
-                Timber.e(e, "Failed to updateNeedingToRefresh -> ${e.message}")
+                Timber.e(e, "Failed to update needing to refresh -> ${e.message}")
             }
         }
     }
@@ -64,7 +47,7 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
                 val fiqhParamName = fiqh.paramName
                 defaultPrefs.edit { it.putString(PREFERRED_FIQH, fiqhParamName) }
             } catch (e: Exception) {
-                Timber.e(e, "Failed to savePreferredFiqh -> ${e.message}")
+                Timber.e(e, "Failed to save preferred fiqh -> ${e.message}")
             }
         }
     }
@@ -117,7 +100,7 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
     suspend fun getPreferredFiqh(): Fiqh {
         return withContext(Dispatchers.IO) {
             try {
-                when (defaultPrefs.getString(PREFERRED_FIQH, Fiqh.UNKNOWN.paramName)) {
+                when (defaultPrefs.getString(PREFERRED_FIQH, Fiqh.HANAFI.paramName)) {
                     Fiqh.HANAFI.paramName -> Fiqh.HANAFI
                     Fiqh.SHAFII.paramName -> Fiqh.SHAFII
                     Fiqh.MALIKI.paramName -> Fiqh.MALIKI
@@ -126,7 +109,7 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
                 }
             } catch (e: Exception) {
                 Timber.e(e, "Failed to savePreferredFiqh -> ${e.message}")
-                Fiqh.UNKNOWN
+                Fiqh.HANAFI
             }
         }
     }

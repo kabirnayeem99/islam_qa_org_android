@@ -17,6 +17,14 @@ class SyncWorker @AssistedInject constructor(
     private val syncUtils: SyncUtils,
 ) : Worker(context, params) {
 
+    /**
+     * We check if we need to sync, if we do, we make a notification notifying user about it,
+     * sync all the questions and their answers,
+     * make another notification notifying about the successful completion,
+     * and return a success or failure result
+     *
+     * @return Result.success() or Result.failure()
+     */
     override fun doWork(): Result {
         return runBlocking {
             val needSyncing = syncUtils.checkIfNeedsSyncing()

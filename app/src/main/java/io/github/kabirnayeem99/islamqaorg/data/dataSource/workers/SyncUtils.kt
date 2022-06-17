@@ -11,6 +11,9 @@ import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaLocalDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaRemoteDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.PreferenceDataSource
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -81,12 +84,15 @@ class SyncUtils @Inject constructor(
             val randomQuestions = fetchCacheAndGetRandomQuestionsFromRemote()
             val fiqhBasedQuestions = fetchCacheAndGetFiqhBasedQuestionsFromRemote()
 
-            randomQuestions.forEach { question ->
-                fetchAndCacheQuestionsDetails(question)
-            }
-
-            fiqhBasedQuestions.forEach { question ->
-                fetchAndCacheQuestionsDetails(question)
+            coroutineScope {
+                listOf(
+                    async {
+                        randomQuestions.forEach { q -> fetchAndCacheQuestionsDetails(q) }
+                    },
+                    async {
+                        fiqhBasedQuestions.forEach { q -> fetchAndCacheQuestionsDetails(q) }
+                    },
+                ).awaitAll()
             }
 
             preferenceDataSource.updateSyncingStatus()
