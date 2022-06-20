@@ -6,6 +6,9 @@ import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerReposi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
+/**
+ * Gets all the questions answered according to currently selected Fiqh of the user.
+ */
 class GetFiqhBasedQuestions
 @Inject
 constructor(private val repository: QuestionAnswerRepository) {

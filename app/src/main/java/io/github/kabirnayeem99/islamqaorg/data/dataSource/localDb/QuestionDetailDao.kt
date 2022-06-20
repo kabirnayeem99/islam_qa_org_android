@@ -6,6 +6,10 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.github.kabirnayeem99.islamqaorg.data.dto.room.QuestionDetailEntity
 
+/**
+ * DAO class that has a method to insert a question into the database, and another method to get
+ * a question from the database
+ */
 @Dao
 interface QuestionDetailDao {
 

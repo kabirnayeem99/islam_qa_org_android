@@ -15,6 +15,9 @@ class StartViewModel @Inject constructor(
     private val workManager: WorkManager,
 ) : ViewModel() {
 
+    /**
+     * Requests work-manager to sync all the questions to the local DB from remote
+     */
     fun syncQuestionsAndAnswers() {
         viewModelScope.launch(Dispatchers.Default) {
             workManager.enqueue(OneTimeWorkRequest.from(SyncWorker::class.java))

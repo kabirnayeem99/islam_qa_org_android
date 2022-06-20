@@ -6,6 +6,9 @@ import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerReposi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
+/**
+ * Gets random questions
+ */
 class GetRandomQuestion
 @Inject constructor(private val repository: QuestionAnswerRepository) {
     suspend operator fun invoke(shouldRefresh: Boolean): Flow<Resource<List<Question>>> {

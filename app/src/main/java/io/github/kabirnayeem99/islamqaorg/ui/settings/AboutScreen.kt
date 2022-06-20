@@ -51,7 +51,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun AboutScreen(navigator: DestinationsNavigator) {
 
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -175,6 +174,7 @@ private fun AboutContent() {
     var appVersionVisibility by remember { mutableStateOf(false) }
 
     val infiniteTransition = rememberInfiniteTransition()
+
     val angle by infiniteTransition.animateFloat(
         initialValue = 0F,
         targetValue = 360F,

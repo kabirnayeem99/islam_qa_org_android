@@ -125,6 +125,11 @@ class QuestionAnswerRepositoryImpl
     }
 
 
+    /**
+     * Gets the currently selected Fiqh from the preference data source.
+     *
+     * @return The currently selected Fiqh.
+     */
     private suspend fun getCurrentlySelectedFiqh(): Fiqh {
         val preferredFiqh = preferenceDataSource.getPreferredFiqh()
         if (preferredFiqh == Fiqh.UNKNOWN) {

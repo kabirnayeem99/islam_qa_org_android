@@ -28,6 +28,11 @@ class QuestionDetailViewModel @Inject constructor(
 
     private var fetchQuestionDetailsJob: Job? = null
 
+    /**
+     * Fetches the question details and updates the UI state.
+     *
+     * @param url The url of the question details to be fetched
+     */
     fun getQuestionsDetailsJob(url: String) {
         fetchQuestionDetailsJob?.cancel()
         fetchQuestionDetailsJob = viewModelScope.launch {
@@ -47,6 +52,12 @@ class QuestionDetailViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Toggles loading on or off based on the parameter
+     *
+     * @param shouldLoad Boolean - This is a boolean value that determines whether the loading
+     * indicator should be shown or not.
+     */
     private fun toggleLoading(shouldLoad: Boolean) {
         uiState = uiState.copy(isLoading = shouldLoad)
     }

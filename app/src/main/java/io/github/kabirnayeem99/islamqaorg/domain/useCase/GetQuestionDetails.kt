@@ -7,10 +7,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
+/**
+ * Gets detailed answers of a question based on the provided URL
+ */
 class GetQuestionDetails @Inject constructor(
     private val homeScreenRepository: QuestionAnswerRepository,
 ) {
-
     suspend operator fun invoke(url: String): Flow<Resource<QuestionDetail>> {
         return homeScreenRepository.getQuestionDetails(url)
             .onStart {

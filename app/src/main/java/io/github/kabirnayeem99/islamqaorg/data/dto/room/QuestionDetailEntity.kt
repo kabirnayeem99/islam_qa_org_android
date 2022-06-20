@@ -4,6 +4,19 @@ import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * Data class for Room database
+ *
+ * @property questionTitle String
+ * @property detailedQuestion String
+ * @property detailedAnswer String
+ * @property fiqh String
+ * @property source String
+ * @property originalLink String
+ * @property nextQuestionLink String
+ * @property previousQuestionLink String
+ * @constructor
+ */
 @Keep
 @Entity
 data class QuestionDetailEntity(

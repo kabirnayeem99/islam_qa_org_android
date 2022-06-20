@@ -35,6 +35,12 @@ class IslamQaLocalDataSource @Inject constructor(
         return questions
     }
 
+    /**
+     * Gets a list of questions from the database based on the fiqh parameter
+     *
+     * @param fiqh Fiqh -> This is the fiqh that the user has selected.
+     * @return A list of Question objects.
+     */
     suspend fun getFiqhBasedQuestionList(fiqh: Fiqh): List<Question> {
         val questions = try {
             questionListDao.getFiqhBasedQuestions(fiqh.paramName).map {
@@ -68,6 +74,12 @@ class IslamQaLocalDataSource @Inject constructor(
     }
 
 
+    /**
+     * Takes a question detail object, converts it to a question detail entity, and inserts it into
+     * the database
+     *
+     * @param questionDetail QuestionDetail - This is the object that we want to cache.
+     */
     suspend fun cacheQuestionDetail(questionDetail: QuestionDetail) {
         withContext(Dispatchers.IO) {
             try {
@@ -89,6 +101,12 @@ class IslamQaLocalDataSource @Inject constructor(
         }
     }
 
+    /**
+     * Gets detailed answer from the cached based on the provided URL (identifier)
+     *
+     * @param url The url of the question.
+     * @return A QuestionDetail object.
+     */
     suspend fun getDetailedQuestionAndAnswer(url: String): QuestionDetail? {
 
         return withContext(Dispatchers.IO) {

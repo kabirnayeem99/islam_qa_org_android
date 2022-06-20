@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,11 +41,12 @@ import kotlinx.coroutines.launch
 @Destination(style = PageTransitionAnimation::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
 
-    val uiState = viewModel.uiState
+    val uiState = homeViewModel.uiState
+
 
     val randomQuestionListHeading = stringResource(id = R.string.label_random_q_n_a)
     val homePageTitle = stringResource(id = R.string.q_n_a)
@@ -56,15 +58,22 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(true) {
-        viewModel.getRandomQuestions()
-        viewModel.getFiqhBasedQuestions()
+        homeViewModel.getRandomQuestions()
+        homeViewModel.getFiqhBasedQuestions()
     }
 
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 12.dp),
-        topBar = { HomeScreenTopAppBar(navigator, viewModel) }
+        topBar = {
+            HomeScreenTopAppBar(navigator) {
+                scope.launch {
+                    homeViewModel.getFiqhBasedQuestions(true)
+                    homeViewModel.getRandomQuestions(true)
+                }
+            }
+        }
     ) {
 
         it.toString()
@@ -119,7 +128,7 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenTopAppBar(
     navigator: DestinationsNavigator,
-    homeViewModel: HomeViewModel
+    onSyncButtonClick: () -> Unit,
 ) {
 
     val scope = rememberCoroutineScope()
@@ -145,10 +154,7 @@ private fun HomeScreenTopAppBar(
             Icons.Outlined.Refresh,
             stringResource(id = R.string.content_desc_sync)
         ) {
-            scope.launch {
-                homeViewModel.getFiqhBasedQuestions(true)
-                homeViewModel.getRandomQuestions(true)
-            }
+            onSyncButtonClick()
         }
 
     }

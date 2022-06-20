@@ -25,6 +25,11 @@ class SettingsViewModel @Inject constructor(
 
     private var savePreferredFiqhJob: Job? = null
 
+    /**
+     * Saves the selected fiqh and updates the UI state with the selected fiqh
+     *
+     * @param fiqh [Fiqh] - The fiqh that the user has selected
+     */
     fun saveFiqh(fiqh: Fiqh) {
         savePreferredFiqhJob?.cancel()
         savePreferredFiqhJob = viewModelScope.launch {
@@ -34,6 +39,10 @@ class SettingsViewModel @Inject constructor(
     }
 
     private var getPreferredFiqhJob: Job? = null
+
+    /**
+     * Fetches the currently selected [Fiqh]
+     */
     fun getFiqh() {
         getPreferredFiqhJob?.cancel()
         getPreferredFiqhJob = viewModelScope.launch {

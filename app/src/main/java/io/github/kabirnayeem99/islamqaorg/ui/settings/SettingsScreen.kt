@@ -58,7 +58,9 @@ fun SettingsScreen(
                 val settingsLabel = stringResource(id = R.string.label_settings)
                 ScreenTitle(homePageTitle = settingsLabel)
                 Spacer(modifier = Modifier.height(52.dp))
-                MadhabSettingsItem(settingsViewModel)
+                MadhabSettingsItem(settingsViewModel.uiState.selectedFiqh) { fiqh ->
+                    settingsViewModel.saveFiqh(fiqh)
+                }
                 Spacer(modifier = Modifier.height(22.dp))
                 AboutSettingsItem(navigator)
 
@@ -69,11 +71,7 @@ fun SettingsScreen(
 
 
 @Composable
-private fun MadhabSettingsItem(
-    settingsViewModel: SettingsViewModel
-) {
-
-    val selectedFiqh = settingsViewModel.uiState.selectedFiqh
+private fun MadhabSettingsItem(selectedFiqh: Fiqh, onFiqhSelected: (Fiqh) -> Unit) {
 
     Box(
         modifier = Modifier
@@ -111,7 +109,9 @@ private fun MadhabSettingsItem(
                         )
                     )
                 }
-                FiqhSelectorDropDownMenu(selectedFiqh, settingsViewModel)
+                FiqhSelectorDropDownMenu(selectedFiqh) { fiqh ->
+                    onFiqhSelected(fiqh)
+                }
             }
             Text(text = stringResource(id = R.string.hint_fiqh))
         }
@@ -173,10 +173,7 @@ private fun AboutSettingsItem(navigator: DestinationsNavigator) {
 }
 
 @Composable
-private fun FiqhSelectorDropDownMenu(
-    selectedFiqh: Fiqh,
-    settingsViewModel: SettingsViewModel
-) {
+private fun FiqhSelectorDropDownMenu(selectedFiqh: Fiqh, onFiqhSelected: (Fiqh) -> Unit) {
     val fiqhList = Fiqh.values().filterNot { it.displayName.isBlank() }
     var expanded by remember { mutableStateOf(false) }
 
@@ -210,7 +207,7 @@ private fun FiqhSelectorDropDownMenu(
                     DropdownMenuItem(onClick = {
                         Timber.d(fiqh.toString())
                         expanded = false
-                        settingsViewModel.saveFiqh(fiqh)
+                        onFiqhSelected(fiqh)
                     }) {
                         Row {
                             Icon(

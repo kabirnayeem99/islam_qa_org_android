@@ -29,34 +29,45 @@ class HomeViewModel @Inject constructor(
 
     private var fetchRandomQuestionJob: Job? = null
 
+    /**
+     * Fetches random questions.
+     *
+     * @param shouldRefresh Boolean = false
+     */
     fun getRandomQuestions(shouldRefresh: Boolean = false) {
         fetchRandomQuestionJob?.cancel()
         fetchRandomQuestionJob = viewModelScope.launch(Dispatchers.IO) {
-            getRandomQuestion(shouldRefresh).distinctUntilChanged().collect { res ->
-                when (res) {
-                    is Resource.Loading -> {
-                        uiState = uiState.copy(isRandomQuestionLoading = true)
-                    }
-                    is Resource.Error -> {
-                        uiState = uiState.copy(isRandomQuestionLoading = false)
-                        makeUserMessage(res.message ?: "")
-                    }
-                    is Resource.Success -> {
+            getRandomQuestion(shouldRefresh).distinctUntilChanged()
+                .collect { res ->
+                    when (res) {
+                        is Resource.Loading -> {
+                            uiState = uiState.copy(isRandomQuestionLoading = true)
+                        }
+                        is Resource.Error -> {
+                            uiState = uiState.copy(isRandomQuestionLoading = false)
+                            makeUserMessage(res.message ?: "")
+                        }
+                        is Resource.Success -> {
 
-                        val questionAnswers = res.data?.sortedBy { it.question } ?: emptyList()
-                        uiState = uiState.copy(
-                            randomQuestions = questionAnswers,
-                            isRandomQuestionLoading = false
-                        )
-                        makeUserMessage("Loaded successfully ${questionAnswers.size} questions.")
+                            val questionAnswers = res.data?.sortedBy { it.question } ?: emptyList()
+                            uiState = uiState.copy(
+                                randomQuestions = questionAnswers,
+                                isRandomQuestionLoading = false
+                            )
+                            makeUserMessage("Loaded successfully ${questionAnswers.size} questions.")
+                        }
                     }
                 }
-            }
         }
     }
 
     private var fetchFiqhBasedQuestionJob: Job? = null
 
+    /**
+     * Fetches the questions based on currently selected Fiqh and updates the UI state.
+     *
+     * @param shouldRefresh Boolean = false
+     */
     fun getFiqhBasedQuestions(shouldRefresh: Boolean = false) {
         fetchFiqhBasedQuestionJob?.cancel()
         fetchFiqhBasedQuestionJob = viewModelScope.launch(Dispatchers.IO) {
