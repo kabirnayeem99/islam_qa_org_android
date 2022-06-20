@@ -61,7 +61,7 @@ fun QuestionDetailsScreen(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = stringResource(id = R.string.content_desc_go_back)
                 ) {
-                    navigator.navigateUp()
+                    scope.launch { navigator.navigateUp() }
                 }
             },
             backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6F),

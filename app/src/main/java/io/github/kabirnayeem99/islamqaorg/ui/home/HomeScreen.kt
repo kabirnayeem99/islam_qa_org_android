@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,6 +33,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.SettingsScreenDestination
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @RootNavGraph(start = true)
@@ -50,6 +52,8 @@ fun HomeScreen(
 
     val fiqhBasedQuestions = uiState.fiqhBasedQuestions
     val randomQuestions = uiState.randomQuestions
+
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(true) {
         viewModel.getRandomQuestions()
@@ -103,7 +107,7 @@ fun HomeScreen(
                         question = question,
                         modifier = Modifier.animateItemPlacement()
                     ) {
-                        navigator.navigate(QuestionDetailsScreenDestination(question.url))
+                        scope.launch { navigator.navigate(QuestionDetailsScreenDestination(question.url)) }
                     }
                 }
             }
@@ -117,6 +121,10 @@ private fun HomeScreenTopAppBar(
     navigator: DestinationsNavigator,
     homeViewModel: HomeViewModel
 ) {
+
+    val scope = rememberCoroutineScope()
+
+
     TopAppBar(
         backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6F),
         modifier = Modifier
@@ -128,7 +136,7 @@ private fun HomeScreenTopAppBar(
             Icons.Outlined.Settings,
             stringResource(id = R.string.content_desc_settings)
         ) {
-            navigator.navigate(SettingsScreenDestination())
+            scope.launch { navigator.navigate(SettingsScreenDestination()) }
         }
 
         Spacer(modifier = Modifier.weight(0.9F))
@@ -137,8 +145,10 @@ private fun HomeScreenTopAppBar(
             Icons.Outlined.Refresh,
             stringResource(id = R.string.content_desc_sync)
         ) {
-            homeViewModel.getFiqhBasedQuestions(true)
-            homeViewModel.getRandomQuestions(true)
+            scope.launch {
+                homeViewModel.getFiqhBasedQuestions(true)
+                homeViewModel.getRandomQuestions(true)
+            }
         }
 
     }
@@ -150,6 +160,8 @@ private fun RandomQuestionSlider(
     randomQuestions: List<Question>,
     navigator: DestinationsNavigator
 ) {
+    val scope = rememberCoroutineScope()
+
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -157,7 +169,9 @@ private fun RandomQuestionSlider(
     ) {
         itemsIndexed(randomQuestions, key = { _, q -> q.url }) { index, question ->
             QuestionSliderItemCard(question = question, index = index, onClick = {
-                navigator.navigate(QuestionDetailsScreenDestination(question.url))
+                scope.launch {
+                    navigator.navigate(QuestionDetailsScreenDestination(question.url))
+                }
             })
         }
     }

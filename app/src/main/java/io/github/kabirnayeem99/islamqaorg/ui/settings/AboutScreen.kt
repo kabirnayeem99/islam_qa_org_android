@@ -50,12 +50,17 @@ import kotlinx.coroutines.launch
 @Destination(style = PageTransitionAnimation::class)
 @Composable
 fun AboutScreen(navigator: DestinationsNavigator) {
+
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 12.dp),
         topBar = { AboutTopAppBar(navigator) },
     ) {
+
+        it.toString()
+
         LazyColumn(modifier = Modifier.padding(horizontal = 24.dp)) {
             item {
                 Spacer(modifier = Modifier.height(62.dp))
@@ -87,6 +92,7 @@ fun AboutScreen(navigator: DestinationsNavigator) {
 private fun AboutButtonSection() {
 
     val uriHandler: UriHandler = LocalUriHandler.current
+    val scope = rememberCoroutineScope()
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -96,21 +102,27 @@ private fun AboutButtonSection() {
             icon = Icons.Outlined.Info,
             title = stringResource(id = R.string.label_about)
         ) {
-            navigateToIslamQaAboutSection(uriHandler)
+            scope.launch {
+                navigateToIslamQaAboutSection(uriHandler)
+            }
         }
         Spacer(modifier = Modifier.width(12.dp))
         AboutBoxItem(
             icon = Icons.Outlined.Build,
             title = stringResource(id = R.string.content_desc_open_github_source_code)
         ) {
-            navigateToSourceCode(uriHandler)
+            scope.launch {
+                navigateToSourceCode(uriHandler)
+            }
         }
         Spacer(modifier = Modifier.width(12.dp))
         AboutBoxItem(
             icon = Icons.Outlined.Person,
             title = stringResource(id = R.string.content_desc_about_developer)
         ) {
-            navigateToMyPersonalGitHubProfile(uriHandler)
+            scope.launch {
+                navigateToMyPersonalGitHubProfile(uriHandler)
+            }
         }
     }
 }
@@ -135,6 +147,9 @@ private fun AboutBoxItem(icon: ImageVector, title: String, onClick: () -> Unit) 
 
 @Composable
 private fun AboutTopAppBar(navigator: DestinationsNavigator) {
+
+    val scope = rememberCoroutineScope()
+
     TopAppBar(
         title = {},
         navigationIcon = {
@@ -142,7 +157,7 @@ private fun AboutTopAppBar(navigator: DestinationsNavigator) {
                 imageVector = Icons.Outlined.ArrowBack,
                 contentDescription = stringResource(id = R.string.content_desc_go_back)
             ) {
-                navigator.navigateUp()
+                scope.launch { navigator.navigateUp() }
             }
         },
         backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6F),

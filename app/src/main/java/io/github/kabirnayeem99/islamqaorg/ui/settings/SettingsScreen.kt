@@ -30,6 +30,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.AboutScreenDestination
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,6 +72,7 @@ fun SettingsScreen(
 private fun MadhabSettingsItem(
     settingsViewModel: SettingsViewModel
 ) {
+
     val selectedFiqh = settingsViewModel.uiState.selectedFiqh
 
     Box(
@@ -119,6 +121,7 @@ private fun MadhabSettingsItem(
 
 @Composable
 private fun AboutSettingsItem(navigator: DestinationsNavigator) {
+    val scope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -127,7 +130,9 @@ private fun AboutSettingsItem(navigator: DestinationsNavigator) {
             .background(
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2F)
             )
-            .clickable { navigator.navigate(AboutScreenDestination()) },
+            .clickable {
+                scope.launch { navigator.navigate(AboutScreenDestination()) }
+            },
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -230,6 +235,8 @@ private fun FiqhSelectorDropDownMenu(
 
 @Composable
 private fun SettingsTopAppBar(navigator: DestinationsNavigator) {
+    val scope = rememberCoroutineScope()
+
     TopAppBar(
         title = {},
         navigationIcon = {
@@ -237,7 +244,9 @@ private fun SettingsTopAppBar(navigator: DestinationsNavigator) {
                 imageVector = Icons.Outlined.ArrowBack,
                 contentDescription = stringResource(id = R.string.content_desc_go_back)
             ) {
-                navigator.navigateUp()
+                scope.launch {
+                    navigator.navigateUp()
+                }
             }
         },
         backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6F),
