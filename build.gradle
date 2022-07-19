@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        compose_version = "1.2.0-beta03"
+        compose_version = '1.2.0'
     }
 
     dependencies {
@@ -10,18 +10,22 @@ buildscript {
         def nav_version = "2.4.2"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
         classpath 'com.google.android.gms:oss-licenses-plugin:0.10.5'
-        classpath "org.jetbrains.kotlin:kotlin-serialization:1.6.21"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:1.7.0"
+    }
+    repositories {
+        google()
     }
 }
 
 plugins {
     id 'com.android.application' version '7.2.1' apply false
     id 'com.android.library' version '7.2.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.21' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.0' apply false
 }
 
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
 
