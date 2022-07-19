@@ -1,5 +1,7 @@
 package io.github.kabirnayeem99.islamqaorg.ui.questionDetails
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -35,7 +37,10 @@ import io.github.kabirnayeem99.islamqaorg.ui.home.QuestionItemPlaceholder
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+    ExperimentalAnimationApi::class
+)
 @Destination(style = PageTransitionAnimation::class)
 @Composable
 fun QuestionDetailsScreen(
@@ -73,52 +78,68 @@ fun QuestionDetailsScreen(
 
         it.toString()
 
-        LazyColumn(
-            modifier = Modifier.padding(24.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center,
-        ) {
+        AnimatedContent(targetState = questionDetailViewModel.uiState.isLoading) { isLoading ->
+            if (isLoading)
+                LazyColumn(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Center,
+                ) {
 
-            item {
-                Spacer(modifier = Modifier.height(52.dp))
-            }
+                    item {
+                        Spacer(modifier = Modifier.height(52.dp))
+                    }
 
-            if (questionDetailViewModel.uiState.isLoading) {
-                item {
-                    QuestionDetailsLoadingIndicator()
+                    item {
+                        QuestionDetailsLoadingIndicator()
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(22.dp))
+                        RelevantQaLabelLoadingIndicator()
+                    }
+                    items(6) {
+                        QuestionItemPlaceholder(false)
+                    }
                 }
-                item {
-                    Spacer(modifier = Modifier.height(22.dp))
-                    RelevantQaLabelLoadingIndicator()
-                }
-                items(6) {
-                    QuestionItemPlaceholder(false)
-                }
-            } else {
-                val questionDetail = questionDetailViewModel.uiState.questionDetails
+            else
+                LazyColumn(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Center,
+                ) {
 
-                item {
-                    QuestionTitleText(questionDetail.questionTitle)
-                    Spacer(modifier = Modifier.height(6.dp))
-                    QuestionSourceText(questionDetail.fiqh, questionDetail.source)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    QuestionDetailText(questionDetail.detailedQuestion)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    QuestionAnswerText(questionDetail.detailedAnswer)
-                    Spacer(modifier = Modifier.height(22.dp))
-                    RelevantQaLabelText()
-                }
+                    item {
+                        Spacer(modifier = Modifier.height(52.dp))
+                    }
 
-                itemsIndexed(questionDetail.relevantQuestions) { _, question ->
-                    QuestionItemCard(question = question, shouldHavePadding = false, onClick = {
-                        scope.launch {
-                            navigator.navigate(QuestionDetailsScreenDestination(question.url))
-                        }
-                    }, modifier = Modifier.animateItemPlacement())
+
+                    val questionDetail = questionDetailViewModel.uiState.questionDetails
+
+                    item {
+                        QuestionTitleText(questionDetail.questionTitle)
+                        Spacer(modifier = Modifier.height(6.dp))
+                        QuestionSourceText(questionDetail.fiqh, questionDetail.source)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        QuestionDetailText(questionDetail.detailedQuestion)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        QuestionAnswerText(questionDetail.detailedAnswer)
+                        Spacer(modifier = Modifier.height(22.dp))
+                        RelevantQaLabelText()
+                    }
+
+                    itemsIndexed(questionDetail.relevantQuestions) { _, question ->
+                        QuestionItemCard(question = question, shouldHavePadding = false, onClick = {
+                            scope.launch {
+                                navigator.navigate(QuestionDetailsScreenDestination(question.url))
+                            }
+                        }, modifier = Modifier.animateItemPlacement())
+                    }
                 }
-            }
         }
+
+
     }
+
 }
 
 @Composable
