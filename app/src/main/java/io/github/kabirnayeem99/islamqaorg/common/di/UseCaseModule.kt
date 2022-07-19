@@ -36,4 +36,9 @@ object UseCaseModule {
     fun provideGetPreferredFiqh(repository: SettingsRepository): GetPreferredFiqh {
         return GetPreferredFiqh(repository)
     }
+
+    @Provides
+    fun provideSearchQuestion(repository: QuestionAnswerRepository): SearchQuestion {
+        return SearchQuestion(repository)
+    }
 }

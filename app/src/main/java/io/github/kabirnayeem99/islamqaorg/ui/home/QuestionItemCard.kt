@@ -27,8 +27,8 @@ import io.github.kabirnayeem99.islamqaorg.ui.theme.ArabicFontFamily
 @Composable
 fun QuestionItemCard(
     question: Question,
-    shouldHavePadding: Boolean = true,
     modifier: Modifier = Modifier,
+    shouldHavePadding: Boolean = true,
     onClick: () -> Unit = {}
 ) {
 

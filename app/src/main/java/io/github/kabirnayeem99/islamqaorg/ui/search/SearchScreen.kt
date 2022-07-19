@@ -36,7 +36,6 @@ fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
 
-
     val uiState = viewModel.uiState
 
     Scaffold(
@@ -52,9 +51,8 @@ fun SearchScreen(
                     content = {
                         itemsIndexed(
                             uiState.searchQuestionResults,
-                            key = { _, q -> q.url }) { _, question ->
-                            QuestionItemCard(question = question)
-                        }
+                            key = { i, q -> q.url.plus(i) },
+                        ) { _, question -> QuestionItemCard(question = question) }
                     },
                 )
             }
@@ -77,6 +75,7 @@ private fun SearchField(
                 end = 24.dp
             )
             .clip(RoundedCornerShape(12.dp)),
+
         leadingIcon = {
             Icon(
                 imageVector = Icons.Outlined.Search,
