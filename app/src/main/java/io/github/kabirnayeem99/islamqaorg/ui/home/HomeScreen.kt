@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -16,7 +16,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +32,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
+import io.github.kabirnayeem99.islamqaorg.ui.destinations.SearchScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.SettingsScreenDestination
 import kotlinx.coroutines.launch
 
@@ -67,20 +67,14 @@ fun HomeScreen(
             .fillMaxSize()
             .padding(top = 12.dp),
         topBar = {
-            HomeScreenTopAppBar(navigator) {
-                scope.launch {
-                    homeViewModel.getFiqhBasedQuestions(true)
-                    homeViewModel.getRandomQuestions(true)
-                }
-            }
+            HomeScreenTopAppBar(navigator)
         }
     ) {
-
-        it.toString()
 
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
+            contentPadding = PaddingValues(top = it.calculateTopPadding())
         ) {
 
             // Header Title
@@ -128,11 +122,9 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenTopAppBar(
     navigator: DestinationsNavigator,
-    onSyncButtonClick: () -> Unit,
 ) {
 
     val scope = rememberCoroutineScope()
-
 
     TopAppBar(
         backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6F),
@@ -151,10 +143,10 @@ private fun HomeScreenTopAppBar(
         Spacer(modifier = Modifier.weight(0.9F))
 
         TopBarActionButton(
-            Icons.Outlined.Refresh,
-            stringResource(id = R.string.content_desc_sync)
+            Icons.Outlined.Search,
+            stringResource(id = R.string.content_desc_search)
         ) {
-            onSyncButtonClick()
+            scope.launch { navigator.navigate(SearchScreenDestination()) }
         }
 
     }

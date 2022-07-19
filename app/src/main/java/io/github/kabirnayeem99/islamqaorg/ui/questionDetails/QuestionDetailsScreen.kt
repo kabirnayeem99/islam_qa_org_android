@@ -1,7 +1,7 @@
 package io.github.kabirnayeem99.islamqaorg.ui.questionDetails
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -78,7 +78,16 @@ fun QuestionDetailsScreen(
 
         it.toString()
 
-        AnimatedContent(targetState = questionDetailViewModel.uiState.isLoading) { isLoading ->
+        AnimatedContent(
+            transitionSpec = {
+                fadeIn(animationSpec = tween(220, delayMillis = 90)) +
+                        slideInVertically(
+                            initialOffsetY = { 90 },
+                            animationSpec = tween(220, delayMillis = 90)
+                        ) with
+                        fadeOut(animationSpec = tween(90))
+            }, targetState = questionDetailViewModel.uiState.isLoading
+        ) { isLoading ->
             if (isLoading)
                 LazyColumn(
                     modifier = Modifier.padding(24.dp),

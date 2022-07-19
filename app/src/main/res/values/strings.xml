@@ -40,4 +40,5 @@
     <string name="content_desc_about_developer">Know about developer</string>
     <string name="label_syncing">We are syncing the questions and answers in the background. It will ensure faster loading, the next time you enter this app.</string>
     <string name="label_synced">We are done syncing a bunch of questions and their answers.</string>
+    <string name="content_desc_search">Search for questions</string>
 </resources>
