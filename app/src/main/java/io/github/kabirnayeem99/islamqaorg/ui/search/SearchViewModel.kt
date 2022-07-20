@@ -25,7 +25,7 @@ class SearchViewModel @Inject constructor(
     }
 
     /**
-     * > When the user types in the search box, we update the UI state with the new text, and if the
+     * When the user types in the search box, we update the UI state with the new text, and if the
      * text is an even number of characters, we fetch the search results
      *
      * @param text The text to be searched.
