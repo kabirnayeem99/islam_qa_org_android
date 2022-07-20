@@ -1,7 +1,6 @@
 package io.github.kabirnayeem99.islamqaorg.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -56,7 +55,6 @@ private val DarkThemeColors = darkColorScheme(
     onSurface = Color(0xffEAE0E3),
 )
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IslamQaTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -64,20 +62,23 @@ fun IslamQaTheme(
     content: @Composable () -> Unit
 ) {
 
-    // Checking if the device is running on Android 10 or above.
-    // If it is, then it will use the dynamic color scheme.
-    val isDynamicColorSupported = isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-
     // Checking if the theme is dark or light and then setting the color scheme accordingly.
     val colorScheme = when {
-        isDynamicColorSupported && isDarkTheme -> {
-            dynamicDarkColorScheme(LocalContext.current)
+
+        isDarkTheme -> {
+            if (isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                dynamicDarkColorScheme(LocalContext.current)
+            else DarkThemeColors
         }
-        isDynamicColorSupported && !isDarkTheme -> {
-            dynamicLightColorScheme(LocalContext.current)
+
+        !isDarkTheme -> {
+            if (isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                dynamicLightColorScheme(LocalContext.current)
+            else LightThemeColors
         }
-        isDarkTheme -> DarkThemeColors
-        else -> LightThemeColors
+
+        else -> DarkThemeColors
+
     }
 
     MaterialTheme(
