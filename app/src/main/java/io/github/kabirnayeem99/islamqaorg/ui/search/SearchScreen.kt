@@ -1,7 +1,6 @@
 package io.github.kabirnayeem99.islamqaorg.ui.search
 
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -36,7 +35,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenD
 import io.github.kabirnayeem99.islamqaorg.ui.home.QuestionItemCard
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Destination(style = PageTransitionAnimation::class)
 fun SearchScreen(
@@ -44,14 +43,9 @@ fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
 
-    val scope = rememberCoroutineScope()
     val uiState = viewModel.uiState
 
-    fun onQuestionClick(url: String) {
-        scope.launch {
-            if (url.isNotBlank()) navigator.navigate(QuestionDetailsScreenDestination(url))
-        }
-    }
+
 
     Scaffold(
         modifier = Modifier
@@ -62,19 +56,33 @@ fun SearchScreen(
             Column {
                 SearchField(uiState, viewModel, contentPadding)
 
-                LazyColumn(
-                    contentPadding = PaddingValues(top = 24.dp),
-                    content = {
-                        itemsIndexed(
-                            uiState.searchQuestionResults,
-                            key = { i, q -> q.url.plus(i) },
-                        ) { _, question ->
-                            QuestionItemCard(
-                                question = question,
-                                onClick = { onQuestionClick(question.url) },
-                            )
-                        }
-                    },
+                SearchResults(uiState, navigator)
+            }
+        },
+    )
+}
+
+@Composable
+private fun SearchResults(uiState: SearchUiState, navigator: DestinationsNavigator) {
+
+    val scope = rememberCoroutineScope()
+
+    fun onQuestionClick(url: String) {
+        scope.launch {
+            if (url.isNotBlank()) navigator.navigate(QuestionDetailsScreenDestination(url))
+        }
+    }
+
+    LazyColumn(
+        contentPadding = PaddingValues(top = 24.dp),
+        content = {
+            itemsIndexed(
+                uiState.searchQuestionResults,
+                key = { i, q -> q.url.plus(i) },
+            ) { _, question ->
+                QuestionItemCard(
+                    question = question,
+                    onClick = { onQuestionClick(question.url) },
                 )
             }
         },
