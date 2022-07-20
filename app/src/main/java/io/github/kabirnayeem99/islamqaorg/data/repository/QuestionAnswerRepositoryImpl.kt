@@ -220,17 +220,24 @@ class QuestionAnswerRepositoryImpl
      * @return a flow of the [Question] list wrapped in a [Resource] class.
      */
     override suspend fun searchQuestions(query: String): Flow<Resource<List<Question>>> {
+
         val fiqh = preferenceDataSource.getPreferredFiqh()
         val cachedFiqhBasedQuestionList = inMemoryMutex.withLock { inMemoryFiqhBasedQuestionList }
+
         return flow {
             if (query.isNotBlank()) {
+
                 val searchResult = localDataSource.searchFiqhBasedQuestionList(fiqh, query)
+
                 if (searchResult.isNotEmpty()) emit(Resource.Success(searchResult))
                 else emit(Resource.Error("Could not find any questions for $query."))
+
             }
         }.onStart {
+
             if (query.isBlank()) emit(Resource.Success(cachedFiqhBasedQuestionList))
             else emit(Resource.Loading())
+
         }.flowOn(Dispatchers.IO)
     }
 }

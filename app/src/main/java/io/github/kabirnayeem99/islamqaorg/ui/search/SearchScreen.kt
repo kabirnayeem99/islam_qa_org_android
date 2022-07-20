@@ -1,14 +1,12 @@
 package io.github.kabirnayeem99.islamqaorg.ui.search
 
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -63,33 +61,21 @@ fun SearchScreen(
         content = { contentPadding ->
             Column {
                 SearchField(uiState, viewModel, contentPadding)
-                AnimatedContent(targetState = uiState.isSearchResultLoading) { isLoading ->
 
-                    if (!isLoading)
-                        LazyColumn(
-                            contentPadding = PaddingValues(top = 24.dp),
-                            content = {
-                                itemsIndexed(
-                                    uiState.searchQuestionResults,
-                                    key = { i, q -> q.url.plus(i) },
-                                ) { _, question ->
-                                    QuestionItemCard(
-                                        question = question,
-                                        onClick = { onQuestionClick(question.url) },
-                                    )
-                                }
-                            },
-                        )
-                    else LinearProgressIndicator(
-                        modifier = Modifier
-                            .padding(top = 24.dp)
-                            .fillMaxWidth()
-                            .padding(start = 24.dp, end = 24.dp)
-                            .align(Alignment.CenterHorizontally)
-                            .clip(CircleShape)
-                    )
-                }
-
+                LazyColumn(
+                    contentPadding = PaddingValues(top = 24.dp),
+                    content = {
+                        itemsIndexed(
+                            uiState.searchQuestionResults,
+                            key = { i, q -> q.url.plus(i) },
+                        ) { _, question ->
+                            QuestionItemCard(
+                                question = question,
+                                onClick = { onQuestionClick(question.url) },
+                            )
+                        }
+                    },
+                )
             }
         },
     )
