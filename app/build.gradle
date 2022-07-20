@@ -8,7 +8,7 @@ plugins {
     id "com.google.protobuf" version "0.8.17"
     id 'com.google.android.gms.oss-licenses-plugin'
     id 'kotlinx-serialization'
-    id 'com.google.devtools.ksp' version '1.7.0-1.0.6'
+    id 'com.google.devtools.ksp' version '1.7.10-1.0.6'
 }
 
 android {
@@ -39,10 +39,14 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += [
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
+        ]
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = compose_version
+        kotlinCompilerExtensionVersion = "1.2.0"
     }
 
     buildFeatures {
