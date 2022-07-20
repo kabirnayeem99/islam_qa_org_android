@@ -55,6 +55,26 @@ class IslamQaLocalDataSource @Inject constructor(
     }
 
     /**
+     * Gets a list of questions from the database based on the query parameter and fiqh
+     *
+     * @param fiqh Fiqh -> This is the fiqh that the user has selected.
+     * @param query String -> This is the text based on which we are filtering questions.
+     * @return A list of Question objects.
+     */
+    suspend fun searchFiqhBasedQuestionList(fiqh: Fiqh, query: String): List<Question> {
+        val questions = try {
+            questionListDao.searchQuestions(query).map {
+                Question(it.id, it.question, it.url)
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to get cached searched question list -> ${e.message}.")
+            emptyList()
+        }
+        Timber.d(questions.toString())
+        return questions
+    }
+
+    /**
      * Takes a list of questions, converts them to question entities, and inserts them into the
      * database
      *

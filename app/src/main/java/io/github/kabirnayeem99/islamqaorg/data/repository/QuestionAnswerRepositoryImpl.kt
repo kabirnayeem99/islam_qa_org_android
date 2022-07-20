@@ -90,6 +90,17 @@ class QuestionAnswerRepositoryImpl
         }
     }
 
+    private suspend fun searchRandomQuestionListFromRemoteDataSource(query: String): Resource<List<Question>> {
+        return try {
+            val homeScreen = remoteDataSource.searchRandomQuestionsList(query)
+            localDataSource.cacheQuestionList(homeScreen)
+            Resource.Success(homeScreen)
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to get home screen data -> ${e.localizedMessage}.")
+            Resource.Error(e.localizedMessage ?: "Failed to get home screen data.")
+        }
+    }
+
 
     /**
      * Fetches the question details based on the URL
@@ -155,7 +166,6 @@ class QuestionAnswerRepositoryImpl
         val cachedFiqhBasedQuestionList = inMemoryMutex.withLock { inMemoryFiqhBasedQuestionList }
         return flow {
             val fiqh = getCurrentlySelectedFiqh()
-            kotlinx.coroutines.delay(2000)
             if (isNetworkAvailable) {
                 val remoteData = getFiqhBasedQuestionListFromRemoteDataSource(fiqh, pageNumber)
                 emit(remoteData)
@@ -201,5 +211,26 @@ class QuestionAnswerRepositoryImpl
             Timber.e(e, "Failed to get fiqh based question data -> ${e.localizedMessage}.")
             Resource.Error(e.localizedMessage ?: "Failed to get home screen data.")
         }
+    }
+
+    /**
+     * Searches questions list based on the preferred [Fiqh] and search query of the user
+     *
+     * @param query String - the query user searched for.
+     * @return a flow of the [Question] list wrapped in a [Resource] class.
+     */
+    override suspend fun searchQuestions(query: String): Flow<Resource<List<Question>>> {
+        val cachedFiqhBasedQuestionList = inMemoryMutex.withLock { inMemoryFiqhBasedQuestionList }
+        return flow {
+            val fiqh = getCurrentlySelectedFiqh()
+            if (isNetworkAvailable) {
+                val remoteData = searchRandomQuestionListFromRemoteDataSource(query)
+                emit(remoteData)
+            } else {
+                emit(Resource.Error("No Internet connection."))
+            }
+        }.onStart {
+            emit(Resource.Loading())
+        }.flowOn(Dispatchers.IO)
     }
 }

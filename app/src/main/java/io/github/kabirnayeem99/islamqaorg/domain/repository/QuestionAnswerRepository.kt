@@ -37,4 +37,12 @@ interface QuestionAnswerRepository {
      */
     suspend fun getQuestionDetails(url: String): Flow<Resource<QuestionDetail>>
 
+    /**
+     * Searches questions list based on the preferred [Fiqh] and search query of the user
+     *
+     * @param query String - the query user searched for.
+     * @return a flow of the [Question] list wrapped in a [Resource] class.
+     */
+    suspend fun searchQuestions(query: String): Flow<Resource<List<Question>>>
+
 }

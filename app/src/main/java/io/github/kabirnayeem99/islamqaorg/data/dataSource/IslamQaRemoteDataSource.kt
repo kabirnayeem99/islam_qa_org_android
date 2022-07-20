@@ -101,4 +101,11 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
             detail
         }
     }
+
+    suspend fun searchRandomQuestionsList(query: String): List<Question> {
+        val searchResults = getFiqhBasedQuestionsList(Fiqh.HANAFI, 1).filter {
+            it.question.contains(query)
+        }
+        return searchResults
+    }
 }

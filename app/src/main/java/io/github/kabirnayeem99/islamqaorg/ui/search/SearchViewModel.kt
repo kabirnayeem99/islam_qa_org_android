@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.SearchQuestion
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,27 +20,44 @@ class SearchViewModel @Inject constructor(
     var uiState by mutableStateOf(SearchUiState())
         private set
 
+    /**
+     * > When the user types in the search box, we update the UI state with the new text, and if the
+     * text is an even number of characters, we fetch the search results
+     *
+     * @param text The text to be searched.
+     */
     fun changeQueryText(text: String) {
         viewModelScope.launch {
             uiState = uiState.copy(query = text)
-            if (text.length % 2 == 0) fetchSearchResults()
         }
     }
 
-    private suspend fun fetchSearchResults() {
+    private var fetchSearchResults: Job? = null
+
+    /**
+     * Fetches the search question results based on the query
+     */
+    fun fetchSearchResults() {
+        fetchSearchResults?.cancel()
         viewModelScope.launch {
             val query = uiState.query
             searchQuestion(query).collect { res ->
                 when (res) {
+
                     is Resource.Success -> {
-                        uiState = uiState.copy(searchQuestionResults = res.data ?: emptyList())
+                        uiState = uiState.copy(
+                            searchQuestionResults = res.data ?: emptyList(),
+                            isSearchResultLoading = false
+                        )
                     }
 
                     is Resource.Loading -> {
-                        uiState = uiState.copy(isSearchResultLoading = true)
+                        uiState = uiState.copy(isSearchResultLoading = query.isNotBlank())
                     }
 
-                    else -> Unit
+                    else -> {
+                        uiState = uiState.copy(isSearchResultLoading = false)
+                    }
                 }
             }
         }

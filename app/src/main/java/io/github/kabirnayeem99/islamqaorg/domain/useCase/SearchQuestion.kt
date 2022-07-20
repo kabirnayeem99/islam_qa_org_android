@@ -13,7 +13,7 @@ class SearchQuestion
     suspend operator fun invoke(
         query: String,
     ): Flow<Resource<List<Question>>> {
-        return repository.getRandomQuestionList()
+        return repository.searchQuestions(query)
             .onStart { if (query.isBlank()) emit(Resource.Success(emptyList())) }
     }
 }
