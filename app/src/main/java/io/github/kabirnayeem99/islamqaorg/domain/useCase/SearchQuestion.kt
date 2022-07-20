@@ -4,7 +4,6 @@ import io.github.kabirnayeem99.islamqaorg.common.base.Resource
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 class SearchQuestion
@@ -14,6 +13,5 @@ class SearchQuestion
         query: String,
     ): Flow<Resource<List<Question>>> {
         return repository.searchQuestions(query)
-            .onStart { if (query.isBlank()) emit(Resource.Success(emptyList())) }
     }
 }

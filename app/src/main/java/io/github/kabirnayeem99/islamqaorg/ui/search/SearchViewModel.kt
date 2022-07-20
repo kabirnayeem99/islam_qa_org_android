@@ -20,6 +20,10 @@ class SearchViewModel @Inject constructor(
     var uiState by mutableStateOf(SearchUiState())
         private set
 
+    init {
+        fetchSearchResults()
+    }
+
     /**
      * > When the user types in the search box, we update the UI state with the new text, and if the
      * text is an even number of characters, we fetch the search results
@@ -47,12 +51,15 @@ class SearchViewModel @Inject constructor(
                     is Resource.Success -> {
                         uiState = uiState.copy(
                             searchQuestionResults = res.data ?: emptyList(),
-                            isSearchResultLoading = false
+                            isSearchResultLoading = false,
                         )
                     }
 
                     is Resource.Loading -> {
-                        uiState = uiState.copy(isSearchResultLoading = query.isNotBlank())
+                        uiState = uiState.copy(
+                            isSearchResultLoading = query.isNotBlank(),
+                            searchQuestionResults = emptyList(),
+                        )
                     }
 
                     else -> {

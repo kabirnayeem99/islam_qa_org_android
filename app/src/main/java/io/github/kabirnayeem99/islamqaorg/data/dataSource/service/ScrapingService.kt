@@ -3,6 +3,7 @@ package io.github.kabirnayeem99.islamqaorg.data.dataSource.service
 import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.FiqhBasedQuestionListDto
 import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.QuestionDetailScreenDto
 import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.RandomQuestionListDto
+import io.github.kabirnayeem99.islamqaorg.data.dto.islamQa.SearchResultQuestionDto
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import it.skrape.core.document
@@ -19,7 +20,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import kotlin.random.Random
 
-private const val homeScreenUrl = "https://islamqa.org/"
+private const val baseIslamQaUrl = "https://islamqa.org/"
 
 class ScrapingService {
 
@@ -32,11 +33,10 @@ class ScrapingService {
         return withContext(Dispatchers.IO) {
 
             val islamQaHomeDto = skrape(HttpFetcher) {
-                request { url = homeScreenUrl }
+                request { url = baseIslamQaUrl }
                 response { getRandomQuestionListDtoOutOfResponse() }
             }
 
-            Timber.d(islamQaHomeDto.toString())
 
             islamQaHomeDto
         }
@@ -101,7 +101,6 @@ class ScrapingService {
                     )
                 }
             }
-            Timber.d(questionDetail.toString())
 
             questionDetail
         }
@@ -228,18 +227,15 @@ class ScrapingService {
 
             val fiqhParamName = if (fiqh == Fiqh.UNKNOWN) Fiqh.HANAFI.paramName else fiqh.paramName
 
-            Timber.d("Getting question for $fiqhParamName of page $pageNumber.")
 
             val fiqhBasedQuestionUrl = "https://islamqa.org/category/${fiqhParamName}/"
 
-            Timber.d("URL is $fiqhBasedQuestionUrl")
 
             val fiqhBasedQuestionListDto = skrape(HttpFetcher) {
                 request { url = fiqhBasedQuestionUrl }
                 response { getFiqhBasedQuestionListDtoOutOfResponse(fiqh) }
             }
 
-            Timber.d(fiqhBasedQuestionListDto.toString())
 
             fiqhBasedQuestionListDto
         }
@@ -257,7 +253,6 @@ class ScrapingService {
             fiqh = fiqh
         )
 
-        Timber.d("FiqhBasedQuestionListDto -> $dto")
         return dto
     }
 
@@ -295,6 +290,59 @@ class ScrapingService {
     } catch (e: Exception) {
         Timber.e(e, "Failed to get question links -> ${e.message}.")
         emptyList()
+    }
+
+    suspend fun parseSearchResults(query: String): SearchResultQuestionDto {
+        val spaceLessQuery = query.replace(" ", "+")
+        val searchResultUrl = "$baseIslamQaUrl?s=$spaceLessQuery"
+
+        Timber.d("search results url -> $searchResultUrl")
+
+        val searchResultQuestionDto = skrape(HttpFetcher) {
+            request { url = searchResultUrl }
+            response { getSearchResultQuestionListDtoOutOfResponse() }
+        }
+
+        return searchResultQuestionDto
+    }
+
+    /**
+     * Parses the HTML response and returns [SearchResultQuestionDto] class.
+     */
+    private fun Result.getSearchResultQuestionListDtoOutOfResponse(): SearchResultQuestionDto {
+        Timber.d("search results response -> $this")
+        return SearchResultQuestionDto(
+            httpStatusCode = status { code },
+            httpStatusMessage = status { message },
+            questions = findSearchResultQuestionQuestionTexts(),
+            questionLinks = findSearchResultQuestionLinks(),
+        )
+    }
+
+    private fun Result.findSearchResultQuestionQuestionTexts(): List<String> {
+        return try {
+
+            document.a {
+                findAll {
+                    Timber.d("list of doc element -> $this\n\n")
+                }
+            }
+
+            document.findAll("div")
+                .filter { it.className == "gs-title" }.eachText
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to find the questions list")
+            emptyList()
+        }
+    }
+
+    private fun Result.findSearchResultQuestionLinks(): List<String> {
+        return try {
+            document.li { a { findAll { filter { it.className == "arpw-title" }.eachHref } } }
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to find RandomQuestion Question Links ")
+            emptyList()
+        }
     }
 
 }

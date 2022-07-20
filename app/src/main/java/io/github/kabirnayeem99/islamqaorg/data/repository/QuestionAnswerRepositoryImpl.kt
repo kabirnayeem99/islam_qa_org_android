@@ -92,9 +92,9 @@ class QuestionAnswerRepositoryImpl
 
     private suspend fun searchRandomQuestionListFromRemoteDataSource(query: String): Resource<List<Question>> {
         return try {
-            val homeScreen = remoteDataSource.searchRandomQuestionsList(query)
-            localDataSource.cacheQuestionList(homeScreen)
-            Resource.Success(homeScreen)
+            val searchResult = remoteDataSource.searchRandomQuestionsList(query)
+            localDataSource.cacheQuestionList(searchResult)
+            Resource.Success(searchResult)
         } catch (e: Exception) {
             Timber.e(e, "Failed to get home screen data -> ${e.localizedMessage}.")
             Resource.Error(e.localizedMessage ?: "Failed to get home screen data.")
@@ -220,17 +220,17 @@ class QuestionAnswerRepositoryImpl
      * @return a flow of the [Question] list wrapped in a [Resource] class.
      */
     override suspend fun searchQuestions(query: String): Flow<Resource<List<Question>>> {
+        val fiqh = preferenceDataSource.getPreferredFiqh()
         val cachedFiqhBasedQuestionList = inMemoryMutex.withLock { inMemoryFiqhBasedQuestionList }
         return flow {
-            val fiqh = getCurrentlySelectedFiqh()
-            if (isNetworkAvailable) {
-                val remoteData = searchRandomQuestionListFromRemoteDataSource(query)
-                emit(remoteData)
-            } else {
-                emit(Resource.Error("No Internet connection."))
+            if (query.isNotBlank()) {
+                val searchResult = localDataSource.searchFiqhBasedQuestionList(fiqh, query)
+                if (searchResult.isNotEmpty()) emit(Resource.Success(searchResult))
+                else emit(Resource.Error("Could not find any questions for $query."))
             }
         }.onStart {
-            emit(Resource.Loading())
+            if (query.isBlank()) emit(Resource.Success(cachedFiqhBasedQuestionList))
+            else emit(Resource.Loading())
         }.flowOn(Dispatchers.IO)
     }
 }
