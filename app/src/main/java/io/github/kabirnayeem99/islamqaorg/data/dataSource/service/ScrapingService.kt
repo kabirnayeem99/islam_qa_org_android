@@ -34,7 +34,7 @@ class ScrapingService {
 
             val islamQaHomeDto = skrape(HttpFetcher) {
                 request { url = baseIslamQaUrl }
-                response { getRandomQuestionListDtoOutOfResponse() }
+                response { getRandomQuestionListDtoOutOfResponse(this) }
             }
 
 
@@ -45,13 +45,15 @@ class ScrapingService {
     /**
      * Parses the HTML response and returns [RandomQuestionListDto] class.
      */
-    private fun Result.getRandomQuestionListDtoOutOfResponse(): RandomQuestionListDto {
-        return RandomQuestionListDto(
-            httpStatusCode = status { code },
-            httpStatusMessage = status { message },
-            questions = findRandomQuestionQuestionTexts(),
-            questionLinks = findRandomQuestionQuestionLinks()
-        )
+    fun getRandomQuestionListDtoOutOfResponse(result: Result): RandomQuestionListDto {
+        result.apply {
+            return RandomQuestionListDto(
+                httpStatusCode = status { code },
+                httpStatusMessage = status { message },
+                questions = findRandomQuestionQuestionTexts(),
+                questionLinks = findRandomQuestionQuestionLinks()
+            )
+        }
     }
 
     private fun Result.findRandomQuestionQuestionLinks(): List<String> {
@@ -223,17 +225,17 @@ class ScrapingService {
      */
     suspend fun parseFiqhBasedQuestionsList(fiqh: Fiqh, pageNumber: Int): FiqhBasedQuestionListDto {
 
+        Timber.d("page number -> $pageNumber")
+
         return withContext(Dispatchers.IO) {
 
             val fiqhParamName = if (fiqh == Fiqh.UNKNOWN) Fiqh.HANAFI.paramName else fiqh.paramName
 
-
             val fiqhBasedQuestionUrl = "https://islamqa.org/category/${fiqhParamName}/"
-
 
             val fiqhBasedQuestionListDto = skrape(HttpFetcher) {
                 request { url = fiqhBasedQuestionUrl }
-                response { getFiqhBasedQuestionListDtoOutOfResponse(fiqh) }
+                response { getFiqhBasedQuestionListDtoOutOfResponse(this, fiqh) }
             }
 
 
@@ -244,16 +246,20 @@ class ScrapingService {
     /**
      * Parses the HTML response and returns [FiqhBasedQuestionListDto] class.
      */
-    private fun Result.getFiqhBasedQuestionListDtoOutOfResponse(fiqh: Fiqh): FiqhBasedQuestionListDto {
-        val dto = FiqhBasedQuestionListDto(
-            httpStatusCode = status { code },
-            httpStatusMessage = status { message },
-            questions = getFiqhBasedQuestionsFromResult(),
-            questionLinks = getQuestionLinksForFiqhBasedQuestions(),
-            fiqh = fiqh
-        )
-
-        return dto
+    fun getFiqhBasedQuestionListDtoOutOfResponse(
+        result: Result,
+        fiqh: Fiqh
+    ): FiqhBasedQuestionListDto {
+        result.apply {
+            val dto = FiqhBasedQuestionListDto(
+                httpStatusCode = status { code },
+                httpStatusMessage = status { message },
+                questions = getFiqhBasedQuestionsFromResult(),
+                questionLinks = getQuestionLinksForFiqhBasedQuestions(),
+                fiqh = fiqh
+            )
+            return dto
+        }
     }
 
     /**
