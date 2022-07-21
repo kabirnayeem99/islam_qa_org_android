@@ -36,22 +36,6 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Saves the preferred fiqh of the user to local storage
-     *
-     * @param fiqh Fiqh - This is the object that contains the fiqh information.
-     */
-    suspend fun savePreferredFiqh(fiqh: Fiqh) {
-        withContext(Dispatchers.IO) {
-            try {
-                val fiqhParamName = fiqh.paramName
-                defaultPrefs.edit { it.putString(PREFERRED_FIQH, fiqhParamName) }
-            } catch (e: Exception) {
-                Timber.e(e, "Failed to save preferred fiqh -> ${e.message}")
-            }
-        }
-    }
-
 
     /**
      * Checks if the last sync time is greater than the sync interval time
@@ -62,9 +46,12 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
         val doesNeedSyncing = withContext(Dispatchers.IO) {
             try {
                 val lastSyncTimeInMillis = defaultPrefs.getLong(LAST_SYNC_TIME, 0)
-                val currentTimeInMillis = Date().time
-                val interval = currentTimeInMillis - lastSyncTimeInMillis
-                interval > SYNC_INTERVAL_TIME_IN_MILLIS
+                if (lastSyncTimeInMillis == 0L) true
+                else {
+                    val currentTimeInMillis = Date().time
+                    val interval = currentTimeInMillis - lastSyncTimeInMillis
+                    interval > SYNC_INTERVAL_TIME_IN_MILLIS
+                }
             } catch (e: Exception) {
                 true
             }
@@ -87,6 +74,22 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
                     .apply()
             } catch (e: Exception) {
                 Timber.e(e, "Failed to update syncing status -> ${e.message}")
+            }
+        }
+    }
+
+    /**
+     * Saves the preferred fiqh of the user to local storage
+     *
+     * @param fiqh Fiqh - This is the object that contains the fiqh information.
+     */
+    suspend fun savePreferredFiqh(fiqh: Fiqh) {
+        withContext(Dispatchers.IO) {
+            try {
+                val fiqhParamName = fiqh.paramName
+                defaultPrefs.edit { it.putString(PREFERRED_FIQH, fiqhParamName) }
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to save preferred fiqh -> ${e.message}")
             }
         }
     }
@@ -126,5 +129,7 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
         operation(editor)
         editor.apply()
     }
+
+
 
 }
