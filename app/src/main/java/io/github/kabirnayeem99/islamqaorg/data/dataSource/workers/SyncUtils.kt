@@ -14,8 +14,10 @@ import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.random.Random
 
 
 val SYNC_NOTIFICATION_CHANNEL_NAME: CharSequence = "Background Sync Status"
@@ -31,6 +33,12 @@ class SyncUtils @Inject constructor(
     private val localDataSource: IslamQaLocalDataSource,
     private val preferenceDataSource: PreferenceDataSource,
 ) {
+
+    private var questionCounter = 0
+
+    fun checkIfWeCanCacheMore(): Boolean {
+        return questionCounter < 500
+    }
 
     /**
      * Creates a notification channel, then creates a notification using that channel for indicating
@@ -81,16 +89,25 @@ class SyncUtils @Inject constructor(
      */
     suspend fun syncAllQuestionsInBackground(): Boolean {
         return try {
+
+            val randomDelayToAvoidBlock = Random.nextLong(200, 500)
+
             val randomQuestions = fetchCacheAndGetRandomQuestionsFromRemote()
             val fiqhBasedQuestions = fetchCacheAndGetFiqhBasedQuestionsFromRemote()
 
             coroutineScope {
                 listOf(
                     async {
-                        randomQuestions.forEach { q -> fetchAndCacheQuestionsDetails(q) }
+                        randomQuestions.forEach { q ->
+                            delay(randomDelayToAvoidBlock)
+                            if (checkIfWeCanCacheMore()) fetchAndCacheQuestionsDetails(q)
+                        }
                     },
                     async {
-                        fiqhBasedQuestions.forEach { q -> fetchAndCacheQuestionsDetails(q) }
+                        fiqhBasedQuestions.forEach { q ->
+                            delay(randomDelayToAvoidBlock)
+                            if (checkIfWeCanCacheMore()) fetchAndCacheQuestionsDetails(q)
+                        }
                     },
                 ).awaitAll()
             }
@@ -113,8 +130,16 @@ class SyncUtils @Inject constructor(
      */
     private suspend fun fetchAndCacheQuestionsDetails(question: Question) {
         try {
+
+            val randomDelayToAvoidBlock = Random.nextLong(200, 500)
+
             val details = remoteDataSource.getDetailedQuestionAndAnswer(question.url)
             localDataSource.cacheQuestionDetail(details)
+
+            details.relevantQuestions.forEach {
+                delay(randomDelayToAvoidBlock)
+                if (checkIfWeCanCacheMore()) fetchAndCacheQuestionsDetails(it)
+            }
         } catch (e: Exception) {
             Timber.e(e, "Failed fetchAndCacheQuestionsDetails -> ${e.message}")
         }
@@ -152,10 +177,13 @@ class SyncUtils @Inject constructor(
     @WorkerThread
     private suspend fun fetchCacheAndGetFiqhBasedQuestionsFromRemote(): List<Question> {
         return try {
+
             val fiqh = preferenceDataSource.getPreferredFiqh()
             val randomQuestions = remoteDataSource.getFiqhBasedQuestionsList(fiqh, 1)
+
             localDataSource.cacheQuestionList(randomQuestions, fiqh)
             preferenceDataSource.updateNeedingToRefresh()
+
             randomQuestions
         } catch (e: Exception) {
             Timber.e(e, "Failed to get fiqh-based questions data -> ${e.localizedMessage}.")
