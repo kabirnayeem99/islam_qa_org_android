@@ -162,6 +162,9 @@ dependencies {
     testImplementation "com.google.truth:truth:1.1.3"
     androidTestImplementation "com.google.truth:truth:1.1.3"
 
+    // Accompanist Permissions - for handling permission in compose
+    implementation "com.google.accompanist:accompanist-permissions:0.24.13-rc"
+
 }
 
 // to suppress opt-in feature warning

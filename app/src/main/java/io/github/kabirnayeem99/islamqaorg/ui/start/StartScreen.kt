@@ -1,5 +1,7 @@
 package io.github.kabirnayeem99.islamqaorg.ui.start
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
@@ -21,13 +23,16 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
 import io.github.kabirnayeem99.islamqaorg.BuildConfig
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.ui.theme.ArabicFontFamily
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalPermissionsApi::class)
 @Preview
 @Composable
 fun StartScreen(
@@ -37,9 +42,32 @@ fun StartScreen(
 
     val scope = rememberCoroutineScope()
 
+    var shouldNavigateNow by remember { mutableStateOf(false) }
+
+    if (Build.VERSION.SDK_INT >= 33) {
+        val postNotificationPermission =
+            rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+
+        LaunchedEffect(key1 = true) {
+            postNotificationPermission.launchPermissionRequest()
+        }
+
+        shouldNavigateNow = when (postNotificationPermission.status) {
+            PermissionStatus.Granted -> {
+                viewModel.syncQuestionsAndAnswers()
+                true
+            }
+            is PermissionStatus.Denied -> {
+
+                false
+            }
+        }
+    }
+
     var centerAppLogoVisibility by remember { mutableStateOf(false) }
     var appVersionVisibility by remember { mutableStateOf(false) }
     var geometryVisibility by remember { mutableStateOf(false) }
+
 
     val infiniteTransition = rememberInfiniteTransition()
     val angle by infiniteTransition.animateFloat(
@@ -60,7 +88,7 @@ fun StartScreen(
             appVersionVisibility = true
             delay(SPLASH_SCREEN_DURATION / 3)
             delay(SPLASH_SCREEN_DURATION / 3)
-            onTimeUp()
+            if (shouldNavigateNow) onTimeUp()
         }
     }
 

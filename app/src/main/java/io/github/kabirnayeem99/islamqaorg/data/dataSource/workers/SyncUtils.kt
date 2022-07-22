@@ -43,7 +43,7 @@ class SyncUtils @Inject constructor(
 
         val name = SYNC_NOTIFICATION_CHANNEL_NAME
         val description = SYNC_NOTIFICATION_CHANNEL_DESCRIPTION
-        val importance = NotificationManager.IMPORTANCE_HIGH
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel = NotificationChannel(CHANNEL_ID, name, importance)
         channel.description = description
 

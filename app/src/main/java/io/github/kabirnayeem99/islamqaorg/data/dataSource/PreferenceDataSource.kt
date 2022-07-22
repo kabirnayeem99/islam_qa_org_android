@@ -46,6 +46,7 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
         val doesNeedSyncing = withContext(Dispatchers.IO) {
             try {
                 val lastSyncTimeInMillis = defaultPrefs.getLong(LAST_SYNC_TIME, 0)
+                Timber.d("Last sync time in millis -> $lastSyncTimeInMillis")
                 if (lastSyncTimeInMillis == 0L) true
                 else {
                     val currentTimeInMillis = Date().time
@@ -129,7 +130,6 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
         operation(editor)
         editor.apply()
     }
-
 
 
 }

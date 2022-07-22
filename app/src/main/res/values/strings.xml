@@ -38,7 +38,7 @@
     <string name="content_desc_go_back">Go back to previous screen</string>
     <string name="content_desc_select_fiqh">Select your preferred Fiqh</string>
     <string name="content_desc_about_developer">Know about developer</string>
-    <string name="label_syncing">We are syncing the questions and answers in the background. It will ensure faster loading, the next time you enter this app.</string>
-    <string name="label_synced">We are done syncing a bunch of questions and their answers.</string>
+    <string name="label_syncing">We are syncing the questions and answers from IslamQA.org in the background. It will ensure faster loading, the next time you enter this app. It will also reduce load on the original website.</string>
+    <string name="label_synced">We are done syncing. Note that, this app is just a frontend for IslamQA.org. Please, pray for the creator of this awesome website for their amazing work. Visit this website for any of your query.</string>
     <string name="content_desc_search">Search for questions</string>
 </resources>
