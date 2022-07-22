@@ -1,5 +1,7 @@
 package io.github.kabirnayeem99.islamqaorg.ui.home
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +37,11 @@ import io.github.kabirnayeem99.islamqaorg.ui.destinations.SearchScreenDestinatio
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.SettingsScreenDestination
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalAnimationApi::class
+)
 @RootNavGraph(start = true)
 @Destination(style = PageTransitionAnimation::class)
 @Composable
@@ -47,7 +52,6 @@ fun HomeScreen(
 
     val uiState = homeViewModel.uiState
 
-
     val randomQuestionListHeading = stringResource(id = R.string.label_random_q_n_a)
     val homePageTitle = stringResource(id = R.string.q_n_a)
     val latestQuestionListHeading = stringResource(id = R.string.label_latest_q_n_a)
@@ -57,18 +61,11 @@ fun HomeScreen(
 
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(true) {
-        homeViewModel.getRandomQuestions()
-        homeViewModel.getFiqhBasedQuestions()
-    }
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 12.dp),
-        topBar = {
-            HomeScreenTopAppBar(navigator)
-        }
+        topBar = { HomeScreenTopAppBar(navigator) }
     ) {
 
         LazyColumn(
@@ -86,15 +83,22 @@ fun HomeScreen(
 
             // Random Question Sliders Section
             item {
+
                 QuestionListHeading(randomQuestionListHeading)
                 Spacer(modifier = Modifier.height(12.dp))
-                if (uiState.isRandomQuestionLoading) {
-                    RandomQuestionLoadingIndicator()
-                    Spacer(modifier = Modifier.height(12.dp))
-                } else {
-                    RandomQuestionSlider(randomQuestions, navigator)
-                    Spacer(modifier = Modifier.height(12.dp))
+
+                AnimatedContent(targetState = uiState.isRandomQuestionLoading) { isLoading ->
+                    if (isLoading) {
+                        RandomQuestionLoadingIndicator()
+                        Spacer(modifier = Modifier.height(12.dp))
+                    } else {
+                        RandomQuestionSlider(randomQuestions, navigator)
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
                 }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
             }
 
             // Fiqh-based question list section
@@ -102,6 +106,7 @@ fun HomeScreen(
                 QuestionListHeading(latestQuestionListHeading)
                 Spacer(modifier = Modifier.height(12.dp))
             }
+
             if (uiState.isFiqhBasedQuestionsLoading)
                 items(10) { QuestionItemPlaceholder() }
             else {

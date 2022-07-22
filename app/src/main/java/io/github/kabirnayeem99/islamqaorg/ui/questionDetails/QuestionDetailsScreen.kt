@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -50,6 +51,7 @@ fun QuestionDetailsScreen(
 ) {
 
     val scope = rememberCoroutineScope()
+    val screenScrollState = rememberLazyListState()
 
     LaunchedEffect(true) {
         questionDetailViewModel.getQuestionsDetailsJob(url)
@@ -80,11 +82,14 @@ fun QuestionDetailsScreen(
 
         AnimatedContent(
             transitionSpec = {
-                fadeIn(animationSpec = tween(220, delayMillis = 90)) +
-                        slideInVertically(
-                            initialOffsetY = { 90 },
-                            animationSpec = tween(220, delayMillis = 90)
-                        ) with
+                if (questionDetailViewModel.uiState.questionDetails.questionTitle.isNotBlank()) {
+                    fadeIn(animationSpec = tween(220, delayMillis = 90)) +
+                            slideInVertically(
+                                initialOffsetY = { 90 },
+                                animationSpec = tween(220, delayMillis = 90)
+                            ) with
+                            fadeOut(animationSpec = tween(90))
+                } else fadeIn(animationSpec = tween(220, delayMillis = 90)) with
                         fadeOut(animationSpec = tween(90))
             }, targetState = questionDetailViewModel.uiState.isLoading
         ) { isLoading ->
@@ -93,22 +98,20 @@ fun QuestionDetailsScreen(
                     modifier = Modifier.padding(24.dp),
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.Center,
+                    state = screenScrollState
                 ) {
 
-                    item {
-                        Spacer(modifier = Modifier.height(52.dp))
-                    }
+                    item { Spacer(modifier = Modifier.height(52.dp)) }
 
-                    item {
-                        QuestionDetailsLoadingIndicator()
-                    }
+                    item { QuestionDetailsLoadingIndicator() }
+
                     item {
                         Spacer(modifier = Modifier.height(22.dp))
                         RelevantQaLabelLoadingIndicator()
                     }
-                    items(6) {
-                        QuestionItemPlaceholder(false)
-                    }
+
+                    items(6) { QuestionItemPlaceholder(false) }
+
                 }
             else
                 LazyColumn(
@@ -117,10 +120,7 @@ fun QuestionDetailsScreen(
                     verticalArrangement = Arrangement.Center,
                 ) {
 
-                    item {
-                        Spacer(modifier = Modifier.height(52.dp))
-                    }
-
+                    item { Spacer(modifier = Modifier.height(52.dp)) }
 
                     val questionDetail = questionDetailViewModel.uiState.questionDetails
 

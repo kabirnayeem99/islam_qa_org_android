@@ -16,17 +16,22 @@ import io.github.kabirnayeem99.islamqaorg.ui.theme.IslamQaTheme
 @Composable
 fun IslamQaRoot() {
     IslamQaTheme {
+
         val systemUiController = rememberSystemUiController()
         val shouldUseDarkIcon = !isSystemInDarkTheme()
+
         SideEffect {
             systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = shouldUseDarkIcon)
         }
+
         val navController = rememberAnimatedNavController()
         val navHostEngine = rememberAnimatedNavHostEngine()
+
         DestinationsNavHost(
             navGraph = NavGraphs.root,
             navController = navController,
             engine = navHostEngine
         )
+
     }
 }

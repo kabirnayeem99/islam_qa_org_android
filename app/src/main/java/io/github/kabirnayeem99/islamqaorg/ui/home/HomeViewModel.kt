@@ -12,6 +12,7 @@ import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetFiqhBasedQuestions
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetRandomQuestion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.util.*
@@ -26,6 +27,13 @@ class HomeViewModel @Inject constructor(
     var uiState by mutableStateOf(HomeScreenUiState())
         private set
 
+    init {
+        viewModelScope.launch {
+            delay(500)
+            getRandomQuestions(true)
+            getFiqhBasedQuestions()
+        }
+    }
 
     private var fetchRandomQuestionJob: Job? = null
 
@@ -34,7 +42,7 @@ class HomeViewModel @Inject constructor(
      *
      * @param shouldRefresh Boolean = false
      */
-    fun getRandomQuestions(shouldRefresh: Boolean = false) {
+    private fun getRandomQuestions(shouldRefresh: Boolean = false) {
         fetchRandomQuestionJob?.cancel()
         fetchRandomQuestionJob = viewModelScope.launch(Dispatchers.IO) {
             getRandomQuestion(shouldRefresh).distinctUntilChanged()
@@ -68,7 +76,7 @@ class HomeViewModel @Inject constructor(
      *
      * @param shouldRefresh Boolean = false
      */
-    fun getFiqhBasedQuestions(shouldRefresh: Boolean = false) {
+    private fun getFiqhBasedQuestions(shouldRefresh: Boolean = false) {
         fetchFiqhBasedQuestionJob?.cancel()
         fetchFiqhBasedQuestionJob = viewModelScope.launch(Dispatchers.IO) {
             val currentPage = uiState.currentPage

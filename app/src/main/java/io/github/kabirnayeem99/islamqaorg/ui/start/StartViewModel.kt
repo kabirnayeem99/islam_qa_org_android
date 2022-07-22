@@ -15,6 +15,10 @@ class StartViewModel @Inject constructor(
     private val workManager: WorkManager,
 ) : ViewModel() {
 
+    init {
+        syncQuestionsAndAnswers()
+    }
+
     /**
      * Requests work-manager to sync all the questions to the local DB from remote
      */

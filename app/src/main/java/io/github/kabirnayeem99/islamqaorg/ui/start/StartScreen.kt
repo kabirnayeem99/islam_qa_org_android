@@ -35,10 +35,6 @@ fun StartScreen(
     viewModel: StartViewModel = hiltViewModel(),
 ) {
 
-    LaunchedEffect(true) {
-        viewModel.syncQuestionsAndAnswers()
-    }
-
     val scope = rememberCoroutineScope()
 
     var centerAppLogoVisibility by remember { mutableStateOf(false) }
