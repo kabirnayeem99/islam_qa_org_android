@@ -62,15 +62,20 @@ class IslamQaLocalDataSource @Inject constructor(
      * @return A list of Question objects.
      */
     suspend fun searchFiqhBasedQuestionList(fiqh: Fiqh, query: String): List<Question> {
+
+        Timber.d("Fiqh -> $fiqh")
+
         val questions = try {
             questionListDao.searchQuestions(query).map {
                 Question(it.id, it.question, it.url)
             }
         } catch (e: Exception) {
             Timber.e(e, "Failed to get cached searched question list -> ${e.message}.")
-            emptyList()
+            questionListDao.getFiqhBasedQuestions(fiqh.paramName).map {
+                Question(it.id, it.question, it.url)
+            }
         }
-        Timber.d(questions.toString())
+
         return questions
     }
 

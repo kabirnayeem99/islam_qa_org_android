@@ -230,7 +230,8 @@ private fun AboutContent() {
                 alignment = Alignment.Center,
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(top = 22.dp)
+                    .height(162.dp)
+                    .width(162.dp)
             )
         }
 
@@ -244,13 +245,13 @@ private fun AboutContent() {
                     .padding(bottom = 180.dp, start = 180.dp, end = 0.dp)
                     .align(Alignment.CenterEnd)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.tertiaryContainer),
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.TopEnd,
             ) {
                 Text(
                     text = BuildConfig.VERSION_NAME,
                     style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontFamily = ArabicFontFamily,
                         fontStyle = FontStyle.Italic,
                     ),

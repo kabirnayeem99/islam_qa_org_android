@@ -58,10 +58,11 @@ fun StartScreen(
                 true
             }
             is PermissionStatus.Denied -> {
-
                 false
             }
         }
+    } else {
+        shouldNavigateNow = true
     }
 
     var centerAppLogoVisibility by remember { mutableStateOf(false) }
@@ -145,7 +146,8 @@ fun StartScreen(
                     alignment = Alignment.Center,
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .padding(top = 22.dp)
+                        .height(182.dp)
+                        .width(182.dp)
                 )
             }
         }
@@ -160,13 +162,13 @@ fun StartScreen(
                     .padding(bottom = 200.dp, start = 200.dp, end = 0.dp)
                     .align(Alignment.CenterEnd)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.tertiaryContainer),
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.TopEnd,
             ) {
                 Text(
                     text = BuildConfig.VERSION_NAME,
                     style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontFamily = ArabicFontFamily,
                         fontStyle = FontStyle.Italic,
                     ),

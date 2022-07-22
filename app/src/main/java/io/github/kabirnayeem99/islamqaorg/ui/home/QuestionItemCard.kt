@@ -62,7 +62,7 @@ fun QuestionItemCard(
                 Card(
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.outlinedCardColors(
-                        containerColor = MaterialTheme.colorScheme.secondary
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 ) {
                     Box(
@@ -72,7 +72,7 @@ fun QuestionItemCard(
                         Text(
                             text = question.fiqh.ifBlank { Fiqh.HANAFI.displayName },
                             style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.onSecondary,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 fontFamily = ArabicFontFamily,
                             )
                         )

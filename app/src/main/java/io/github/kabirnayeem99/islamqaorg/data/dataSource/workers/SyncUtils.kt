@@ -59,10 +59,10 @@ class SyncUtils @Inject constructor(
         notificationManager?.createNotificationChannel(channel)
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_islamic_geometric)
+            .setSmallIcon(R.drawable.ic_islamqa)
             .setContentTitle(SYNC_NOTIFICATION_TITLE)
             .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setVibrate(LongArray(0))
 
         NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, builder.build())
