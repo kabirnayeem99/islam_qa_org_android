@@ -36,9 +36,7 @@ class SyncUtils @Inject constructor(
 
     private var questionCounter = 0
 
-    fun checkIfWeCanCacheMore(): Boolean {
-        return questionCounter < 500
-    }
+    private fun checkIfWeCanCacheMore(): Boolean = questionCounter < 100
 
     /**
      * Creates a notification channel, then creates a notification using that channel for indicating
@@ -138,7 +136,8 @@ class SyncUtils @Inject constructor(
 
             details.relevantQuestions.forEach {
                 delay(randomDelayToAvoidBlock)
-                if (checkIfWeCanCacheMore()) fetchAndCacheQuestionsDetails(it)
+                if (checkIfWeCanCacheMore() && question.fiqh.isNotBlank())
+                    fetchAndCacheQuestionsDetails(it)
             }
         } catch (e: Exception) {
             Timber.e(e, "Failed fetchAndCacheQuestionsDetails -> ${e.message}")
