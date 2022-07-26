@@ -122,11 +122,14 @@ This app needs no extra credential as it has no internal API or Firebase connect
 
 ## Demo
 
-<a href="https://ibb.co/s1n33f5"><img src="https://i.ibb.co/pKcXX7W/demo-home-screen.png" alt="demo-home-screen" border="0" height="500"></a>
-<a href="https://ibb.co/PZWxGz4"><img src="https://i.ibb.co/4ZSWRgM/demo-details-page.png" alt="demo-details-page" border="0"  height="500"></a>
+<a href="https://ibb.co/rmvy9Nk"><img src="https://ibb.co/rmvy9Nk" alt="demo-details-page" border="0"  height="500"></a>
+<a href="https://ibb.co/Z2J4BSd"><img src="https://ibb.co/Z2J4BSd" alt="demo-details-page" border="0"  height="500"></a>
+<a href="https://ibb.co/RgST4L7"><img src="https://ibb.co/RgST4L7" alt="demo-details-page" border="0"  height="500"></a>
+<a href="https://ibb.co/jbJCqnY"><img src="https://ibb.co/jbJCqnY" alt="demo-details-page" border="0"  height="500"></a>
+<a href="https://ibb.co/kgdG3qV"><img src="https://ibb.co/kgdG3qV" alt="demo-details-page" border="0"  height="500"></a>
+<a href="https://ibb.co/3SsnmJC"><img src="https://ibb.co/3SsnmJC" alt="demo-details-page" border="0"  height="500"></a>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 <!-- ROADMAP -->
 
