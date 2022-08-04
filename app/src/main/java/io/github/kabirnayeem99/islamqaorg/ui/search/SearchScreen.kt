@@ -45,8 +45,6 @@ fun SearchScreen(
 
     val uiState = viewModel.uiState
 
-
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
