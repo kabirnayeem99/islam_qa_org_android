@@ -77,25 +77,25 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.ui:ui-foundation:0.1.0-dev14'
-    implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
+    implementation 'androidx.core:core-splashscreen:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.2.0'
 
     // Skrape.it - for web scraping
-    implementation 'it.skrape:skrapeit:1.2.2'
+    implementation 'it.skrape:skrapeit:1.3.0-alpha.1'
 
     // Jetpack Compose - for UI building
-    implementation 'androidx.activity:activity-compose:1.5.0'
-    implementation "androidx.compose.material:material:1.3.0-alpha01"
-    implementation "androidx.compose.animation:animation:1.3.0-alpha01"
-    implementation "androidx.compose.ui:ui-tooling:1.3.0-alpha01"
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0'
-    def material_3_version = '1.0.0-alpha14'
+    implementation 'androidx.activity:activity-compose:1.5.1'
+    implementation 'androidx.compose.material:material:1.3.0-alpha02'
+    implementation 'androidx.compose.animation:animation:1.3.0-alpha02'
+    implementation 'androidx.compose.ui:ui-tooling:1.3.0-alpha02'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
+    def material_3_version = '1.0.0-alpha15'
     implementation "androidx.compose.material3:material3:$material_3_version"
     implementation "androidx.compose.material3:material3-window-size-class:$material_3_version"
-    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.24.13-rc'
+    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.26.0-alpha'
 
     // Navigation
-    def nav_version = '2.5.0'
+    def nav_version = '2.5.1'
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
@@ -109,7 +109,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     // LifeCycle Components and Extensions
-    def lifecycle_version = '2.5.0'
+    def lifecycle_version = '2.5.1'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
@@ -119,14 +119,14 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
     // Hilt - for dependency injection
-    def hilt_dagger_version = '2.42'
+    def hilt_dagger_version = '2.43.1'
     implementation "com.google.dagger:hilt-android:$hilt_dagger_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_dagger_version"
 
     // Room - for storing data locally
-    def room_version = "2.4.2"
+    def room_version = '2.4.3'
     implementation "androidx.room:room-runtime:$room_version"
-    kapt 'androidx.room:room-compiler:2.4.2'
+    kapt 'androidx.room:room-compiler:2.4.3'
     implementation "androidx.room:room-ktx:$room_version"
 
     // Kotlin JSON Serializer -> for serialization and deserialization
@@ -136,11 +136,11 @@ dependencies {
     def glide_version = "4.13.2"
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
-    implementation 'com.github.skydoves:landscapist-glide:1.5.3'
+    implementation 'com.github.skydoves:landscapist-glide:1.6.0'
 
     // Compose Destinations - for better and simpler navigation
-    implementation 'io.github.raamcosta.compose-destinations:animations-core:1.6.13-beta'
-    ksp 'io.github.raamcosta.compose-destinations:ksp:1.6.13-beta'
+    implementation 'io.github.raamcosta.compose-destinations:animations-core:1.7.15-beta'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.7.15-beta'
 
     // Work Manager - for background syncing
     def work_manager_version = "2.7.1"
@@ -162,7 +162,7 @@ dependencies {
     androidTestImplementation "com.google.truth:truth:1.1.3"
 
     // Accompanist Permissions - for handling permission in compose
-    implementation "com.google.accompanist:accompanist-permissions:0.24.13-rc"
+    implementation 'com.google.accompanist:accompanist-permissions:0.26.0-alpha'
 
 }
 

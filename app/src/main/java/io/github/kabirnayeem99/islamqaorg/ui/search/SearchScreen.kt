@@ -89,6 +89,7 @@ private fun SearchResults(uiState: SearchUiState, navigator: DestinationsNavigat
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchField(
     uiState: SearchUiState,
