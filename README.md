@@ -4,7 +4,7 @@
 <br />
 <div align="center">
 
-<a href="https://imgbb.com/"><img src="https://i.ibb.co/T26H0zQ/ic-launcher.png" alt="ic-launcher" border="0" width="240" height="240"></a>
+<a href="https://imgbb.com/"><img src="https://i.ibb.co/T26H0zQ/ic-launcher.png" alt="ic-launcher" border="0" width="120" height="120"></a>
 
 <h3 align="center">IslamQA-for-Android</h3>
 
