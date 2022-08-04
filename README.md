@@ -122,12 +122,12 @@ This app needs no extra credential as it has no internal API or Firebase connect
 
 ## Demo
 
-<a href="https://ibb.co/rmvy9Nk"><img src="https://i.ibb.co/kxMcZvK/Screenshot-20220726-193319.png" alt="Screenshot-20220726-193319" border="0" width="400" height="680"></a>
-<a href="https://ibb.co/Z2J4BSd"><img src="https://i.ibb.co/XY407DX/Screenshot-20220726-193331.png" alt="Screenshot-20220726-193331" border="0" width="400" height="680"></a>
-<a href="https://ibb.co/RgST4L7"><img src="https://i.ibb.co/Mghk5q9/Screenshot-20220726-193339.png" alt="Screenshot-20220726-193339" border="0" width="400" height="680"></a>
-<a href="https://ibb.co/jbJCqnY"><img src="https://i.ibb.co/7jk3BsD/Screenshot-20220726-193403.png" alt="Screenshot-20220726-193403" border="0" width="400" height="680"></a>
-<a href="https://ibb.co/kgdG3qV"><img src="https://i.ibb.co/nsWw3Qq/Screenshot-20220726-193405.png" alt="Screenshot-20220726-193405" border="0" width="400" height="680"></a>
-<a href="https://ibb.co/3SsnmJC"><img src="https://i.ibb.co/frSsdcx/Screenshot-20220726-193442.png" alt="Screenshot-20220726-193442" border="0" width="400" height="680"></a>
+<a href="https://ibb.co/rmvy9Nk"><img src="https://i.ibb.co/kxMcZvK/Screenshot-20220726-193319.png" alt="Screenshot-20220726-193319" border="0" width="200" height="340"></a>
+<a href="https://ibb.co/Z2J4BSd"><img src="https://i.ibb.co/XY407DX/Screenshot-20220726-193331.png" alt="Screenshot-20220726-193331" border="0" width="200" height="340"></a>
+<a href="https://ibb.co/RgST4L7"><img src="https://i.ibb.co/Mghk5q9/Screenshot-20220726-193339.png" alt="Screenshot-20220726-193339" border="0" width="200" height="340"></a>
+<a href="https://ibb.co/jbJCqnY"><img src="https://i.ibb.co/7jk3BsD/Screenshot-20220726-193403.png" alt="Screenshot-20220726-193403" border="0" width="200" height="340"></a>
+<a href="https://ibb.co/kgdG3qV"><img src="https://i.ibb.co/nsWw3Qq/Screenshot-20220726-193405.png" alt="Screenshot-20220726-193405" border="0" width="200" height="340"></a>
+<a href="https://ibb.co/3SsnmJC"><img src="https://i.ibb.co/frSsdcx/Screenshot-20220726-193442.png" alt="Screenshot-20220726-193442" border="0" width="200" height="340"></a>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
