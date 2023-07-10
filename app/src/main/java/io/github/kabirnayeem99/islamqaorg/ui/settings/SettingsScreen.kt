@@ -26,15 +26,13 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
-import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
-import io.github.kabirnayeem99.islamqaorg.ui.destinations.AboutScreenDestination
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Destination(style = PageTransitionAnimation::class)
+
+@Destination
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel = hiltViewModel(),
@@ -131,7 +129,7 @@ private fun AboutSettingsItem(navigator: DestinationsNavigator) {
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2F)
             )
             .clickable {
-                scope.launch { navigator.navigate(AboutScreenDestination()) }
+//                scope.launch { navigator.navigate(AboutScreenDestination()) }
             },
         contentAlignment = Alignment.Center
     ) {

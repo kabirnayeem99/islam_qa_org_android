@@ -19,12 +19,9 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
 
         Timber.d("Random questions list -> $qList")
 
-        if (qList.httpStatusCode == 404)
-            throw Exception(qList.httpStatusMessage.ifBlank { "Failed to parse the random question lists." })
-        if (qList.questionLinks.isEmpty() || qList.questions.isEmpty())
-            throw Exception("No questions were found.")
-        if (qList.questions.size != qList.questionLinks.size)
-            throw Exception("Failed to get answers for some questions")
+        if (qList.httpStatusCode == 404) throw Exception(qList.httpStatusMessage.ifBlank { "Failed to parse the random question lists." })
+        if (qList.questionLinks.isEmpty() || qList.questions.isEmpty()) throw Exception("No questions were found.")
+        if (qList.questions.size != qList.questionLinks.size) throw Exception("Failed to get answers for some questions")
 
         val questionAnswer = mutableListOf<Question>()
         qList.questions.forEachIndexed { index, question ->
@@ -49,13 +46,9 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
 
         Timber.d("Fiqh-based questions list -> $qList")
 
-
-        if (qList.httpStatusCode != 200)
-            throw Exception(qList.httpStatusMessage.ifBlank { "Failed to parse the questions." })
-        if (qList.questionLinks.isEmpty() || qList.questions.isEmpty())
-            throw Exception("No questions were found.")
-        if (qList.questions.size != qList.questionLinks.size)
-            throw Exception("Failed to get answers for some questions")
+        if (qList.httpStatusCode != 200) throw Exception(qList.httpStatusMessage.ifBlank { "Failed to parse the questions." })
+        if (qList.questionLinks.isEmpty() || qList.questions.isEmpty()) throw Exception("No questions were found.")
+        if (qList.questions.size != qList.questionLinks.size) throw Exception("Failed to get answers for some questions")
 
         val questionAnswer = mutableListOf<Question>()
         qList.questions.forEachIndexed { index, question ->
@@ -108,13 +101,11 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
 
         Timber.d("search results -> $searchResult")
 
-        if (searchResult.httpStatusCode == 404)
-            throw Exception(searchResult.httpStatusMessage
-                .ifBlank { "Failed to parse the search result question lists." })
-        if (searchResult.questionLinks.isEmpty() || searchResult.questions.isEmpty())
-            throw Exception("No questions were found.")
-        if (searchResult.questions.size != searchResult.questionLinks.size)
-            throw Exception("Failed to get answer links for some questions")
+        if (searchResult.httpStatusCode == 404) throw Exception(searchResult.httpStatusMessage.ifBlank { "Failed to parse the search result question lists." })
+        if (searchResult.questionLinks.isEmpty() || searchResult.questions.isEmpty()) throw Exception(
+            "No questions were found."
+        )
+        if (searchResult.questions.size != searchResult.questionLinks.size) throw Exception("Failed to get answer links for some questions")
 
         val questionAnswer = mutableListOf<Question>()
         searchResult.questions.forEachIndexed { index, question ->
@@ -122,7 +113,6 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
             questionAnswer.add(Question(index, question, answerLink))
         }
 
-        return questionAnswer
-            .ifEmpty { throw Exception("Failed to find any answers.") }
+        return questionAnswer.ifEmpty { throw Exception("Failed to find any answers.") }
     }
 }

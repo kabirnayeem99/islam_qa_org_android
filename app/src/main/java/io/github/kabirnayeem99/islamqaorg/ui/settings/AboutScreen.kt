@@ -38,7 +38,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.kabirnayeem99.islamqaorg.BuildConfig
 import io.github.kabirnayeem99.islamqaorg.R
-import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
 import io.github.kabirnayeem99.islamqaorg.ui.start.SPLASH_SCREEN_DURATION
@@ -46,8 +45,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.theme.ArabicFontFamily
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Destination(style = PageTransitionAnimation::class)
+@Destination()
 @Composable
 fun AboutScreen(navigator: DestinationsNavigator) {
 

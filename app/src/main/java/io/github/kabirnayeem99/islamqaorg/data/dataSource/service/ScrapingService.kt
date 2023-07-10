@@ -14,7 +14,13 @@ import it.skrape.fetcher.skrape
 import it.skrape.selects.eachHref
 import it.skrape.selects.eachText
 import it.skrape.selects.html
-import it.skrape.selects.html5.*
+import it.skrape.selects.html5.a
+import it.skrape.selects.html5.div
+import it.skrape.selects.html5.h1
+import it.skrape.selects.html5.h2
+import it.skrape.selects.html5.li
+import it.skrape.selects.html5.span
+import it.skrape.selects.html5.ul
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -67,8 +73,7 @@ class ScrapingService {
 
     private fun Result.findRandomQuestionQuestionTexts(): List<String> {
         return try {
-            document.findAll("li")
-                .filter { it.className == "arpw-li arpw-clearfix" }.eachText
+            document.findAll("li").filter { it.className == "arpw-li arpw-clearfix" }.eachText
         } catch (e: Exception) {
             Timber.e(e, "Failed to find the questions list")
             emptyList()
@@ -145,8 +150,7 @@ class ScrapingService {
     }
 
     enum class Page {
-        PREV,
-        NEXT
+        PREV, NEXT
     }
 
     /**
@@ -247,18 +251,16 @@ class ScrapingService {
      * Parses the HTML response and returns [FiqhBasedQuestionListDto] class.
      */
     fun getFiqhBasedQuestionListDtoOutOfResponse(
-        result: Result,
-        fiqh: Fiqh
+        result: Result, fiqh: Fiqh
     ): FiqhBasedQuestionListDto {
         result.apply {
-            val dto = FiqhBasedQuestionListDto(
+            return FiqhBasedQuestionListDto(
                 httpStatusCode = status { code },
                 httpStatusMessage = status { message },
                 questions = getFiqhBasedQuestionsFromResult(),
                 questionLinks = getQuestionLinksForFiqhBasedQuestions(),
                 fiqh = fiqh
             )
-            return dto
         }
     }
 
@@ -268,10 +270,9 @@ class ScrapingService {
      * @receiver [Result]
      */
     private fun Result.getFiqhBasedQuestionsFromResult() = try {
-        document.h1 {
+        document.h2 {
             findAll {
-                filter { it.className == "entry-title" }.eachText
-                    .filterIndexed { index, _ -> index != 0 }
+                eachText
             }
         }
     } catch (e: Exception) {
@@ -285,12 +286,9 @@ class ScrapingService {
      * @receiver [Result]
      */
     private fun Result.getQuestionLinksForFiqhBasedQuestions() = try {
-        document.h1 {
+        document.h2 {
             findAll {
-                filter { it.className == "entry-title" }.map {
-                    it.eachHref.joinToString(",")
-                }.filterIndexed { index, _ -> index != 0 }
-
+                map { it.eachHref.joinToString(",") }
             }
         }
     } catch (e: Exception) {
@@ -334,8 +332,7 @@ class ScrapingService {
                 }
             }
 
-            document.findAll("div")
-                .filter { it.className == "gs-title" }.eachText
+            document.findAll("div").filter { it.className == "gs-title" }.eachText
         } catch (e: Exception) {
             Timber.e(e, "Failed to find the questions list")
             emptyList()

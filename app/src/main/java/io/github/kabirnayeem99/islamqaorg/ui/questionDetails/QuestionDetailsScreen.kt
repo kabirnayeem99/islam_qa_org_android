@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,7 +29,6 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.valentinilk.shimmer.shimmer
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.ui.common.HtmlText
-import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.home.QuestionItemCard
@@ -38,11 +36,8 @@ import io.github.kabirnayeem99.islamqaorg.ui.home.QuestionItemPlaceholder
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
-    ExperimentalAnimationApi::class
-)
-@Destination(style = PageTransitionAnimation::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
+@Destination
 @Composable
 fun QuestionDetailsScreen(
     url: String,

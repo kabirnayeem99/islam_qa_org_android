@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,15 +30,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.kabirnayeem99.islamqaorg.R
-import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
-import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.home.QuestionItemCard
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Destination(style = PageTransitionAnimation::class)
+@Destination
 fun SearchScreen(
     navigator: DestinationsNavigator,
     viewModel: SearchViewModel = hiltViewModel(),
@@ -87,7 +85,6 @@ private fun SearchResults(uiState: SearchUiState, navigator: DestinationsNavigat
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchField(
     uiState: SearchUiState,
@@ -95,8 +92,8 @@ private fun SearchField(
     contentPadding: PaddingValues,
 ) {
 
-    val transparentTextFieldColors = TextFieldDefaults.textFieldColors(
-        textColor = MaterialTheme.colorScheme.onBackground,
+    val transparentTextFieldColors = TextFieldDefaults.colors(
+//        focusedLabelColor = MaterialTheme.colorScheme.onBackground,
         disabledTextColor = Color.Transparent,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,

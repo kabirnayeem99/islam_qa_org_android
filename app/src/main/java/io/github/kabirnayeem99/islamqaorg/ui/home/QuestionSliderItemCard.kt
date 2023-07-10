@@ -19,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.skydoves.landscapist.glide.GlideImage
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 
@@ -44,15 +43,15 @@ fun QuestionSliderItemCard(question: Question, index: Int, onClick: () -> Unit) 
     ) {
 
 
-        GlideImage(
-            imageModel = R.drawable.bg_banner,
+        Image(
+            painter = painterResource(id = R.drawable.bg_banner),
             contentScale = ContentScale.FillBounds,
             modifier = Modifier
                 .padding(0.8.dp)
                 .clip(RoundedCornerShape(12.dp)),
-
             alignment = Alignment.Center,
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary, BlendMode.Color),
+            contentDescription = null,
         )
 
         Text(
