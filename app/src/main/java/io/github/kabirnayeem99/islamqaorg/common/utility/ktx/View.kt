@@ -2,7 +2,11 @@ package io.github.kabirnayeem99.islamqaorg.common.utility.ktx
 
 import android.animation.ValueAnimator.REVERSE
 import android.view.View
-import android.view.animation.*
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.BounceInterpolator
+import android.view.animation.RotateAnimation
+import android.view.animation.TranslateAnimation
 import com.google.android.material.snackbar.Snackbar
 
 

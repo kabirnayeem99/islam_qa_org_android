@@ -4,7 +4,7 @@ import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
-import java.util.*
+import java.util.Date
 
 @Keep
 @Entity

@@ -7,7 +7,7 @@ import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 private const val FETCH_COUNT = "fetch_count"

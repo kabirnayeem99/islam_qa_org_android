@@ -1,10 +1,21 @@
 package io.github.kabirnayeem99.islamqaorg.ui.questionDetails
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -78,13 +89,12 @@ fun QuestionDetailsScreen(
         AnimatedContent(
             transitionSpec = {
                 if (questionDetailViewModel.uiState.questionDetails.questionTitle.isNotBlank()) {
-                    fadeIn(animationSpec = tween(220, delayMillis = 90)) +
+                    (fadeIn(animationSpec = tween(220, delayMillis = 90)) +
                             slideInVertically(
                                 initialOffsetY = { 90 },
                                 animationSpec = tween(220, delayMillis = 90)
-                            ) with
-                            fadeOut(animationSpec = tween(90))
-                } else fadeIn(animationSpec = tween(220, delayMillis = 90)) with
+                            )).togetherWith(fadeOut(animationSpec = tween(90)))
+                } else fadeIn(animationSpec = tween(220, delayMillis = 90)) togetherWith
                         fadeOut(animationSpec = tween(90))
             }, targetState = questionDetailViewModel.uiState.isLoading
         ) { isLoading ->

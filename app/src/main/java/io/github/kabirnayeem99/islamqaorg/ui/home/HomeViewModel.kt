@@ -15,7 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,10 +51,12 @@ class HomeViewModel @Inject constructor(
                         is Resource.Loading -> {
                             uiState = uiState.copy(isRandomQuestionLoading = true)
                         }
+
                         is Resource.Error -> {
                             uiState = uiState.copy(isRandomQuestionLoading = false)
                             makeUserMessage(res.message ?: "")
                         }
+
                         is Resource.Success -> {
 
                             val questionAnswers = res.data?.sortedBy { it.question } ?: emptyList()
@@ -86,10 +88,12 @@ class HomeViewModel @Inject constructor(
                         is Resource.Loading -> {
                             uiState = uiState.copy(isFiqhBasedQuestionsLoading = true)
                         }
+
                         is Resource.Error -> {
                             uiState = uiState.copy(isFiqhBasedQuestionsLoading = false)
                             makeUserMessage(res.message ?: "")
                         }
+
                         is Resource.Success -> {
 
                             val questionAnswers = res.data ?: emptyList()

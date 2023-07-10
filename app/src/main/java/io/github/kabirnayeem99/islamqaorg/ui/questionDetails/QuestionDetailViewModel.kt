@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +43,7 @@ class QuestionDetailViewModel @Inject constructor(
                         toggleLoading(false)
                         makeUserMessage(res.message ?: "")
                     }
+
                     is Resource.Success -> {
                         toggleLoading(false)
                         uiState = uiState.copy(questionDetails = res.data ?: QuestionDetail())
