@@ -12,6 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
+import java.time.Duration
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,6 +42,7 @@ class SearchViewModel @Inject constructor(
     fun fetchSearchResults() {
         fetchSearchResults?.cancel()
         fetchSearchResults = viewModelScope.launch(Dispatchers.IO) {
+            delay(Duration.ofMillis(800L))
             val query = uiState.query
             searchQuestion(query).distinctUntilChanged().collect { resource ->
                 uiState = when (resource) {
