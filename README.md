@@ -3,7 +3,7 @@
 
 <a href="https://imgbb.com/"><img src="https://i.ibb.co/T26H0zQ/ic-launcher.png" alt="ic-launcher" border="0" width="120" height="120"></a>
 
-<h2 align="center">IslamQA Android</h3>
+<h2 align="center">IslamQA Android (Unofficial)</h3>
 
   <p align="center">
     Unofficial client for IslamQA.org
@@ -11,9 +11,9 @@
 
 </div>
 <br />
-An unofficial client designed for IslamQA.org. Instead of utilizing the API provided by IslamQA.org, the client employs web scraping techniques to extract information from the website.
-It is important to note that this project is not intended for widespread adoption, but rather serves as an experimental and educational undertaking. Its purpose lies in showcasing the implementation of web scraping methodologies for accessing the wealth of Islamic knowledge available on IslamQA.org.
-For those unfamiliar with IslamQA.org, it serves as a distinguished repository of Islamic answers. With an extensive collection of 93,950 Islamic Q&A, sourced from the official websites of renowned scholars and esteemed Islamic educational institutions worldwide, IslamQA.org stands as a comprehensive platform for seekers of Islamic knowledge.
+Unofficial client designed for IslamQA.org. Instead of utilizing any API, this app employs web scraping techniques to extract information from the website on the device itself.
+Please note that this project is not intended for widespread adoption, but rather serves as an experimental and educational undertaking.
+For those unfamiliar with IslamQA.org, it serves as a distinguished repository of Islamic answers with an extensive collection of 93,950 Islamic Q&A.
 
 
 ## 💡 Basic Information
@@ -61,19 +61,22 @@ project a star! Thanks again!
 
 ## 📜 License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. The MIT License is a permissive open-source license that allows users to freely use, modify, and distribute the software while retaining the original license and copyright notices. See `LICENSE.txt` for more information.
 
 ## 📮 Contact
 
-Naimul Kabir - [@kabirnayeem99](https://www.linkedin.com/in/kabirnayeem99/) -
-kabirnayeem.99@gmail.com
+👤 **Naimul Kabir**<br/>
+📧 Email: kabirnayeem.99@gmail.com<br/>
+💼 LinkedIn: [@kabirnayeem99](https://www.linkedin.com/in/kabirnayeem99/)
 
 
 ## 💌 Acknowledgments
 
-* [skrape.it](https://github.com/skrapeit/skrape.it)
-* [Shimmer Effect for Android](https://facebook.github.io/shimmer-android/)
-* [Timber](https://github.com/JakeWharton/timber)
+A special thanks to the following contributors and libraries:
 
+* **[skrape.it](https://github.com/skrapeit/skrape.it)**: Their invaluable tool for on-device web scraping.
+* [Shimmer Effect for Android](https://facebook.github.io/shimmer-android/): Elegant loading animations. 
+* [Timber](https://github.com/JakeWharton/timber): Sophisticated logging library that greatly aids in debugging and development.
+* Room: For data storage and caching.
 
 
