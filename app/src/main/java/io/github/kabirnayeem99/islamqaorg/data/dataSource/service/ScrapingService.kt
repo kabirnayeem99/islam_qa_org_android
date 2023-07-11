@@ -18,6 +18,7 @@ import it.skrape.selects.html5.a
 import it.skrape.selects.html5.div
 import it.skrape.selects.html5.h1
 import it.skrape.selects.html5.h2
+import it.skrape.selects.html5.h4
 import it.skrape.selects.html5.li
 import it.skrape.selects.html5.span
 import it.skrape.selects.html5.ul
@@ -64,7 +65,10 @@ class ScrapingService {
 
     private fun Result.findRandomQuestionQuestionLinks(): List<String> {
         return try {
-            document.li { a { findAll { filter { it.className == "arpw-title" }.eachHref } } }
+            val urls = document.h4 {
+                findAll { map { it.eachHref.firstOrNull() ?: "" } }
+            }
+            urls
         } catch (e: Exception) {
             Timber.e(e, "Failed to find RandomQuestion Question Links ")
             emptyList()
@@ -73,7 +77,10 @@ class ScrapingService {
 
     private fun Result.findRandomQuestionQuestionTexts(): List<String> {
         return try {
-            document.findAll("li").filter { it.className == "arpw-li arpw-clearfix" }.eachText
+            val texts = document.h4 {
+                findAll { map { it.text } }
+            }
+            texts
         } catch (e: Exception) {
             Timber.e(e, "Failed to find the questions list")
             emptyList()

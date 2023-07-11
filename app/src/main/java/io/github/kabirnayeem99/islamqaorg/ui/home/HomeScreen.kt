@@ -29,6 +29,9 @@ import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
+import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
+import io.github.kabirnayeem99.islamqaorg.ui.destinations.SearchScreenDestination
+import io.github.kabirnayeem99.islamqaorg.ui.destinations.SettingsScreenDestination
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -105,7 +108,7 @@ fun HomeScreen(
                         question = question,
                         modifier = Modifier.animateItemPlacement()
                     ) {
-//                        scope.launch { navigator.navigate(QuestionDetailsScreenDestination(question.url)) }
+                        scope.launch { navigator.navigate(QuestionDetailsScreenDestination(question.url)) }
                     }
                 }
             }
@@ -132,7 +135,7 @@ private fun HomeScreenTopAppBar(
             Icons.Outlined.Settings,
             stringResource(id = R.string.content_desc_settings)
         ) {
-//            scope.launch { navigator.navigate(SettingsScreenDestination()) }
+            scope.launch { navigator.navigate(SettingsScreenDestination()) }
         }
 
         Spacer(modifier = Modifier.weight(0.9F))
@@ -141,7 +144,7 @@ private fun HomeScreenTopAppBar(
             Icons.Outlined.Search,
             stringResource(id = R.string.content_desc_search)
         ) {
-//            scope.launch { navigator.navigate(SearchScreenDestination()) }
+            scope.launch { navigator.navigate(SearchScreenDestination()) }
         }
 
     }
@@ -163,7 +166,7 @@ private fun RandomQuestionSlider(
         itemsIndexed(randomQuestions, key = { _, q -> q.url }) { index, question ->
             QuestionSliderItemCard(question = question, index = index, onClick = {
                 scope.launch {
-//                    navigator.navigate(QuestionDetailsScreenDestination(question.url))
+                    navigator.navigate(QuestionDetailsScreenDestination(question.url))
                 }
             })
         }

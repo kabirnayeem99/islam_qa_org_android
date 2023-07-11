@@ -17,8 +17,6 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
     suspend fun getRandomQuestionsList(): List<Question> {
         val qList = scrapingService.parseRandomQuestionList()
 
-        Timber.d("Random questions list -> $qList")
-
         if (qList.httpStatusCode == 404) throw Exception(qList.httpStatusMessage.ifBlank { "Failed to parse the random question lists." })
         if (qList.questionLinks.isEmpty() || qList.questions.isEmpty()) throw Exception("No questions were found.")
         if (qList.questions.size != qList.questionLinks.size) throw Exception("Failed to get answers for some questions")
