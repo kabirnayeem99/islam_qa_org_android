@@ -47,6 +47,7 @@ import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
+import io.github.kabirnayeem99.islamqaorg.ui.destinations.AboutScreenDestination
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -138,7 +139,6 @@ private fun MadhabSettingsItem(selectedFiqh: Fiqh, onFiqhSelected: (Fiqh) -> Uni
 
 @Composable
 private fun AboutSettingsItem(navigator: DestinationsNavigator) {
-    val scope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -148,7 +148,7 @@ private fun AboutSettingsItem(navigator: DestinationsNavigator) {
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2F)
             )
             .clickable {
-//                scope.launch { navigator.navigate(AboutScreenDestination()) }
+                navigator.navigate(AboutScreenDestination())
             },
         contentAlignment = Alignment.Center
     ) {

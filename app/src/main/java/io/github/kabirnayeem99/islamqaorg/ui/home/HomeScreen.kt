@@ -1,9 +1,14 @@
 package io.github.kabirnayeem99.islamqaorg.ui.home
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -15,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,15 +36,13 @@ import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.SearchScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.SettingsScreenDestination
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @RootNavGraph(start = true)
 @Destination
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
 ) {
 
     val uiState = homeViewModel.uiState
@@ -52,14 +54,18 @@ fun HomeScreen(
     val fiqhBasedQuestions = uiState.fiqhBasedQuestions
     val randomQuestions = uiState.randomQuestions
 
-    val scope = rememberCoroutineScope()
-
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 12.dp),
-        topBar = { HomeScreenTopAppBar(navigator) }
-    ) {
+    Scaffold(modifier = Modifier
+        .fillMaxSize()
+        .padding(top = 12.dp), topBar = {
+        HomeScreenTopAppBar(
+            onSettingsClicked = {
+                navigator.navigate(SettingsScreenDestination())
+            },
+            onSearchClicked = {
+                navigator.navigate(SearchScreenDestination())
+            },
+        )
+    }) {
 
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -85,7 +91,12 @@ fun HomeScreen(
                         RandomQuestionLoadingIndicator()
                         Spacer(modifier = Modifier.height(12.dp))
                     } else {
-                        RandomQuestionSlider(randomQuestions, navigator)
+                        RandomQuestionSlider(
+                            randomQuestions,
+                            onQuestionClick = { question ->
+                                navigator.navigate(QuestionDetailsScreenDestination(question.url))
+                            },
+                        )
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
@@ -100,15 +111,13 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(12.dp))
             }
 
-            if (uiState.isFiqhBasedQuestionsLoading)
-                items(10) { QuestionItemPlaceholder() }
+            if (uiState.isFiqhBasedQuestionsLoading) items(10) { QuestionItemPlaceholder() }
             else {
                 itemsIndexed(fiqhBasedQuestions, key = { _, item -> item.url }) { _, question ->
                     QuestionItemCard(
                         question = question,
-                        modifier = Modifier.animateItemPlacement()
                     ) {
-                        scope.launch { navigator.navigate(QuestionDetailsScreenDestination(question.url)) }
+                        navigator.navigate(QuestionDetailsScreenDestination(question.url))
                     }
                 }
             }
@@ -119,32 +128,26 @@ fun HomeScreen(
 
 @Composable
 private fun HomeScreenTopAppBar(
-    navigator: DestinationsNavigator,
+    onSettingsClicked: () -> Unit = {},
+    onSearchClicked: () -> Unit = {},
 ) {
-
-    val scope = rememberCoroutineScope()
 
     TopAppBar(
         backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6F),
-        modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.6F)),
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.6F)),
         elevation = 0.dp,
 
         ) {
         TopBarActionButton(
-            Icons.Outlined.Settings,
-            stringResource(id = R.string.content_desc_settings)
-        ) {
-            scope.launch { navigator.navigate(SettingsScreenDestination()) }
-        }
+            Icons.Outlined.Settings, stringResource(id = R.string.content_desc_settings)
+        ) { onSettingsClicked() }
 
         Spacer(modifier = Modifier.weight(0.9F))
 
         TopBarActionButton(
-            Icons.Outlined.Search,
-            stringResource(id = R.string.content_desc_search)
+            Icons.Outlined.Search, stringResource(id = R.string.content_desc_search)
         ) {
-            scope.launch { navigator.navigate(SearchScreenDestination()) }
+            onSearchClicked()
         }
 
     }
@@ -154,9 +157,8 @@ private fun HomeScreenTopAppBar(
 @Composable
 private fun RandomQuestionSlider(
     randomQuestions: List<Question>,
-    navigator: DestinationsNavigator
+    onQuestionClick: (Question) -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
 
     LazyRow(
         modifier = Modifier
@@ -164,11 +166,12 @@ private fun RandomQuestionSlider(
             .height(200.dp),
     ) {
         itemsIndexed(randomQuestions, key = { _, q -> q.url }) { index, question ->
-            QuestionSliderItemCard(question = question, index = index, onClick = {
-                scope.launch {
-                    navigator.navigate(QuestionDetailsScreenDestination(question.url))
-                }
-            })
+            QuestionSliderItemCard(
+                question = question, index = index,
+                onClick = {
+                    onQuestionClick(question)
+                },
+            )
         }
     }
 }
@@ -193,8 +196,7 @@ private fun QuestionListHeading(headingLabel: String) {
 
     Text(
         text = headingLabel,
-        style = MaterialTheme.typography.headlineSmall
-            .copy(color = MaterialTheme.colorScheme.primary),
+        style = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.primary),
         textAlign = TextAlign.Start,
         modifier = Modifier
             .fillMaxWidth()

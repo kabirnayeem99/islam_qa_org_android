@@ -1,48 +1,20 @@
 package io.github.kabirnayeem99.islamqaorg.domain.repository
 
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
-import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
 import kotlinx.coroutines.flow.Flow
 
 interface QuestionAnswerRepository {
 
-    /**
-     * Fetches the list of random questions
-     *
-     * @param shouldRefresh Boolean - This is a flag that tells the repository to refresh the data from
-     * the remote data source.
-     * @return A flow of [QuestionDetail] wrapped in [Resource].
-     */
-    suspend fun getRandomQuestionList(shouldRefresh: Boolean = false): Flow<Resource<List<Question>>>
+    suspend fun getRandomQuestionList(shouldRefresh: Boolean = false): Flow<List<Question>>
 
-    /**
-     * Gets questions list based on the preferred [Fiqh] of the user
-     *
-     * @param pageNumber Int - the page number from which the questions will be loaded.
-     * @param shouldRefresh Boolean - whether the data should be fetched from website or from local cache
-     * @return a flow of the [Question] list wrapped in a [Resource] class.
-     */
     suspend fun getFiqhBasedQuestionList(
-        pageNumber: Int,
-        shouldRefresh: Boolean = false
+        pageNumber: Int, shouldRefresh: Boolean = false
     ): Flow<Resource<List<Question>>>
 
-    /**
-     * Fetches the question details based on the URL
-     *
-     * @param url The url of the question to be fetched.
-     * @return A flow of [QuestionDetail] wrapped in [Resource].
-     */
-    suspend fun getQuestionDetails(url: String): Flow<Resource<QuestionDetail>>
+    suspend fun getQuestionDetails(url: String): Flow<QuestionDetail>
 
-    /**
-     * Searches questions list based on the preferred [Fiqh] and search query of the user
-     *
-     * @param query String - the query user searched for.
-     * @return a flow of the [Question] list wrapped in a [Resource] class.
-     */
-    suspend fun searchQuestions(query: String): Flow<Resource<List<Question>>>
+    suspend fun searchQuestions(query: String): Flow<List<Question>>
 
 }

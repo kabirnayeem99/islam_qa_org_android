@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 
@@ -35,25 +36,24 @@ import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 fun QuestionSliderItemCard(question: Question, index: Int, onClick: () -> Unit) {
     BoxWithConstraints(
         modifier = Modifier
-            .padding(start = if (index == 0) 24.dp else 12.dp, end = 12.dp, top = 8.dp)
+            .padding(
+                start = if (index == 0) 24.dp else 12.dp, end = 12.dp, top = 8.dp
+            )
             .width(300.dp)
             .height(200.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.primary)
             .border(
                 border = BorderStroke(
-                    width = 0.8.dp,
-                    color = MaterialTheme.colorScheme.primary
-                ),
-                shape = RoundedCornerShape(12.dp)
+                    width = 0.8.dp, color = MaterialTheme.colorScheme.primary
+                ), shape = RoundedCornerShape(12.dp)
             )
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
+            .clickable { onClick() }, contentAlignment = Alignment.Center
     ) {
 
 
-        Image(
-            painter = painterResource(id = R.drawable.bg_banner),
+        AsyncImage(
+            R.drawable.bg_banner,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier
                 .padding(0.8.dp)
@@ -66,8 +66,7 @@ fun QuestionSliderItemCard(question: Question, index: Int, onClick: () -> Unit) 
         Text(
             text = question.question,
             style = MaterialTheme.typography.headlineMedium.copy(
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.primary
+                textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.primary
             ),
             modifier = Modifier
                 .align(Alignment.Center)
@@ -118,19 +117,18 @@ fun QuestionSliderItemCard(question: Question, index: Int, onClick: () -> Unit) 
 fun QuestionSliderItemCardPlaceholder(index: Int) {
     BoxWithConstraints(
         modifier = Modifier
-            .padding(start = if (index == 0) 24.dp else 12.dp, end = 12.dp, top = 8.dp)
+            .padding(
+                start = if (index == 0) 24.dp else 12.dp, end = 12.dp, top = 8.dp
+            )
             .width(300.dp)
             .height(200.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.5F))
             .border(
                 border = BorderStroke(
-                    width = 0.8.dp,
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5F)
-                ),
-                shape = RoundedCornerShape(12.dp)
-            ),
-        contentAlignment = Alignment.Center
+                    width = 0.8.dp, color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5F)
+                ), shape = RoundedCornerShape(12.dp)
+            ), contentAlignment = Alignment.Center
     ) {
 
 
@@ -146,10 +144,8 @@ fun QuestionSliderItemCardPlaceholder(index: Int) {
                 .align(Alignment.Center)
                 .border(
                     border = BorderStroke(
-                        width = 0.8.dp,
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5F)
-                    ),
-                    shape = RoundedCornerShape(12.dp)
+                        width = 0.8.dp, color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5F)
+                    ), shape = RoundedCornerShape(12.dp)
                 )
                 .clip(RoundedCornerShape(12.dp))
                 .background(MaterialTheme.colorScheme.secondary)

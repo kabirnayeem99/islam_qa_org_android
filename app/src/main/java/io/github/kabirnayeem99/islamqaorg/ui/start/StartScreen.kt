@@ -3,7 +3,6 @@ package io.github.kabirnayeem99.islamqaorg.ui.start
 import android.Manifest
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -14,7 +13,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -38,12 +36,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
@@ -53,7 +51,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.theme.ArabicFontFamily
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class)
 @Preview
 @Composable
 fun StartScreen(
@@ -129,8 +127,8 @@ fun StartScreen(
             exit = scaleOut() + fadeOut(),
         ) {
 
-            Image(
-                painter = painterResource(id = R.drawable.ic_islamic_geometric),
+            AsyncImage(
+                R.drawable.ic_islamic_geometric,
                 contentDescription = stringResource(id = R.string.content_desc_app_logo),
                 contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer),
@@ -160,8 +158,8 @@ fun StartScreen(
                     .align(Alignment.Center),
                 contentAlignment = Alignment.Center,
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_islamqa),
+                AsyncImage(
+                    R.drawable.ic_islamqa,
                     contentDescription = stringResource(id = R.string.content_desc_app_logo),
                     contentScale = ContentScale.Fit,
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primaryContainer),

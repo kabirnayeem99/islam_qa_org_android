@@ -106,8 +106,8 @@ class ScrapingService {
                         questionTitle = document.h1 { findFirst { text } },
                         detailedQuestion = getDetailedQuestionAsHtmlText(),
                         detailedAnswer = getDetailedAnswer(),
-                        fiqh = document.div { findAll { first { it.className == "et_pb_code_inner" && it.parent.id == "meta-1" }.a { findFirst { text } } } },
-                        source = document.div { findAll { first { it.className == "et_pb_code_inner" && it.parent.id == "meta-1" }.eachLink.keys.last() } },
+                        fiqh = getFiqhForQuestionDetails(),
+                        source = getSourceForQuestionDetails(),
                         originalLink = link,
                         nextQuestionLink = getPrevOrNextLink(Page.NEXT),
                         previousQuestionLink = getPrevOrNextLink(Page.PREV),
@@ -117,6 +117,24 @@ class ScrapingService {
             }
 
             questionDetail
+        }
+    }
+
+    private fun Result.getSourceForQuestionDetails(): String {
+        return try {
+            document.div { findAll { first { it.id == "answered-according-to" }.eachLink.keys.toList()[1] } }
+        } catch (e: Exception) {
+            Timber.e(e, "getSourceForQuestionDetails: " + e.localizedMessage)
+            "N/A"
+        }
+    }
+
+    private fun Result.getFiqhForQuestionDetails(): String {
+        return try {
+            document.div { findAll { first { it.id == "answered-according-to" }.a { findFirst { text } } } }
+        } catch (e: Exception) {
+            Timber.e(e, "getFiqhForQuestionDetails: " + e.localizedMessage)
+            "N/A"
         }
     }
 
@@ -356,3 +374,5 @@ class ScrapingService {
     }
 
 }
+
+private const val TAG = "ScrapingService"
