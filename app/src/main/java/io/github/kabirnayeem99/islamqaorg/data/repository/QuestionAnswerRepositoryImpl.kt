@@ -1,5 +1,8 @@
 package io.github.kabirnayeem99.islamqaorg.data.repository
 
+import android.util.LruCache
+import io.github.kabirnayeem99.islamqaorg.common.EmptyCacheException
+import io.github.kabirnayeem99.islamqaorg.common.NoNetworkException
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
 import io.github.kabirnayeem99.islamqaorg.common.utility.NetworkUtil
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaLocalDataSource
@@ -78,27 +81,33 @@ class QuestionAnswerRepositoryImpl
         }
     }
 
+    private val inMemoryQuestionDetails: LruCache<String, QuestionDetail> = LruCache(18)
 
     override suspend fun getQuestionDetails(url: String): Flow<QuestionDetail> {
+        val inMemoryQuestionDetail = inMemoryQuestionDetails.get(url) ?: QuestionDetail()
+
         return flow {
             try {
-                emit(Resource.Loading())
                 val questionDetailLocal = localDataSource.getDetailedQuestionAndAnswer(url)
-                questionDetailLocal.let {
-                    emit(Resource.Success(it))
-                }
-                if (isNetworkAvailable) {
-                    val questionDetailed = remoteDataSource.getDetailedQuestionAndAnswer(url)
-                    localDataSource.cacheQuestionDetail(questionDetailed)
-                    emit(Resource.Success(questionDetailed))
-                }
-            } catch (e: Exception) {
-                Timber.e(e, "Failed to get the detailed question -> ${e.message}.")
-                emit(Resource.Error(e.localizedMessage ?: "Failed to get the detailed question."))
+                inMemoryQuestionDetails.put(url, questionDetailLocal)
+                emit(questionDetailLocal)
+
+                if (!isNetworkAvailable) throw NoNetworkException()
+
+                val questionDetailRemote = getAndCacheQuestionDetailFromRemote(url)
+                emit(questionDetailRemote)
+            } catch (e: EmptyCacheException) {
+                val questionDetailRemote = getAndCacheQuestionDetailFromRemote(url)
+                emit(questionDetailRemote)
             }
-        }.flowOn(Dispatchers.IO)
+        }.onStart { emit(inMemoryQuestionDetail) }
     }
 
+    private suspend fun getAndCacheQuestionDetailFromRemote(url: String): QuestionDetail {
+        val questionDetailed = remoteDataSource.getDetailedQuestionAndAnswer(url)
+        localDataSource.cacheQuestionDetail(questionDetailed)
+        return questionDetailed
+    }
 
     private suspend fun getCurrentlySelectedFiqh(): Fiqh {
         val preferredFiqh = preferenceDataSource.getPreferredFiqh()

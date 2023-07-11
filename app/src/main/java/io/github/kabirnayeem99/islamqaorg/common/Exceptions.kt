@@ -4,3 +4,5 @@ class EmptyCacheException : Exception() {
     override val message: String
         get() = "No cache found"
 }
+
+class NoNetworkException : Exception()
