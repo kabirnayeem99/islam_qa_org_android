@@ -6,6 +6,7 @@ import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import java.util.Locale
@@ -16,7 +17,9 @@ class SearchQuestion
 
     suspend operator fun invoke(query: String): Flow<Resource<List<Question>>> {
         val queries = splitIntoTerms(query)
-        return repository.searchQuestions(queries).map { validateToResource(it) }
+        return repository.searchQuestions(queries)
+            .distinctUntilChanged()
+            .map { validateToResource(it) }
             .catch { emit(Resource.Error(it.localizedMessage ?: "")) }
             .onStart { emit(validateQueryAndMapToResource(query)) }
     }
