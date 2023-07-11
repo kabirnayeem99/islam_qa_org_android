@@ -6,12 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.kabirnayeem99.islamqaorg.common.base.Resource
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetPreferredFiqh
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.SavePreferredFiqh
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,23 +33,29 @@ class SettingsViewModel @Inject constructor(
      */
     fun saveFiqh(fiqh: Fiqh) {
         savePreferredFiqhJob?.cancel()
-        savePreferredFiqhJob = viewModelScope.launch {
-            savePreferredFiqh(fiqh)
+        savePreferredFiqhJob = viewModelScope.launch(Dispatchers.IO) {
             uiState = uiState.copy(selectedFiqh = fiqh)
+            savePreferredFiqh(fiqh)
         }
     }
 
     private var getPreferredFiqhJob: Job? = null
 
-    /**
-     * Fetches the currently selected [Fiqh]
-     */
     fun getFiqh() {
         getPreferredFiqhJob?.cancel()
-        getPreferredFiqhJob = viewModelScope.launch {
-            val fiqh = getPreferredFiqh()
-            Timber.d("Fiqh is $fiqh")
-            uiState = uiState.copy(selectedFiqh = fiqh)
+        getPreferredFiqhJob = viewModelScope.launch(Dispatchers.IO) {
+            getPreferredFiqh().collect { resource ->
+                uiState = when (resource) {
+                    is Resource.Loading -> uiState.copy(isLoading = true)
+
+                    is Resource.Success -> {
+                        val selectedFiqh = resource.data ?: Fiqh.UNKNOWN
+                        uiState.copy(isLoading = false, selectedFiqh = selectedFiqh)
+                    }
+
+                    is Resource.Error -> uiState.copy(isLoading = false)
+                }
+            }
         }
     }
 }

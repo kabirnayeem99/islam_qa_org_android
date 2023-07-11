@@ -37,67 +37,51 @@ class HomeViewModel @Inject constructor(
 
     private var fetchRandomQuestionJob: Job? = null
 
-    /**
-     * Fetches random questions.
-     *
-     * @param shouldRefresh Boolean = false
-     */
     private fun getRandomQuestions(shouldRefresh: Boolean = false) {
         fetchRandomQuestionJob?.cancel()
         fetchRandomQuestionJob = viewModelScope.launch(Dispatchers.IO) {
-            getRandomQuestion(shouldRefresh).distinctUntilChanged()
-                .collect { res ->
-                    when (res) {
-                        is Resource.Loading -> {
-                            uiState = uiState.copy(isRandomQuestionLoading = true)
-                        }
+            getRandomQuestion(shouldRefresh).distinctUntilChanged().collect { resource ->
+                uiState = when (resource) {
+                    is Resource.Loading -> uiState.copy(isRandomQuestionLoading = true)
 
-                        is Resource.Error -> {
-                            uiState = uiState.copy(isRandomQuestionLoading = false)
-                            makeUserMessage(res.message ?: "")
-                        }
+                    is Resource.Error -> {
+                        makeUserMessage(resource.message ?: "")
+                        uiState.copy(isRandomQuestionLoading = false)
+                    }
 
-                        is Resource.Success -> {
-
-                            val questionAnswers = res.data?.sortedBy { it.question } ?: emptyList()
-                            uiState = uiState.copy(
-                                randomQuestions = questionAnswers,
-                                isRandomQuestionLoading = false
-                            )
-                            makeUserMessage("Loaded successfully ${questionAnswers.size} questions.")
-                        }
+                    is Resource.Success -> {
+                        val questionAnswers = resource.data?.sortedBy { it.question } ?: emptyList()
+                        makeUserMessage("Loaded successfully ${questionAnswers.size} questions.")
+                        uiState.copy(
+                            randomQuestions = questionAnswers, isRandomQuestionLoading = false
+                        )
                     }
                 }
+            }
         }
     }
 
     private var fetchFiqhBasedQuestionJob: Job? = null
 
-    /**
-     * Fetches the questions based on currently selected Fiqh and updates the UI state.
-     *
-     * @param shouldRefresh Boolean = false
-     */
     private fun getFiqhBasedQuestions(shouldRefresh: Boolean = false) {
         fetchFiqhBasedQuestionJob?.cancel()
         fetchFiqhBasedQuestionJob = viewModelScope.launch(Dispatchers.IO) {
             val currentPage = uiState.currentPage
             getFiqhBasedQuestions(currentPage, shouldRefresh).distinctUntilChanged()
-                .collect { res ->
-                    when (res) {
+                .collect { resource ->
+                    uiState = when (resource) {
                         is Resource.Loading -> {
-                            uiState = uiState.copy(isFiqhBasedQuestionsLoading = true)
+                            uiState.copy(isFiqhBasedQuestionsLoading = true)
                         }
 
                         is Resource.Error -> {
-                            uiState = uiState.copy(isFiqhBasedQuestionsLoading = false)
-                            makeUserMessage(res.message ?: "")
+                            makeUserMessage(resource.message ?: "")
+                            uiState.copy(isFiqhBasedQuestionsLoading = false)
                         }
 
                         is Resource.Success -> {
-
-                            val questionAnswers = res.data ?: emptyList()
-                            uiState = uiState.copy(
+                            val questionAnswers = resource.data ?: emptyList()
+                            uiState.copy(
                                 fiqhBasedQuestions = questionAnswers,
                                 isFiqhBasedQuestionsLoading = false,
                             )
@@ -108,28 +92,16 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    /**
-     * Makes a new user message with a unique id and add it to the list of user messages.
-     *
-     * @param messageText The text of the message to be sent.
-     * @return Nothing.
-     */
     private fun makeUserMessage(messageText: String) {
         if (messageText.isBlank()) return
         viewModelScope.launch(Dispatchers.IO) {
             val messages = uiState.messages + UserMessage(
-                id = UUID.randomUUID().mostSignificantBits,
-                message = messageText
+                id = UUID.randomUUID().mostSignificantBits, message = messageText
             )
             uiState = uiState.copy(messages = messages)
         }
     }
 
-    /**
-     * Removes the message after it is shown with the given id from the user messages
-     *
-     * @param messageId The id of the message that was shown.
-     */
     fun userMessageShown(messageId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             val messages = uiState.messages.filterNot { it.id == messageId }

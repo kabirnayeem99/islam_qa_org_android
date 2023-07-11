@@ -28,63 +28,41 @@ class QuestionDetailViewModel @Inject constructor(
 
     private var fetchQuestionDetailsJob: Job? = null
 
-    /**
-     * Fetches the question details and updates the UI state.
-     *
-     * @param url The url of the question details to be fetched
-     */
     fun getQuestionsDetailsJob(url: String) {
         fetchQuestionDetailsJob?.cancel()
-        fetchQuestionDetailsJob = viewModelScope.launch {
-            getQuestionDetails(url).distinctUntilChanged().collect { res ->
-                when (res) {
+        fetchQuestionDetailsJob = viewModelScope.launch(Dispatchers.IO) {
+            getQuestionDetails(url).distinctUntilChanged().collect { resource ->
+                when (resource) {
                     is Resource.Loading -> toggleLoading(true)
+
                     is Resource.Error -> {
                         toggleLoading(false)
-                        makeUserMessage(res.message ?: "")
+                        makeUserMessage(resource.message ?: "")
                     }
 
                     is Resource.Success -> {
                         toggleLoading(false)
-                        uiState = uiState.copy(questionDetails = res.data ?: QuestionDetail())
+                        uiState = uiState.copy(questionDetails = resource.data ?: QuestionDetail())
                     }
                 }
             }
         }
     }
 
-    /**
-     * Toggles loading on or off based on the parameter
-     *
-     * @param shouldLoad Boolean - This is a boolean value that determines whether the loading
-     * indicator should be shown or not.
-     */
     private fun toggleLoading(shouldLoad: Boolean) {
         uiState = uiState.copy(isLoading = shouldLoad)
     }
 
-    /**
-     * Makes a new user message with a unique id and add it to the list of user messages.
-     *
-     * @param messageText The text of the message to be sent.
-     * @return Nothing.
-     */
     private fun makeUserMessage(messageText: String) {
         if (messageText.isBlank()) return
         viewModelScope.launch(Dispatchers.IO) {
             val messages = uiState.messages + UserMessage(
-                id = UUID.randomUUID().mostSignificantBits,
-                message = messageText
+                id = UUID.randomUUID().mostSignificantBits, message = messageText
             )
             uiState = uiState.copy(messages = messages)
         }
     }
 
-    /**
-     * Removes the message after it is shown with the given id from the user messages
-     *
-     * @param messageId The id of the message that was shown.
-     */
     fun userMessageShown(messageId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             val messages = uiState.messages.filterNot { it.id == messageId }

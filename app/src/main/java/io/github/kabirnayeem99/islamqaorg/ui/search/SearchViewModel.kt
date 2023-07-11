@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.SearchQuestion
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,47 +26,34 @@ class SearchViewModel @Inject constructor(
         fetchSearchResults()
     }
 
-    /**
-     * When the user types in the search box, we update the UI state with the new text, and if the
-     * text is an even number of characters, we fetch the search results
-     *
-     * @param text The text to be searched.
-     */
+
+    private val changeQuerySyncKey = "change_query_sync_key"
+
     fun changeQueryText(text: String) {
-        viewModelScope.launch {
-            uiState = uiState.copy(query = text)
+        synchronized(changeQuerySyncKey) {
+            viewModelScope.launch(Dispatchers.IO) { uiState = uiState.copy(query = text) }
         }
     }
 
     private var fetchSearchResults: Job? = null
 
-    /**
-     * Fetches the search question results based on the query
-     */
     fun fetchSearchResults() {
         fetchSearchResults?.cancel()
-        viewModelScope.launch {
+        fetchSearchResults = viewModelScope.launch(Dispatchers.IO) {
             val query = uiState.query
-            searchQuestion(query).collect { res ->
-                when (res) {
+            searchQuestion(query).distinctUntilChanged().collect { resource ->
+                uiState = when (resource) {
+                    is Resource.Success -> uiState.copy(
+                        searchQuestionResults = resource.data ?: emptyList(),
+                        isSearchResultLoading = false,
+                    )
 
-                    is Resource.Success -> {
-                        uiState = uiState.copy(
-                            searchQuestionResults = res.data ?: emptyList(),
-                            isSearchResultLoading = false,
-                        )
-                    }
+                    is Resource.Loading -> uiState.copy(
+                        isSearchResultLoading = query.isNotBlank(),
+                        searchQuestionResults = emptyList(),
+                    )
 
-                    is Resource.Loading -> {
-                        uiState = uiState.copy(
-                            isSearchResultLoading = query.isNotBlank(),
-                            searchQuestionResults = emptyList(),
-                        )
-                    }
-
-                    else -> {
-                        uiState = uiState.copy(isSearchResultLoading = false)
-                    }
+                    else -> uiState.copy(isSearchResultLoading = false)
                 }
             }
         }
