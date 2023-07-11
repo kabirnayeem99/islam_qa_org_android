@@ -1,75 +1,19 @@
-<div id="top"></div>
-
-<!-- PROJECT LOGO -->
 <br />
 <div align="center">
 
 <a href="https://imgbb.com/"><img src="https://i.ibb.co/T26H0zQ/ic-launcher.png" alt="ic-launcher" border="0" width="120" height="120"></a>
 
-<h3 align="center">IslamQA-for-Android</h3>
+<h2 align="center">IslamQA Android</h3>
 
   <p align="center">
-     Native android application built on top of https://islamqa.org/.
+    Unofficial client for IslamQA.org
     <br />
-    <br />
-    <a href="https://youtu.be/wzAcSdtiLfY">View Demo</a>
-    ·
-    <a href="https://github.com/kabirnayeem99/islam_qa_org_android/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/kabirnayeem99/islam_qa_org_android/issues">Request Feature</a>
-    .
-    <a href="https://github.com/users/kabirnayeem99/projects/1">Project Management</a>
-  </p>
+
 </div>
-
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
-
-
-
-<!-- ABOUT THE PROJECT -->
-
-## About The Project
-
-Native Android Application built with latest Android OS features. Just a frontend for IslamQA.org.
-
-IslamQA.org is a repository of Islamic answers. They have collected over 93,950 Islamic Q&A from the
-official websites of various scholars and Islamic educational institutions around the world. You can
-find answers to your questions from different school of thoughts (madaahib) from the Sunni
-scholarship. So far, they have collected around 87,000 answers from Hanafi Fiqh, around 5,700
-answers from Shafi’i Fiqh, around 270 answers from Maliki Fiqh, and around 280 answers from the
-Hanbali fiqh.
-
-This app just scrapes this awesome website in the user-end, and shows the answers based on the
-preferred 'Madhab' of the user. Once loaded, it caches the data, to reduce load on the original
-website. This app incorporates latest Material You themeing, Clean Architecture recommended by
-Google, Kotlin Coroutines for multithreading and Work Manager for background syncing to give an
-immersive experience to the user.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+<br />
+An unofficial client designed for IslamQA.org. Instead of utilizing the API provided by IslamQA.org, the client employs web scraping techniques to extract information from the website.
+It is important to note that this project is not intended for widespread adoption, but rather serves as an experimental and educational undertaking. Its purpose lies in showcasing the implementation of web scraping methodologies for accessing the wealth of Islamic knowledge available on IslamQA.org.
+For those unfamiliar with IslamQA.org, it serves as a distinguished repository of Islamic answers. With an extensive collection of 93,950 Islamic Q&A, sourced from the official websites of renowned scholars and esteemed Islamic educational institutions worldwide, IslamQA.org stands as a comprehensive platform for seekers of Islamic knowledge.
 
 ### Built With
 
@@ -79,7 +23,7 @@ Major frameworks this application is built around.
 * Kotlin Coroutines, for multithreading.
 * [skrape.it](https://github.com/skrapeit/skrape.it), for web scraping.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+
 
 <!-- GETTING STARTED -->
 
@@ -116,7 +60,7 @@ This app needs no extra credential as it has no internal API or Firebase connect
     ./gradlew build
     ```
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+
 
 <!-- USAGE EXAMPLES -->
 
@@ -129,7 +73,7 @@ This app needs no extra credential as it has no internal API or Firebase connect
 <a href="https://ibb.co/kgdG3qV"><img src="https://i.ibb.co/nsWw3Qq/Screenshot-20220726-193405.png" alt="Screenshot-20220726-193405" border="0" width="200" height="340"></a>
 <a href="https://ibb.co/3SsnmJC"><img src="https://i.ibb.co/frSsdcx/Screenshot-20220726-193442.png" alt="Screenshot-20220726-193442" border="0" width="200" height="340"></a>
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+
 
 <!-- ROADMAP -->
 
@@ -143,7 +87,7 @@ This app needs no extra credential as it has no internal API or Firebase connect
 See the [open issues](https://github.com/kabirnayeem99/islam_qa_org_android/issues) for a full list
 of proposed features (and known issues).
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+
 
 
 <!-- CONTRIBUTING -->
@@ -163,7 +107,7 @@ project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+
 
 <!-- LICENSE -->
 
@@ -171,7 +115,7 @@ project a star! Thanks again!
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+
 
 <!-- CONTACT -->
 
@@ -180,7 +124,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 Naimul Kabir - [@kabirnayeem99](https://www.linkedin.com/in/kabirnayeem99/) -
 kabirnayeem.99@gmail.com
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+
 
 <!-- ACKNOWLEDGMENTS -->
 
@@ -190,5 +134,5 @@ kabirnayeem.99@gmail.com
 * [Shimmer Effect for Android](https://facebook.github.io/shimmer-android/)
 * [Timber](https://github.com/JakeWharton/timber)
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+
 
