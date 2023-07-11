@@ -14,6 +14,6 @@ interface QuestionAnswerRepository {
 
     suspend fun getQuestionDetails(url: String): Flow<QuestionDetail>
 
-    suspend fun searchQuestions(query: String): Flow<List<Question>>
+    suspend fun searchQuestions(query: List<String>): Flow<List<Question>>
 
 }

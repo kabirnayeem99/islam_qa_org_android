@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SimpleSQLiteQuery
 import io.github.kabirnayeem99.islamqaorg.data.dto.room.QuestionEntity
 
 /**
@@ -44,12 +46,18 @@ interface QuestionListDao {
     @Query("SELECT * FROM questionentity ORDER BY timeInMillis desc LIMIT 10")
     suspend fun getRandomQuestions(): List<QuestionEntity>
 
-    /**
-     * Takes the selected Fiqh and query as inputs and returns a list of QuestionEntity objects.
-     *
-     * @param fiqh String
-     * @param query String
-     */
-    @Query("SELECT * FROM questionentity WHERE question LIKE '%' || :query || '%' ORDER BY timeInMillis desc LIMIT 10")
-    suspend fun searchQuestions(query: String): List<QuestionEntity>
+//    @Query("SELECT * FROM questionentity WHERE question LIKE '%' || :query || '%' ORDER BY timeInMillis desc LIMIT 10")
+//    suspend fun searchQuestions(query: List<String>): List<QuestionEntity>
+
+    @RawQuery(observedEntities = [QuestionEntity::class])
+    suspend fun searchQuestions(query: SimpleSQLiteQuery): List<QuestionEntity>
+}
+
+fun generateSearchQuery(terms: List<String>): SimpleSQLiteQuery {
+    val allFetchGeneralQuery = "SELECT * FROM questionentity"
+    val filteringQueryPart = terms.joinToString(
+        prefix = " WHERE ", separator = " OR "
+    ) { term -> "question LIKE '%$term%'" }
+    val searchQuery = allFetchGeneralQuery + filteringQueryPart
+    return SimpleSQLiteQuery(searchQuery)
 }

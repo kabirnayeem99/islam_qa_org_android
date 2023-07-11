@@ -3,6 +3,7 @@ package io.github.kabirnayeem99.islamqaorg.data.dataSource
 import io.github.kabirnayeem99.islamqaorg.common.EmptyCacheException
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb.QuestionDetailDao
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb.QuestionListDao
+import io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb.generateSearchQuery
 import io.github.kabirnayeem99.islamqaorg.data.mappers.toQuestionDetail
 import io.github.kabirnayeem99.islamqaorg.data.mappers.toQuestionDetailEntity
 import io.github.kabirnayeem99.islamqaorg.data.mappers.toQuestionEntities
@@ -41,9 +42,10 @@ class IslamQaLocalDataSource @Inject constructor(
     }
 
 
-    suspend fun searchFiqhBasedQuestionList(query: String): List<Question> {
+    suspend fun searchFiqhBasedQuestionList(query: List<String>): List<Question> {
         try {
-            val questions = questionListDao.searchQuestions(query).toQuestions()
+            val searchQuery = generateSearchQuery(query)
+            val questions = questionListDao.searchQuestions(searchQuery).toQuestions()
             if (questions.isEmpty()) throw EmptyCacheException()
             return questions
         } catch (e: Exception) {

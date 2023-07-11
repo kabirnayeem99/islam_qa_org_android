@@ -149,15 +149,10 @@ class QuestionAnswerRepositoryImpl
     }
 
 
-    override suspend fun searchQuestions(query: String): Flow<List<Question>> {
-        val cachedFiqhBasedQuestionList = inMemoryMutex.withLock { inMemoryFiqhBasedQuestionList }
+    override suspend fun searchQuestions(query: List<String>): Flow<List<Question>> {
         return flow {
-            if (query.isNotBlank()) {
-                val searchResult = localDataSource.searchFiqhBasedQuestionList(query)
-                if (searchResult.isNotEmpty()) emit(searchResult)
-            }
-        }.onStart {
-            if (query.isBlank()) emit(cachedFiqhBasedQuestionList)
+            val searchResult = localDataSource.searchFiqhBasedQuestionList(query)
+            emit(searchResult)
         }
     }
 }
