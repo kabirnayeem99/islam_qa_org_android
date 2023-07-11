@@ -15,84 +15,35 @@ An unofficial client designed for IslamQA.org. Instead of utilizing the API prov
 It is important to note that this project is not intended for widespread adoption, but rather serves as an experimental and educational undertaking. Its purpose lies in showcasing the implementation of web scraping methodologies for accessing the wealth of Islamic knowledge available on IslamQA.org.
 For those unfamiliar with IslamQA.org, it serves as a distinguished repository of Islamic answers. With an extensive collection of 93,950 Islamic Q&A, sourced from the official websites of renowned scholars and esteemed Islamic educational institutions worldwide, IslamQA.org stands as a comprehensive platform for seekers of Islamic knowledge.
 
-### Built With
 
-Major frameworks this application is built around.
+## 💡 Basic Information
 
-* Android SDK
-* Kotlin Coroutines, for multithreading.
-* [skrape.it](https://github.com/skrapeit/skrape.it), for web scraping.
+* Project Initialization Date: Jun 01, 2022
+* Framework: Android Native SDK, 
+* Language: Kotlin
+* Development environment: Android Studio 
+* Target Platforms: Android (Mobile)
 
+## 🚀 Getting Started
 
+1) First you need to download the project locally. You can do this in different ways. Clone the
+   project in your pc by -
 
-<!-- GETTING STARTED -->
-
-## Getting Started
-
-This app needs no extra credential as it has no internal API or Firebase connection.
-
-### Prerequisites
-
-* Android Studio Chipmunk ([Download link](https://developer.android.com/studio/releases))
-* Java-OpenJDK 11+
-    * For macOS
-       ```shell
-       brew install openjdk@11
-       ```
-    * For Windows
-       ```shell
-        choco install openjdk11
-       ```
-    * For Linux
-       ```shell
-        pacman -S jdk11-openjdk
-        ```
-* Android SDK Version 32
-
-### Installation
-
-1. Clone the repo
    ```shell
    git clone https://github.com/kabirnayeem99/islam_qa_org_android.git
    ```
-2. Build the project
-    ```shell
-    ./gradlew build
-    ```
+2) Open the project in Android Studio (`Android Studio Flamingo | 2022.2.1 or up`).
+3) Run the project by clicking on `Run` button.
 
+## 📸 Screenshots
 
+<a href="https://ibb.co/1Rdgk9t"><img src="https://i.ibb.co/YfyCxtF/Screenshot-20230711-220327.png" alt="Screenshot-20230711-220327" border="0" width="200"></a>
+<a href="https://ibb.co/QrKy89Q"><img src="https://i.ibb.co/ZWMqHdX/Screenshot-20230711-220340.png" alt="Screenshot-20230711-220340" border="0" width="200"></a>
+<a href="https://ibb.co/bWD3CK8"><img src="https://i.ibb.co/r7Ntzw1/Screenshot-20230711-220345.png" alt="Screenshot-20230711-220345" border="0" width="200"></a>
+<a href="https://ibb.co/S6Qnhwd"><img src="https://i.ibb.co/p1WztjR/Screenshot-20230711-220352.png" alt="Screenshot-20230711-220352" border="0" width="200"></a>
+<a href="https://ibb.co/gDXg1g0"><img src="https://i.ibb.co/LCqpwpT/Screenshot-20230711-220410.png" alt="Screenshot-20230711-220410" border="0" width="200"></a>
 
-<!-- USAGE EXAMPLES -->
-
-## Demo
-
-<a href="https://ibb.co/rmvy9Nk"><img src="https://i.ibb.co/kxMcZvK/Screenshot-20220726-193319.png" alt="Screenshot-20220726-193319" border="0" width="200" height="340"></a>
-<a href="https://ibb.co/Z2J4BSd"><img src="https://i.ibb.co/XY407DX/Screenshot-20220726-193331.png" alt="Screenshot-20220726-193331" border="0" width="200" height="340"></a>
-<a href="https://ibb.co/RgST4L7"><img src="https://i.ibb.co/Mghk5q9/Screenshot-20220726-193339.png" alt="Screenshot-20220726-193339" border="0" width="200" height="340"></a>
-<a href="https://ibb.co/jbJCqnY"><img src="https://i.ibb.co/7jk3BsD/Screenshot-20220726-193403.png" alt="Screenshot-20220726-193403" border="0" width="200" height="340"></a>
-<a href="https://ibb.co/kgdG3qV"><img src="https://i.ibb.co/nsWw3Qq/Screenshot-20220726-193405.png" alt="Screenshot-20220726-193405" border="0" width="200" height="340"></a>
-<a href="https://ibb.co/3SsnmJC"><img src="https://i.ibb.co/frSsdcx/Screenshot-20220726-193442.png" alt="Screenshot-20220726-193442" border="0" width="200" height="340"></a>
-
-
-
-<!-- ROADMAP -->
-
-## Roadmap
-
-- [x] Load Random questions in a slider
-- [x] Load Fiqh-based questions in the home page
-- [x] Load Answers with the relevant question list.
-- [ ] Offline first designs with background syncing.
-
-See the [open issues](https://github.com/kabirnayeem99/islam_qa_org_android/issues) for a full list
-of proposed features (and known issues).
-
-
-
-
-<!-- CONTRIBUTING -->
-
-## Contributing
+## 🫶 Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and
 create. Any contributions you make are **greatly appreciated**.
@@ -108,27 +59,17 @@ project a star! Thanks again!
 5. Open a Pull Request
 
 
-
-<!-- LICENSE -->
-
-## License
+## 📜 License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-
-
-<!-- CONTACT -->
-
-## Contact
+## 📮 Contact
 
 Naimul Kabir - [@kabirnayeem99](https://www.linkedin.com/in/kabirnayeem99/) -
 kabirnayeem.99@gmail.com
 
 
-
-<!-- ACKNOWLEDGMENTS -->
-
-## Acknowledgments
+## 💌 Acknowledgments
 
 * [skrape.it](https://github.com/skrapeit/skrape.it)
 * [Shimmer Effect for Android](https://facebook.github.io/shimmer-android/)
