@@ -13,12 +13,15 @@ class GetRandomQuestion
 @Inject constructor(private val repository: QuestionAnswerRepository) {
     suspend operator fun invoke(shouldRefresh: Boolean): Flow<Resource<List<Question>>> {
         return repository.getRandomQuestionList(shouldRefresh).map { validateAndMapToResource(it) }
-            .catch { emit(Resource.Error(it.localizedMessage ?: "Error!!!")) }
+            .catch { e -> emit(Resource.Error(generateErrorMessage(e.localizedMessage ?: ""))) }
             .onStart { emit(Resource.Loading()) }
     }
 
     private fun validateAndMapToResource(questionList: List<Question>): Resource<List<Question>> {
-        return if (questionList.isEmpty()) Resource.Error("Not found.")
+        return if (questionList.isEmpty()) Resource.Error(generateErrorMessage("Not found."))
         else Resource.Success(questionList)
     }
+
+    private fun generateErrorMessage(message: String) =
+        "Failed at getting random questions. $message"
 }

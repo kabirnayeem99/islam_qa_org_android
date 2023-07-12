@@ -17,13 +17,11 @@ class SearchQuestion
 
     suspend operator fun invoke(query: String): Flow<Resource<List<Question>>> {
         val queries = splitIntoTerms(query)
-        return repository.searchQuestions(queries)
-            .distinctUntilChanged()
+        return repository.searchQuestions(queries).distinctUntilChanged()
             .map { validateToResource(it) }
-            .catch { emit(Resource.Error(it.localizedMessage ?: "")) }
+            .catch { e -> emit(Resource.Error(generateErrorMessage(e.localizedMessage ?: ""))) }
             .onStart { emit(validateQueryAndMapToResource(query)) }
     }
-
 
     private fun splitIntoTerms(query: String) =
         query.split(" ").filterNot { term -> term.isEmpty() || term.isDigitsOnly() }
@@ -41,13 +39,16 @@ class SearchQuestion
     }
 
     private fun validateQuery(query: String): String? {
-        if (query.isEmpty()) return "Search query is empty."
-        if (query.startsWith(" ")) return "Search query starts with a space."
-        if (query.firstOrNull()?.isDigit() == true) return "Search query starts with a number."
+        if (query.isEmpty()) return generateErrorMessage("Can't be empty.")
+        if (query.startsWith(" ")) return generateErrorMessage("Remove space at start.")
+        if (query.firstOrNull()?.isDigit() == true) return generateErrorMessage("Remove number.")
         val nonEnglishRegex = Regex("[^\\p{L}\\p{M}\\p{N}\\p{P}\\p{Z}]")
-        if (nonEnglishRegex.containsMatchIn(query)) return "Search query contains non-English characters."
+        if (nonEnglishRegex.containsMatchIn(query)) return generateErrorMessage("Only in English.")
 
         return null
     }
+
+
+    private fun generateErrorMessage(message: String): String = "Failed to search. $message."
 
 }
