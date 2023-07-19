@@ -8,10 +8,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.kabirnayeem99.islamqaorg.common.base.Resource
 import io.github.kabirnayeem99.islamqaorg.common.base.UserMessage
+import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetFiqhBasedQuestions
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.GetRandomQuestion
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -35,11 +35,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private var fetchRandomQuestionJob: Job? = null
 
     private fun getRandomQuestions(shouldRefresh: Boolean = false) {
-        fetchRandomQuestionJob?.cancel()
-        fetchRandomQuestionJob = viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             getRandomQuestion(shouldRefresh).distinctUntilChanged().collect { resource ->
                 uiState = when (resource) {
                     is Resource.Loading -> uiState.copy(isRandomQuestionLoading = true)
@@ -61,33 +59,47 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private var fetchFiqhBasedQuestionJob: Job? = null
+    private var lastQuestion: Question? = null
+    fun loadNextPageIfLastQuestion(question: Question) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (lastQuestion == null) return@launch
+            if (question.url != lastQuestion!!.url) return@launch
+            getFiqhBasedQuestions(shouldRefresh = false)
+        }
+    }
 
     private fun getFiqhBasedQuestions(shouldRefresh: Boolean = false) {
-        fetchFiqhBasedQuestionJob?.cancel()
-        fetchFiqhBasedQuestionJob = viewModelScope.launch(Dispatchers.IO) {
-            val currentPage = uiState.currentPage
-            getFiqhBasedQuestions(currentPage, shouldRefresh).distinctUntilChanged()
-                .collect { resource ->
-                    uiState = when (resource) {
-                        is Resource.Loading -> {
-                            uiState.copy(isFiqhBasedQuestionsLoading = true)
-                        }
+        synchronized("getFiqhBasedQuestionsSync") {
+            viewModelScope.launch(Dispatchers.IO) {
+                val currentPage = uiState.currentPage
+                getFiqhBasedQuestions(currentPage, shouldRefresh).distinctUntilChanged()
+                    .collect { resource ->
+                        uiState = when (resource) {
+                            is Resource.Loading -> {
+                                uiState.copy(isFiqhBasedQuestionsLoading = true)
+                            }
 
-                        is Resource.Error -> {
-                            makeUserMessage(resource.message ?: "")
-                            uiState.copy(isFiqhBasedQuestionsLoading = false)
-                        }
+                            is Resource.Error -> {
+                                makeUserMessage(resource.message ?: "")
+                                uiState.copy(isFiqhBasedQuestionsLoading = false)
+                            }
 
-                        is Resource.Success -> {
-                            val questionAnswers = resource.data ?: emptyList()
-                            uiState.copy(
-                                fiqhBasedQuestions = questionAnswers,
-                                isFiqhBasedQuestionsLoading = false,
-                            )
+                            is Resource.Success -> {
+                                val newQuestionAnswers = resource.data ?: emptyList()
+                                var questionAnswers = uiState.fiqhBasedQuestions.toMutableList()
+                                questionAnswers.addAll(newQuestionAnswers)
+                                questionAnswers =
+                                    questionAnswers.distinctBy { it.url }.toMutableList()
+                                lastQuestion = questionAnswers.last()
+                                uiState.copy(
+                                    fiqhBasedQuestions = questionAnswers,
+                                    isFiqhBasedQuestionsLoading = false,
+                                    currentPage = uiState.currentPage + 1,
+                                )
+                            }
                         }
                     }
-                }
+            }
         }
     }
 

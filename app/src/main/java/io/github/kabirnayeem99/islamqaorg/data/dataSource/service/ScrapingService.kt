@@ -253,21 +253,17 @@ class ScrapingService {
      * @return A list of questions.
      */
     suspend fun parseFiqhBasedQuestionsList(fiqh: Fiqh, pageNumber: Int): FiqhBasedQuestionListDto {
-
-        Timber.d("page number -> $pageNumber")
-
-        return withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.Default) {
 
             val fiqhParamName = if (fiqh == Fiqh.UNKNOWN) Fiqh.HANAFI.paramName else fiqh.paramName
 
-            val fiqhBasedQuestionUrl = "https://islamqa.org/category/${fiqhParamName}/"
+            val fiqhBasedQuestionUrl =
+                "https://islamqa.org/category/${fiqhParamName}/page/$pageNumber/"
 
             val fiqhBasedQuestionListDto = skrape(HttpFetcher) {
                 request { url = fiqhBasedQuestionUrl }
                 response { getFiqhBasedQuestionListDtoOutOfResponse(this, fiqh) }
             }
-
-
             fiqhBasedQuestionListDto
         }
     }
@@ -323,9 +319,7 @@ class ScrapingService {
 
     suspend fun parseSearchResults(query: String): SearchResultQuestionDto {
         val spaceLessQuery = query.replace(" ", "+")
-        val searchResultUrl = "$baseIslamQaUrl?s=$spaceLessQuery"
-
-        Timber.d("search results url -> $searchResultUrl")
+        val searchResultUrl = "$baseIslamQaUrl?s=&s=$spaceLessQuery"
 
         val searchResultQuestionDto = skrape(HttpFetcher) {
             request { url = searchResultUrl }

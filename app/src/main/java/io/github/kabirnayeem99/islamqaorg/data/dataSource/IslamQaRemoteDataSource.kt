@@ -42,8 +42,6 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
 
         val qList = scrapingService.parseFiqhBasedQuestionsList(fiqh, pageNumber)
 
-        Timber.d("Fiqh-based questions list -> $qList")
-
         if (qList.httpStatusCode != 200) throw Exception(qList.httpStatusMessage.ifBlank { "Failed to parse the questions." })
         if (qList.questionLinks.isEmpty() || qList.questions.isEmpty()) throw Exception("No questions were found.")
         if (qList.questions.size != qList.questionLinks.size) throw Exception("Failed to get answers for some questions")
@@ -84,7 +82,6 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
         Timber.d("getDetailedQuestionAndAnswer -> $detail")
 
         return detail
-
     }
 
     /**
@@ -97,7 +94,6 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
     suspend fun searchRandomQuestionsList(query: String): List<Question> {
         val searchResult = scrapingService.parseSearchResults(query)
 
-        Timber.d("search results -> $searchResult")
 
         if (searchResult.httpStatusCode == 404) throw Exception(searchResult.httpStatusMessage.ifBlank { "Failed to parse the search result question lists." })
         if (searchResult.questionLinks.isEmpty() || searchResult.questions.isEmpty()) throw Exception(

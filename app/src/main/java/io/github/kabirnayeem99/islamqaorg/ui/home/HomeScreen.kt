@@ -119,6 +119,7 @@ fun HomeScreen(
                     ) {
                         navigator.navigate(QuestionDetailsScreenDestination(question.url))
                     }
+                    homeViewModel.loadNextPageIfLastQuestion(question)
                 }
             }
         }
