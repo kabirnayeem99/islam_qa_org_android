@@ -31,7 +31,7 @@ For those unfamiliar with IslamQA.org, it serves as a distinguished repository o
    ```shell
    git clone https://github.com/kabirnayeem99/islam_qa_org_android.git
    ```
-2) Open the project in Android Studio (`Android Studio Flamingo | 2022.2.1 or up`).
+2) Open the project in Android Studio (`Android Studio Hedgehog | 2023.1.1 or up`).
 3) Run the project by clicking on `Run` button.
 
 ## 📸 Screenshots
