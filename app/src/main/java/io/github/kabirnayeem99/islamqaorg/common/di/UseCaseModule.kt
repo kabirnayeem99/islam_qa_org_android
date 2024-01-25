@@ -1,5 +1,6 @@
 package io.github.kabirnayeem99.islamqaorg.common.di
 
+import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,4 +42,8 @@ object UseCaseModule {
     fun provideSearchQuestion(repository: QuestionAnswerRepository): SearchQuestion {
         return SearchQuestion(repository)
     }
+
+    @Provides
+    fun provideFetchAndSavePeriodically(workManager: WorkManager) =
+        FetchAndSavePeriodically(workManager)
 }

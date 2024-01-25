@@ -20,4 +20,7 @@ class BackgroundQAListFetcherWorker @AssistedInject constructor(
             if (successfullySynced) Result.success() else Result.failure()
         }
     }
+    companion object {
+const val TAG = "BackgroundQAListFetcher"
+    }
 }
