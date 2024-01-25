@@ -17,9 +17,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.DropdownMenu
@@ -180,7 +180,7 @@ private fun AboutSettingsItem(navigator: DestinationsNavigator) {
                     )
                 }
                 Icon(
-                    Icons.Outlined.ArrowForward,
+                    Icons.AutoMirrored.Rounded.ArrowForward,
                     stringResource(id = R.string.hint_fiqh)
                 )
             }
@@ -191,7 +191,7 @@ private fun AboutSettingsItem(navigator: DestinationsNavigator) {
 
 @Composable
 private fun FiqhSelectorDropDownMenu(selectedFiqh: Fiqh, onFiqhSelected: (Fiqh) -> Unit) {
-    val fiqhList = Fiqh.values().filterNot { it.displayName.isBlank() }
+    val fiqhList = Fiqh.entries.filterNot { it.displayName.isBlank() }
     var expanded by remember { mutableStateOf(false) }
 
     Box(
@@ -255,7 +255,7 @@ private fun SettingsTopAppBar(navigator: DestinationsNavigator) {
         title = {},
         navigationIcon = {
             TopBarActionButton(
-                imageVector = Icons.Outlined.ArrowBack,
+                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                 contentDescription = stringResource(id = R.string.content_desc_go_back)
             ) {
                 scope.launch {

@@ -15,13 +15,12 @@ Unofficial client designed for IslamQA.org. Instead of utilizing any API, this a
 Please note that this project is not intended for widespread adoption, but rather serves as an experimental and educational undertaking.
 For those unfamiliar with IslamQA.org, it serves as a distinguished repository of Islamic answers with an extensive collection of 93,950 Islamic Q&A.
 
-
 ## 💡 Basic Information
 
 * Project Initialization Date: Jun 01, 2022
-* Framework: Android Native SDK, 
+* Framework: Android Native SDK,
 * Language: Kotlin
-* Development environment: Android Studio 
+* Development environment: Android Studio
 * Target Platforms: Android (Mobile)
 
 ## 🚀 Getting Started
@@ -58,10 +57,11 @@ project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-
 ## 📜 License
 
-Distributed under the MIT License. The MIT License is a permissive open-source license that allows users to freely use, modify, and distribute the software while retaining the original license and copyright notices. See `LICENSE.txt` for more information.
+Distributed under the MIT License. The MIT License is a permissive open-source license that allows
+users to freely use, modify, and distribute the software while retaining the original license and
+copyright notices. See `LICENSE.txt` for more information.
 
 ## 📮 Contact
 
@@ -69,14 +69,16 @@ Distributed under the MIT License. The MIT License is a permissive open-source l
 📧 Email: kabirnayeem.99@gmail.com<br/>
 💼 LinkedIn: [@kabirnayeem99](https://www.linkedin.com/in/kabirnayeem99/)
 
-
 ## 💌 Acknowledgments
 
 A special thanks to the following contributors and libraries:
 
-* **[skrape.it](https://github.com/skrapeit/skrape.it)**: Their invaluable tool for on-device web scraping.
-* [Shimmer Effect for Android](https://facebook.github.io/shimmer-android/): Elegant loading animations. 
-* [Timber](https://github.com/JakeWharton/timber): Sophisticated logging library that greatly aids in debugging and development.
+* **[skrape.it](https://github.com/skrapeit/skrape.it)**: Their invaluable tool for on-device web
+  scraping.
+* [Shimmer Effect for Android](https://facebook.github.io/shimmer-android/): Elegant loading
+  animations.
+* [Timber](https://github.com/JakeWharton/timber): Sophisticated logging library that greatly aids
+  in debugging and development.
 * Room: For data storage and caching.
 
 

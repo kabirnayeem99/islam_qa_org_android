@@ -43,9 +43,8 @@ class IslamQaApp : Application(), Configuration.Provider {
     /**
      * Called by the WorkManager library to get the configuration for the WorkManager instance
      */
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
-    }
 }
