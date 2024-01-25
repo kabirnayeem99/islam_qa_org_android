@@ -18,7 +18,7 @@ For those unfamiliar with IslamQA.org, it serves as a distinguished repository o
 ## 💡 Basic Information
 
 * Project Initialization Date: Jun 01, 2022
-* Framework: Android Native SDK,
+* Framework: Android Native SDK
 * Language: Kotlin
 * Development environment: Android Studio
 * Target Platforms: Android (Mobile)
