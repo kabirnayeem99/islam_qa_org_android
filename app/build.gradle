@@ -160,6 +160,6 @@ dependencies {
     androidTestImplementation 'com.google.truth:truth:1.1.5'
 
     // Accompanist Permissions - for handling permission in compose
-    implementation 'com.google.accompanist:accompanist-permissions:0.31.5-beta'
+    implementation 'com.google.accompanist:accompanist-permissions:0.34.0'
 
 }

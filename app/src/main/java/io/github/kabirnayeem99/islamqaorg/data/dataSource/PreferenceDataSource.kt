@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.Date
@@ -12,6 +14,7 @@ import javax.inject.Inject
 
 private const val FETCH_COUNT = "fetch_count"
 private const val PREFERRED_FIQH = "preferred_fiqh"
+private const val FIQH_LAST_PAGE = "preferred_fiqh"
 private const val LAST_SYNC_TIME = "last_sync_time"
 private const val SYNC_INTERVAL_TIME_IN_MILLIS = 604_800_000 // 7 days
 
@@ -69,12 +72,33 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
             try {
                 val date = Date()
                 val dateInMillis = date.time
-                defaultPrefs
-                    .edit()
-                    .putLong(LAST_SYNC_TIME, dateInMillis)
-                    .apply()
+                defaultPrefs.edit().putLong(LAST_SYNC_TIME, dateInMillis).apply()
             } catch (e: Exception) {
                 Timber.e(e, "Failed to update syncing status -> ${e.message}")
+            }
+        }
+    }
+
+    private val lastSyncedLock = Mutex()
+
+    suspend fun saveCurrentFiqhLastPageSynced(lastPage: Int) {
+        lastSyncedLock.withLock {
+            try {
+                val fiqh = getPreferredFiqh()
+                defaultPrefs.edit { it.putInt(FIQH_LAST_PAGE + fiqh.paramName, lastPage) }
+            } catch (e: Exception) {
+                Timber.e(e, "saveCurrentFiqhLastPageSynced: " + e.message)
+            }
+        }
+    }
+
+    suspend fun getCurrentFiqhLastPageSynced(): Int {
+        lastSyncedLock.withLock {
+            try {
+                val fiqh = getPreferredFiqh()
+                return defaultPrefs.getInt(FIQH_LAST_PAGE + fiqh.paramName, 0)
+            } catch (e: Exception) {
+                return 0
             }
         }
     }
@@ -133,3 +157,5 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
 
 
 }
+
+private const val TAG = "PreferenceDataSource"

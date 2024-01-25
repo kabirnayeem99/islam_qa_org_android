@@ -54,6 +54,28 @@ class QuestionAnswerRepositoryImpl
         }
     }
 
+    override suspend fun fetchAndSaveRandomQuestionList(): Boolean {
+        try {
+            val fiqh = getCurrentlySelectedFiqh()
+            val lastSyncedPage = preferenceDataSource.getCurrentFiqhLastPageSynced()
+            val newStartingPage = lastSyncedPage + 1
+            val newLastSyncingPage = newStartingPage + 10
+            for (page in newStartingPage..newLastSyncingPage) {
+                val list = getFiqhBasedQuestionListFromRemoteDataSource(fiqh, page)
+                if (list.isEmpty()) {
+                    throw IllegalStateException("Failed with page $page for fiqh ${fiqh.displayName}")
+                } else {
+                    localDataSource.cacheQuestionList(list)
+                    preferenceDataSource.saveCurrentFiqhLastPageSynced(newLastSyncingPage)
+                }
+            }
+            return true
+        } catch (e: Exception) {
+            Timber.e("fetchAndSaveRandomQuestionList: ${e.localizedMessage}", e)
+            return false
+        }
+    }
+
 
     private suspend fun getRandomQuestionListFromRemoteDataSource(): List<Question> {
         return try {

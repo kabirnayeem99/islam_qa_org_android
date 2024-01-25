@@ -95,6 +95,7 @@ class ScrapingService {
      * @return A `QuestionDetailScreenDto` object.
      */
     suspend fun parseQuestionDetailScreen(link: String): QuestionDetailScreenDto {
+        Timber.d("parseQuestionDetailScreen: link: $link")
         return withContext(Dispatchers.IO) {
 
             val questionDetail = skrape(HttpFetcher) {
@@ -191,8 +192,8 @@ class ScrapingService {
 
         try {
             val classNameForPrevOrNext = when (prevOrNext) {
-                Page.PREV -> "nav-previous"
-                Page.NEXT -> "nav-next"
+                Page.PREV -> "previous"
+                Page.NEXT -> "next"
             }
 
             return document.div {
