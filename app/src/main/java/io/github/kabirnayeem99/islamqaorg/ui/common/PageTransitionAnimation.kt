@@ -10,29 +10,30 @@ import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.spec.DestinationStyle
 
 
+const val TRANSITION_TIME_IN_MILLIS = 400
 
 object PageTransitionAnimation : DestinationStyle.Animated {
     override fun AnimatedContentTransitionScope<NavBackStackEntry>.enterTransition(): EnterTransition? {
         return slideInHorizontally(
-            initialOffsetX = { 1000 }, animationSpec = tween(700)
+            initialOffsetX = { 1000 }, animationSpec = tween(TRANSITION_TIME_IN_MILLIS)
         )
     }
 
     override fun AnimatedContentTransitionScope<NavBackStackEntry>.exitTransition(): ExitTransition? {
         return slideOutHorizontally(
-            targetOffsetX = { -1000 }, animationSpec = tween(700)
+            targetOffsetX = { -1000 }, animationSpec = tween(TRANSITION_TIME_IN_MILLIS)
         )
     }
 
     override fun AnimatedContentTransitionScope<NavBackStackEntry>.popEnterTransition(): EnterTransition? {
         return slideInHorizontally(
-            initialOffsetX = { -1000 }, animationSpec = tween(700)
+            initialOffsetX = { -1000 }, animationSpec = tween(TRANSITION_TIME_IN_MILLIS)
         )
     }
 
     override fun AnimatedContentTransitionScope<NavBackStackEntry>.popExitTransition(): ExitTransition? {
         return slideOutHorizontally(
-            targetOffsetX = { 1000 }, animationSpec = tween(700)
+            targetOffsetX = { 1000 }, animationSpec = tween(TRANSITION_TIME_IN_MILLIS)
         )
     }
 }

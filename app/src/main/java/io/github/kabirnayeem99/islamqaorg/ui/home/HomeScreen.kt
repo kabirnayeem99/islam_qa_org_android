@@ -1,6 +1,6 @@
 package io.github.kabirnayeem99.islamqaorg.ui.home
 
-import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -80,7 +80,7 @@ fun HomeScreen(
         ) {
 
             // Header Title
-            item {
+            item() {
                 Spacer(modifier = Modifier.height(62.dp))
                 ScreenTitle(homePageTitle)
                 Spacer(modifier = Modifier.height(22.dp))
@@ -92,22 +92,20 @@ fun HomeScreen(
                 QuestionListHeading(randomQuestionListHeading)
                 Spacer(modifier = Modifier.height(12.dp))
 
-                AnimatedContent(
-                    targetState = uiState.isRandomQuestionLoading,
-                    label = "RandomQuestionListSlider"
-                ) { isLoading ->
-                    if (isLoading) {
-                        RandomQuestionLoadingIndicator()
-                        Spacer(modifier = Modifier.height(12.dp))
-                    } else {
-                        RandomQuestionSlider(
-                            randomQuestions,
-                            onQuestionClick = { question ->
-                                navigator.navigate(QuestionDetailsScreenDestination(question.url))
-                            },
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
+
+                AnimatedVisibility(visible = uiState.isRandomQuestionLoading || uiState.randomQuestions.isEmpty()) {
+                    RandomQuestionLoadingIndicator()
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+
+                AnimatedVisibility(visible = !uiState.isRandomQuestionLoading && uiState.randomQuestions.isNotEmpty()) {
+                    RandomQuestionSlider(
+                        randomQuestions,
+                        onQuestionClick = { question ->
+                            navigator.navigate(QuestionDetailsScreenDestination(question.url))
+                        },
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -120,9 +118,14 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(12.dp))
             }
 
-            if (uiState.isFiqhBasedQuestionsLoading) items(10) { QuestionItemPlaceholder() }
-            else {
-                val lastQuestionUrl = fiqhBasedQuestions.lastOrNull()?.url
+            if (uiState.isFiqhBasedQuestionsLoading || uiState.fiqhBasedQuestions.isEmpty()) {
+                items(10) {
+                    QuestionItemPlaceholder()
+                }
+            }
+
+            val lastQuestionUrl = fiqhBasedQuestions.lastOrNull()?.url
+            if (!uiState.isFiqhBasedQuestionsLoading && uiState.fiqhBasedQuestions.isNotEmpty()) {
                 itemsIndexed(fiqhBasedQuestions, key = { _, item -> item.url }) { _, question ->
                     QuestionItemCard(
                         question = question, modifier = Modifier.animateItemPlacement()

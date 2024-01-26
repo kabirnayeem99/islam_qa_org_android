@@ -48,7 +48,7 @@ class HomeViewModel @Inject constructor(
                         val questionAnswers = resource.data ?: emptyList()
                         uiState.copy(
                             randomQuestions = questionAnswers,
-                            isRandomQuestionLoading = false,
+                            isRandomQuestionLoading = questionAnswers.isEmpty(),
                         )
                     }
                 }
@@ -62,8 +62,7 @@ class HomeViewModel @Inject constructor(
         fetchFiqhBasedQuestionsJob?.cancel()
         fetchFiqhBasedQuestionsJob = viewModelScope.launch(Dispatchers.IO) {
             val currentPage = uiState.currentPage
-            getFiqhBasedQuestions(currentPage).distinctUntilChanged()
-                .collect { resource ->
+            getFiqhBasedQuestions(currentPage).distinctUntilChanged().collect { resource ->
                     uiState = when (resource) {
                         is Resource.Loading -> {
                             uiState.copy(isFiqhBasedQuestionsLoading = currentPage == 1)
@@ -90,7 +89,7 @@ class HomeViewModel @Inject constructor(
                                         questionAnswers.distinctBy { it.url }.toMutableList()
                                     uiState.copy(
                                         fiqhBasedQuestions = questionAnswers,
-                                        isFiqhBasedQuestionsLoading = false,
+                                        isFiqhBasedQuestionsLoading = questionAnswers.isEmpty(),
                                         currentPage = currentPage + 1,
                                     )
                                 }
