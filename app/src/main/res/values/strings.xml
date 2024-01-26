@@ -43,4 +43,5 @@
     <string name="content_desc_search">Search for questions</string>
     <string name="notification_title">Syncing questions and answers</string>
     <string name="cancel_download">Cancel syncing</string>
+    <string name="label_q_n_a"><![CDATA[Q&A List]]></string>
 </resources>

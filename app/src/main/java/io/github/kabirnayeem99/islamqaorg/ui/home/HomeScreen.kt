@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -37,6 +40,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
+import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.SearchScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.SettingsScreenDestination
 
@@ -124,7 +128,6 @@ fun HomeScreen(
                 }
             }
 
-            val lastQuestionUrl = fiqhBasedQuestions.lastOrNull()?.url
             if (!uiState.isFiqhBasedQuestionsLoading && uiState.fiqhBasedQuestions.isNotEmpty()) {
                 itemsIndexed(fiqhBasedQuestions, key = { _, item -> item.url }) { _, question ->
                     QuestionItemCard(
@@ -132,12 +135,21 @@ fun HomeScreen(
                     ) {
                         navigator.navigate(QuestionDetailsScreenDestination(question.url))
                     }
-                    LaunchedEffect(lastQuestionUrl) {
-                        if (lastQuestionUrl == question.url) {
-                            homeViewModel.fetchFiqhBasedQuestions(false)
-                        }
-                    }
                 }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+                Button(
+                    onClick = { navigator.navigate(QuestionScreenDestination()) },
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.label_q_n_a),
+                        style = MaterialTheme.typography.bodyMedium.copy(color = Color.White)
+                    )
+                }
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }
