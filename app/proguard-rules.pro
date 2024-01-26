@@ -23,6 +23,9 @@
 -dontwarn kotlin.reflect.jvm.internal.**
 
 -keep class kotlin.reflect.jvm.internal.** { *; }
+-keep class   it.skrape.fetcher.** { *; }
+-keep class   io.ktor.client.** { *; }
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 
 -keep interface javax.annotation.Nullable
 
@@ -120,3 +123,83 @@
 -dontwarn org.ietf.jgss.GSSName
 -dontwarn org.ietf.jgss.Oid
 -dontwarn sun.reflect.Reflection
+# Please add these rules to your existing keep rules in order to suppress warnings.
+# This is generated automatically by the Android Gradle plugin.
+-dontwarn edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+-dontwarn java.awt.AWTEvent
+-dontwarn java.awt.CardLayout
+-dontwarn java.awt.Color
+-dontwarn java.awt.Component
+-dontwarn java.awt.Container
+-dontwarn java.awt.Dialog
+-dontwarn java.awt.Dimension
+-dontwarn java.awt.FlowLayout
+-dontwarn java.awt.Frame
+-dontwarn java.awt.Graphics
+-dontwarn java.awt.GridBagConstraints
+-dontwarn java.awt.GridBagLayout
+-dontwarn java.awt.GridLayout
+-dontwarn java.awt.Insets
+-dontwarn java.awt.Label
+-dontwarn java.awt.LayoutManager
+-dontwarn java.awt.SystemColor
+-dontwarn java.awt.TextArea
+-dontwarn java.awt.TextComponent
+-dontwarn java.awt.TextField
+-dontwarn java.awt.Toolkit
+-dontwarn java.awt.Window
+-dontwarn java.awt.event.ActionEvent
+-dontwarn java.awt.event.ActionListener
+-dontwarn java.awt.event.TextEvent
+-dontwarn java.awt.event.TextListener
+-dontwarn java.awt.event.WindowAdapter
+-dontwarn java.awt.event.WindowEvent
+-dontwarn java.awt.event.WindowListener
+-dontwarn javax.mail.Address
+-dontwarn javax.mail.Authenticator
+-dontwarn javax.mail.BodyPart
+-dontwarn javax.mail.Message$RecipientType
+-dontwarn javax.mail.Message
+-dontwarn javax.mail.Multipart
+-dontwarn javax.mail.Session
+-dontwarn javax.mail.Transport
+-dontwarn javax.mail.internet.AddressException
+-dontwarn javax.mail.internet.InternetAddress
+-dontwarn javax.mail.internet.MimeBodyPart
+-dontwarn javax.mail.internet.MimeMessage
+-dontwarn javax.mail.internet.MimeMultipart
+-dontwarn javax.script.ScriptEngine
+-dontwarn javax.script.ScriptEngineManager
+-dontwarn javax.servlet.ServletContextEvent
+-dontwarn javax.servlet.ServletContextListener
+-dontwarn javax.servlet.http.HttpServlet
+-dontwarn javax.swing.AbstractButton
+-dontwarn javax.swing.BorderFactory
+-dontwarn javax.swing.JButton
+-dontwarn javax.swing.JComponent
+-dontwarn javax.swing.JDialog
+-dontwarn javax.swing.JFrame
+-dontwarn javax.swing.JList
+-dontwarn javax.swing.JMenu
+-dontwarn javax.swing.JMenuBar
+-dontwarn javax.swing.JMenuItem
+-dontwarn javax.swing.JPanel
+-dontwarn javax.swing.JScrollPane
+-dontwarn javax.swing.JSplitPane
+-dontwarn javax.swing.JTextPane
+-dontwarn javax.swing.JViewport
+-dontwarn javax.swing.KeyStroke
+-dontwarn javax.swing.ListModel
+-dontwarn javax.swing.UIManager
+-dontwarn javax.swing.border.Border
+-dontwarn javax.swing.event.ListDataEvent
+-dontwarn javax.swing.event.ListDataListener
+-dontwarn javax.swing.event.ListSelectionListener
+-dontwarn javax.swing.text.JTextComponent
+-dontwarn org.apache.avalon.framework.logger.Logger
+-dontwarn org.apache.log.Hierarchy
+-dontwarn org.apache.log.Logger
+-dontwarn org.apache.xml.resolver.Catalog
+-dontwarn org.apache.xml.resolver.CatalogManager
+-dontwarn org.apache.xml.resolver.readers.CatalogReader
+-dontwarn org.apache.xml.resolver.readers.SAXCatalogReader

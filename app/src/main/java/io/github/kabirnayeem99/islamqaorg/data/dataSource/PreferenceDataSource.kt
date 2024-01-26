@@ -98,6 +98,7 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
                 val fiqh = getPreferredFiqh()
                 return defaultPrefs.getInt(FIQH_LAST_PAGE + fiqh.paramName, 0)
             } catch (e: Exception) {
+                Timber.e("getCurrentFiqhLastPageSynced: ${e.localizedMessage}")
                 return 0
             }
         }

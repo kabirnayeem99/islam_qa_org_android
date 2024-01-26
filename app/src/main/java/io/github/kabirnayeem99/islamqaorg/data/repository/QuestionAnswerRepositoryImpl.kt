@@ -61,7 +61,7 @@ class QuestionAnswerRepositoryImpl
                 }
 
                 list.forEachIndexed { index, q ->
-                    delay(Random.nextLong(index * 100L))
+                    delay(Random.nextLong((index + 1) * 100L))
                     val questionDetailed = remoteDataSource.getDetailedQuestionAndAnswer(q.url)
                     localDataSource.cacheQuestionDetail(questionDetailed)
                     currentProgress++
@@ -72,7 +72,7 @@ class QuestionAnswerRepositoryImpl
             }
             return true
         } catch (e: Exception) {
-            Timber.e("fetchAndSaveRandomQuestionList: ${e.localizedMessage}", e)
+            Timber.e(e, "fetchAndSaveRandomQuestionList: ${e.localizedMessage}", e)
             return false
         }
     }

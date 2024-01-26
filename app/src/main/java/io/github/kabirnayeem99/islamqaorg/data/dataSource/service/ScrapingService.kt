@@ -94,7 +94,7 @@ class ScrapingService {
      * @return A `QuestionDetailScreenDto` object.
      */
     suspend fun parseQuestionDetailScreen(link: String): QuestionDetailScreenDto {
-        Timber.d("parseQuestionDetailScreen: link: $link")
+        Timber.i("parseQuestionDetailScreen: link: $link")
         return withContext(Dispatchers.IO) {
 
             val questionDetail = skrape(HttpFetcher) {
@@ -225,8 +225,7 @@ class ScrapingService {
                             findAll {
                                 map {
                                     Question(
-                                        question = it.text,
-                                        url = it.eachHref.firstOrNull() ?: ""
+                                        question = it.text, url = it.eachHref.firstOrNull() ?: ""
                                     )
                                 }
                             }
@@ -249,19 +248,27 @@ class ScrapingService {
      * @param pageNumber The page number of the questions list.
      * @return A list of questions.
      */
-    suspend fun parseFiqhBasedQuestionsList(fiqh: Fiqh, pageNumber: Int): FiqhBasedQuestionListDto {
+    suspend fun parseFiqhBasedQuestionsList(
+        fiqh: Fiqh,
+        pageNumber: Int
+    ): FiqhBasedQuestionListDto? {
         return withContext(Dispatchers.Default) {
-
-            val fiqhParamName = if (fiqh == Fiqh.UNKNOWN) Fiqh.HANAFI.paramName else fiqh.paramName
-
-            val fiqhBasedQuestionUrl =
-                "https://islamqa.org/category/${fiqhParamName}/page/$pageNumber/"
-
-            val fiqhBasedQuestionListDto = skrape(HttpFetcher) {
-                request { url = fiqhBasedQuestionUrl }
-                response { getFiqhBasedQuestionListDtoOutOfResponse(this, fiqh) }
+            try {
+                val fiqhParamName =
+                    if (fiqh == Fiqh.UNKNOWN) Fiqh.HANAFI.paramName else fiqh.paramName
+                Timber.i("Fiqh param name: $fiqhParamName")
+                val fiqhBasedQuestionUrl =
+                    "https://islamqa.org/category/${fiqhParamName}/page/$pageNumber/"
+                Timber.i("fiqhBasedQuestionUrl: $fiqhBasedQuestionUrl")
+                val fiqhBasedQuestionListDto = skrape(HttpFetcher) {
+                    request { url = fiqhBasedQuestionUrl }
+                    response { getFiqhBasedQuestionListDtoOutOfResponse(this, fiqh) }
+                }
+                fiqhBasedQuestionListDto
+            } catch (e: Exception) {
+                Timber.e(e, "parseFiqhBasedQuestionsList: ${e.localizedMessage}")
+                null
             }
-            fiqhBasedQuestionListDto
         }
     }
 
@@ -270,15 +277,20 @@ class ScrapingService {
      */
     fun getFiqhBasedQuestionListDtoOutOfResponse(
         result: Result, fiqh: Fiqh
-    ): FiqhBasedQuestionListDto {
-        result.apply {
-            return FiqhBasedQuestionListDto(
-                httpStatusCode = status { code },
-                httpStatusMessage = status { message },
-                questions = getFiqhBasedQuestionsFromResult(),
-                questionLinks = getQuestionLinksForFiqhBasedQuestions(),
-                fiqh = fiqh
-            )
+    ): FiqhBasedQuestionListDto? {
+        try {
+            result.apply {
+                return FiqhBasedQuestionListDto(
+                    httpStatusCode = status { code },
+                    httpStatusMessage = status { message },
+                    questions = getFiqhBasedQuestionsFromResult(),
+                    questionLinks = getQuestionLinksForFiqhBasedQuestions(),
+                    fiqh = fiqh
+                )
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "getFiqhBasedQuestionListDtoOutOfResponse: ${e.localizedMessage}")
+            return null
         }
     }
 

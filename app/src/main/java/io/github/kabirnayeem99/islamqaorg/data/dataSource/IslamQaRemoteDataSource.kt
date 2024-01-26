@@ -36,25 +36,30 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
      */
     suspend fun getFiqhBasedQuestionsList(fiqh: Fiqh, pageNumber: Int): List<Question> {
 
-        val qList = scrapingService.parseFiqhBasedQuestionsList(fiqh, pageNumber)
+        try {
+            val qList =
+                scrapingService.parseFiqhBasedQuestionsList(fiqh, pageNumber) ?: return emptyList()
 
-        if (qList.httpStatusCode != 200) throw Exception(qList.httpStatusMessage.ifBlank { "Failed to parse the questions." })
-        if (qList.questionLinks.isEmpty() || qList.questions.isEmpty()) throw Exception("No questions were found.")
-        if (qList.questions.size != qList.questionLinks.size) throw Exception("Failed to get answers for some questions")
+            if (qList.httpStatusCode != 200) throw Exception(qList.httpStatusMessage.ifBlank { "Failed to parse the questions." })
+            if (qList.questionLinks.isEmpty() || qList.questions.isEmpty()) throw Exception("No questions were found.")
+            if (qList.questions.size != qList.questionLinks.size) throw Exception("Failed to get answers for some questions")
 
-        val questionAnswer = mutableListOf<Question>()
-        qList.questions.forEachIndexed { index, question ->
-            val answerLink = qList.questionLinks[index]
-            questionAnswer.add(
-                Question(
-                    question = question,
-                    url = answerLink,
-                    fiqh = fiqh.paramName,
+            val questionAnswer = mutableListOf<Question>()
+            qList.questions.forEachIndexed { index, question ->
+                val answerLink = qList.questionLinks[index]
+                questionAnswer.add(
+                    Question(
+                        question = question,
+                        url = answerLink,
+                        fiqh = fiqh.paramName,
+                    )
                 )
-            )
+            }
+            return questionAnswer.ifEmpty { throw Exception("Failed to parse links of the questions") }
+        } catch (e: Exception) {
+            Timber.e(e, "getFiqhBasedQuestionsList: ")
+            return emptyList()
         }
-        return questionAnswer.ifEmpty { throw Exception("Failed to parse links of the questions") }
-
     }
 
     /**
@@ -64,11 +69,8 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
      * @return A QuestionDetail object.
      */
     suspend fun getDetailedQuestionAndAnswer(url: String): QuestionDetail {
-
-        Timber.d("Loading question answer of $url")
-
+        Timber.i("Loading question answer of $url")
         val dto = scrapingService.parseQuestionDetailScreen(url)
-
         val detail = QuestionDetail(
             questionTitle = dto.questionTitle,
             detailedQuestion = dto.detailedQuestion,
@@ -76,13 +78,9 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
             fiqh = dto.fiqh,
             source = dto.source,
             originalLink = dto.originalLink,
-            nextQuestionLink = dto.nextQuestionLink,
-            previousQuestionLink = dto.previousQuestionLink,
             relevantQuestions = dto.relevantQuestions,
         )
-
-        Timber.d("getDetailedQuestionAndAnswer -> $detail")
-
+        Timber.i("getDetailedQuestionAndAnswer -> $detail")
         return detail
     }
 
