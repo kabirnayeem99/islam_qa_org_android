@@ -1,7 +1,6 @@
 package io.github.kabirnayeem99.islamqaorg.ui.questionDetails
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -47,7 +46,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.home.QuestionItemPlaceholder
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Destination
 @Composable
 fun QuestionDetailsScreen(
@@ -78,8 +77,9 @@ fun QuestionDetailsScreen(
                 }
             },
             backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6F),
-            modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.6F)),
+            modifier = Modifier.background(
+                color = MaterialTheme.colorScheme.background.copy(alpha = 0.6F)
+            ),
             elevation = 0.dp,
         )
     }) {
@@ -89,66 +89,68 @@ fun QuestionDetailsScreen(
         AnimatedContent(
             transitionSpec = {
                 if (questionDetailViewModel.uiState.questionDetails.questionTitle.isNotBlank()) {
-                    (fadeIn(animationSpec = tween(220, delayMillis = 90)) +
-                            slideInVertically(
-                                initialOffsetY = { 90 },
-                                animationSpec = tween(220, delayMillis = 90)
-                            )).togetherWith(fadeOut(animationSpec = tween(90)))
-                } else fadeIn(animationSpec = tween(220, delayMillis = 90)) togetherWith
-                        fadeOut(animationSpec = tween(90))
-            }, targetState = questionDetailViewModel.uiState.isLoading
+                    (fadeIn(animationSpec = tween(220, delayMillis = 90)) + slideInVertically(
+                        initialOffsetY = { 90 }, animationSpec = tween(220, delayMillis = 90)
+                    )).togetherWith(fadeOut(animationSpec = tween(90)))
+                } else fadeIn(animationSpec = tween(220, delayMillis = 90)) togetherWith fadeOut(
+                    animationSpec = tween(90)
+                )
+            },
+            targetState = questionDetailViewModel.uiState.isLoading,
+            label = "QUESTION_LIST_RELEVANT"
         ) { isLoading ->
-            if (isLoading)
-                LazyColumn(
-                    modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.Center,
-                    state = screenScrollState
-                ) {
+            if (isLoading) LazyColumn(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center,
+                state = screenScrollState
+            ) {
 
-                    item { Spacer(modifier = Modifier.height(52.dp)) }
+                item { Spacer(modifier = Modifier.height(52.dp)) }
 
-                    item { QuestionDetailsLoadingIndicator() }
+                item { QuestionDetailsLoadingIndicator() }
 
-                    item {
-                        Spacer(modifier = Modifier.height(22.dp))
-                        RelevantQaLabelLoadingIndicator()
-                    }
-
-                    items(6) { QuestionItemPlaceholder(false) }
-
+                item {
+                    Spacer(modifier = Modifier.height(22.dp))
+                    RelevantQaLabelLoadingIndicator()
                 }
-            else
-                LazyColumn(
-                    modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.Center,
-                ) {
 
-                    item { Spacer(modifier = Modifier.height(52.dp)) }
+                items(6) { QuestionItemPlaceholder(false) }
 
-                    val questionDetail = questionDetailViewModel.uiState.questionDetails
+            }
+            else LazyColumn(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center,
+            ) {
 
-                    item {
-                        QuestionTitleText(questionDetail.questionTitle)
-                        Spacer(modifier = Modifier.height(6.dp))
-                        QuestionSourceText(questionDetail.fiqh, questionDetail.source)
-                        Spacer(modifier = Modifier.height(12.dp))
-                        QuestionDetailText(questionDetail.detailedQuestion)
-                        Spacer(modifier = Modifier.height(12.dp))
-                        QuestionAnswerText(questionDetail.detailedAnswer)
-                        Spacer(modifier = Modifier.height(22.dp))
-                        RelevantQaLabelText()
-                    }
+                item { Spacer(modifier = Modifier.height(52.dp)) }
 
-                    itemsIndexed(questionDetail.relevantQuestions) { _, question ->
-                        QuestionItemCard(question = question, shouldHavePadding = false, onClick = {
-                            scope.launch {
-                                navigator.navigate(QuestionDetailsScreenDestination(question.url))
-                            }
-                        }, modifier = Modifier.animateItemPlacement())
-                    }
+                val questionDetail = questionDetailViewModel.uiState.questionDetails
+
+                item {
+                    QuestionTitleText(questionDetail.questionTitle)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    QuestionSourceText(questionDetail.fiqh, questionDetail.source)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    QuestionDetailText(questionDetail.detailedQuestion)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    QuestionAnswerText(questionDetail.detailedAnswer)
+                    Spacer(modifier = Modifier.height(22.dp))
+                    RelevantQaLabelText()
                 }
+
+                itemsIndexed(
+                    questionDetail.relevantQuestions,
+                    key = { _, q -> q.url },
+                ) { _, question ->
+                    QuestionItemCard(question = question, shouldHavePadding = false, onClick = {
+                        scope.launch {
+                            navigator.navigate(QuestionDetailsScreenDestination(question.url))
+                        }
+                    }, modifier = Modifier.animateItemPlacement())
+                }
+            }
         }
 
 
@@ -169,10 +171,8 @@ private fun RelevantQaLabelLoadingIndicator() {
 @Composable
 private fun QuestionTitleText(questionTitle: String) {
     Text(
-        text = questionTitle,
-        style = MaterialTheme.typography.headlineLarge.copy(
-            color = MaterialTheme.colorScheme.onBackground,
-            fontStyle = FontStyle.Normal
+        text = questionTitle, style = MaterialTheme.typography.headlineLarge.copy(
+            color = MaterialTheme.colorScheme.onBackground, fontStyle = FontStyle.Normal
         )
     )
 }
@@ -209,8 +209,7 @@ private fun RelevantQaLabelText() {
     Text(
         text = stringResource(id = R.string.label_relevant_q_n_a),
         style = MaterialTheme.typography.headlineLarge.copy(
-            color = MaterialTheme.colorScheme.onBackground,
-            fontStyle = FontStyle.Italic
+            color = MaterialTheme.colorScheme.onBackground, fontStyle = FontStyle.Italic
         )
     )
 }
