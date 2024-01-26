@@ -56,12 +56,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun StartScreen(
     onTimeUp: () -> Unit = {},
+    onCloseApp: () -> Unit = {},
     viewModel: StartViewModel = hiltViewModel(),
 ) {
 
     val scope = rememberCoroutineScope()
 
-    var shouldNavigateNow by remember { mutableStateOf(false) }
 
     if (Build.VERSION.SDK_INT >= 33) {
         val postNotificationPermission =
@@ -71,18 +71,10 @@ fun StartScreen(
             postNotificationPermission.launchPermissionRequest()
         }
 
-        shouldNavigateNow = when (postNotificationPermission.status) {
-            PermissionStatus.Granted -> {
-                viewModel.syncQuestionsAndAnswers()
-                true
-            }
-
-            is PermissionStatus.Denied -> {
-                false
-            }
+        when (postNotificationPermission.status) {
+            PermissionStatus.Granted -> viewModel.syncQuestionsAndAnswers()
+            else -> onCloseApp()
         }
-    } else {
-        shouldNavigateNow = true
     }
 
     var centerAppLogoVisibility by remember { mutableStateOf(false) }
@@ -90,13 +82,11 @@ fun StartScreen(
     var geometryVisibility by remember { mutableStateOf(false) }
 
 
-    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition = rememberInfiniteTransition(label = "INFINITE_TRANSITION")
     val angle by infiniteTransition.animateFloat(
-        initialValue = 0F,
-        targetValue = 360F,
-        animationSpec = infiniteRepeatable(
+        initialValue = 0F, targetValue = 360F, animationSpec = infiniteRepeatable(
             animation = tween(SPLASH_SCREEN_DURATION.toInt(), easing = FastOutSlowInEasing)
-        )
+        ), label = "INFINITE_TRANSITION_ANGLE"
     )
 
     LaunchedEffect(true) {
@@ -109,7 +99,13 @@ fun StartScreen(
             appVersionVisibility = true
             delay(SPLASH_SCREEN_DURATION / 3)
             delay(SPLASH_SCREEN_DURATION / 3)
-            if (shouldNavigateNow) onTimeUp()
+            viewModel.navEvent.collect { navEvent ->
+                when (navEvent) {
+                    NavigationState.CloseApp -> onCloseApp()
+                    NavigationState.GoToHome -> onTimeUp()
+                    else -> Unit
+                }
+            }
         }
     }
 
@@ -127,8 +123,7 @@ fun StartScreen(
             exit = scaleOut() + fadeOut(),
         ) {
 
-            AsyncImage(
-                R.drawable.ic_islamic_geometric,
+            AsyncImage(R.drawable.ic_islamic_geometric,
                 contentDescription = stringResource(id = R.string.content_desc_app_logo),
                 contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer),
@@ -139,8 +134,7 @@ fun StartScreen(
                     .width(400.dp)
                     .graphicsLayer {
                         rotationZ = angle
-                    }
-            )
+                    })
 
         }
 
@@ -173,8 +167,7 @@ fun StartScreen(
         }
 
         AnimatedVisibility(
-            visible = appVersionVisibility,
-            enter = slideInHorizontally() + fadeIn()
+            visible = appVersionVisibility, enter = slideInHorizontally() + fadeIn()
         ) {
 
             Box(

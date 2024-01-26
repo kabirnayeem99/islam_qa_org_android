@@ -21,7 +21,7 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             IslamQaTheme {
-                StartScreen(onTimeUp = { navigateToOtherScreen() })
+                StartScreen(onTimeUp = { navigateToOtherScreen() }, onCloseApp = {closeApp()})
             }
         }
     }
@@ -29,6 +29,10 @@ class StartActivity : AppCompatActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         makeFullScreen()
+    }
+
+    private fun closeApp() {
+        finish()
     }
 
     @Suppress("DEPRECATION")
