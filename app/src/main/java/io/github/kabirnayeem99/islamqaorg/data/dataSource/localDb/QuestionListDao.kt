@@ -43,7 +43,7 @@ interface QuestionListDao {
      * Returns a list of QuestionEntity objects, ordered by timeInMillis in descending order, and
      * limited to 10 items
      */
-    @Query("SELECT * FROM questionentity ORDER BY timeInMillis desc LIMIT 10")
+    @Query("SELECT * FROM questionentity ORDER BY RANDOM() desc LIMIT 10")
     suspend fun getRandomQuestions(): List<QuestionEntity>
 
 //    @Query("SELECT * FROM questionentity WHERE question LIKE '%' || :query || '%' ORDER BY timeInMillis desc LIMIT 10")

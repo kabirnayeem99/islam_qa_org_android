@@ -110,8 +110,6 @@ class ScrapingService {
                         fiqh = getFiqhForQuestionDetails(),
                         source = getSourceForQuestionDetails(),
                         originalLink = link,
-                        nextQuestionLink = getPrevOrNextLink(Page.NEXT),
-                        previousQuestionLink = getPrevOrNextLink(Page.PREV),
                         relevantQuestions = getRelevantQuestionsFromQuestionDetails()
                     )
                 }

@@ -11,13 +11,18 @@ import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
 import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.random.Random
 
 class QuestionAnswerRepositoryImpl
 @Inject constructor(
@@ -34,27 +39,19 @@ class QuestionAnswerRepositoryImpl
     private var inMemoryRandomQuestionList = emptyList<Question>()
 
     override suspend fun getRandomQuestionList(shouldRefresh: Boolean): Flow<List<Question>> {
-        val cachedRandomQuestionList = inMemoryMutex.withLock { inMemoryRandomQuestionList }
         return flow {
-            if (isNetworkAvailable) {
-                val remoteData = getRandomQuestionListFromRemoteDataSource()
-                emit(remoteData)
-            } else {
-                val localQuestionList = localDataSource.getRandomQuestionList()
-                if (localQuestionList.isEmpty()) {
-                    val remoteData = getRandomQuestionListFromRemoteDataSource()
-                    emit(remoteData)
-                }
-                inMemoryMutex.withLock { inMemoryRandomQuestionList = localQuestionList }
-                preferenceDataSource.updateNeedingToRefresh()
-                emit(localQuestionList)
-            }
+            val localQuestionList = localDataSource.getRandomQuestionList()
+            inMemoryRandomQuestionList = localQuestionList
+            emit(localQuestionList)
         }.onStart {
-            if (cachedRandomQuestionList.isNotEmpty()) emit(cachedRandomQuestionList)
-        }
+            if (inMemoryRandomQuestionList.isNotEmpty()) emit(inMemoryRandomQuestionList)
+        }.catch { e ->
+            Timber.e(e, "getRandomQuestionList: ")
+            emit(inMemoryFiqhBasedQuestionList)
+        }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun fetchAndSaveRandomQuestionList(): Boolean {
+    override suspend fun fetchAndSaveQuestionListByFiqh(setProgress: suspend (Int) -> Unit): Boolean {
         try {
             val fiqh = getCurrentlySelectedFiqh()
             val lastSyncedPage = preferenceDataSource.getCurrentFiqhLastPageSynced()
@@ -66,6 +63,11 @@ class QuestionAnswerRepositoryImpl
                     throw IllegalStateException("Failed with page $page for fiqh ${fiqh.displayName}")
                 } else {
                     localDataSource.cacheQuestionList(list)
+                    list.forEachIndexed { index, q ->
+                        delay(Random.nextLong(q.url.length.toLong()))
+                        getAndCacheQuestionDetailFromRemote(q.url)
+                        setProgress(((page + 1) - newStartingPage) * (index + 1))
+                    }
                     preferenceDataSource.saveCurrentFiqhLastPageSynced(newLastSyncingPage)
                     Timber.i("fetchAndSaveRandomQuestionList: saved page $page for fiqh ${fiqh.displayName}")
                 }
@@ -95,7 +97,6 @@ class QuestionAnswerRepositoryImpl
 
     override suspend fun getQuestionDetails(url: String): Flow<QuestionDetail> {
         val inMemoryQuestionDetail = inMemoryQuestionDetails.get(url) ?: QuestionDetail()
-
         return flow {
             try {
                 val questionDetailLocal = localDataSource.getDetailedQuestionAndAnswer(url)

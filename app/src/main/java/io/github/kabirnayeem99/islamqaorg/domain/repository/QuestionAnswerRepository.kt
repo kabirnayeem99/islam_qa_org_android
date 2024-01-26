@@ -8,7 +8,7 @@ interface QuestionAnswerRepository {
 
     suspend fun getRandomQuestionList(shouldRefresh: Boolean = false): Flow<List<Question>>
 
-    suspend fun fetchAndSaveRandomQuestionList(): Boolean
+    suspend fun fetchAndSaveQuestionListByFiqh(setProgress: suspend (Int) -> Unit = {}): Boolean
 
     suspend fun getFiqhBasedQuestionList(
         pageNumber: Int, shouldRefresh: Boolean = false

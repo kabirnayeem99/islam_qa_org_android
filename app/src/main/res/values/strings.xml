@@ -41,4 +41,6 @@
     <string name="label_syncing">We are syncing the questions and answers from IslamQA.org in the background. It will ensure faster loading, the next time you enter this app. It will also reduce load on the original website.</string>
     <string name="label_synced">We are done syncing. Note that, this app is just a frontend for IslamQA.org. Please, pray for the creator of this awesome website for their amazing work. Visit this website for any of your query.</string>
     <string name="content_desc_search">Search for questions</string>
+    <string name="notification_title">Syncing questions and answers</string>
+    <string name="cancel_download">Cancel syncing</string>
 </resources>
