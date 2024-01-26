@@ -33,6 +33,7 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
+import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.ScreenTitle
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
@@ -41,7 +42,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.destinations.SettingsScreenDestinat
 
 @OptIn(ExperimentalFoundationApi::class)
 @RootNavGraph(start = true)
-@Destination
+@Destination(style = PageTransitionAnimation::class)
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),

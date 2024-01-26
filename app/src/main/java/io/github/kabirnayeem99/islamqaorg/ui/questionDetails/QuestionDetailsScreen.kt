@@ -39,6 +39,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.valentinilk.shimmer.shimmer
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.ui.common.HtmlText
+import io.github.kabirnayeem99.islamqaorg.ui.common.PageTransitionAnimation
 import io.github.kabirnayeem99.islamqaorg.ui.common.TopBarActionButton
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.home.QuestionItemCard
@@ -47,7 +48,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @OptIn(ExperimentalFoundationApi::class)
-@Destination
+@Destination(style = PageTransitionAnimation::class)
 @Composable
 fun QuestionDetailsScreen(
     url: String,

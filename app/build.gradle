@@ -102,7 +102,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     // Compose-shimmer - for shimmer loading animation
-    implementation 'com.valentinilk.shimmer:compose-shimmer:1.0.5'
+    implementation 'com.valentinilk.shimmer:compose-shimmer:1.2.0'
 
     // Coroutines - for threading
     def coroutines_version = '1.7.2'
@@ -134,11 +134,11 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
 
     // Coil - for image loading
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     // Compose Destinations - for better and simpler navigation
-    implementation 'io.github.raamcosta.compose-destinations:animations-core:1.9.50'
-    ksp 'io.github.raamcosta.compose-destinations:ksp:1.9.50'
+    implementation 'io.github.raamcosta.compose-destinations:animations-core:1.10.0'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.10.0'
 
     // Work Manager - for background syncing
     def work_manager_version = '2.9.0'
