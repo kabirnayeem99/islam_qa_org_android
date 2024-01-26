@@ -11,16 +11,16 @@ import org.junit.Before
 import org.junit.Test
 import java.util.*
 
-class QuestionDetailDaoTesting {
+class QuestionAnswerDaoTesting {
 
     private lateinit var db: IslamQaDatabase
-    private lateinit var dao: QuestionDetailDao
+    private lateinit var dao: QuestionAnswerDao
 
     @Before
     fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, IslamQaDatabase::class.java).build()
-        dao = db.getQuestionDetailDao()
+        dao = db.getQuestionAnswerDao()
     }
 
     @After

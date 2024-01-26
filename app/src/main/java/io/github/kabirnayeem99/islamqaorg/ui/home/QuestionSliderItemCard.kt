@@ -33,9 +33,9 @@ import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 
 @Composable
-fun QuestionSliderItemCard(question: Question, index: Int, onClick: () -> Unit) {
+fun QuestionSliderItemCard(modifier: Modifier = Modifier,question: Question, index: Int, onClick: () -> Unit) {
     BoxWithConstraints(
-        modifier = Modifier
+        modifier = modifier
             .padding(
                 start = if (index == 0) 24.dp else 12.dp, end = 12.dp, top = 8.dp
             )

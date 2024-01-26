@@ -9,26 +9,22 @@ import javax.inject.Inject
 
 class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: ScrapingService) {
 
-    /**
-     * Gets the list of random questions from the IslamQA (Under "Random List of Q&A" heading)
-     *
-     * @return A list of Question objects.
-     */
-    suspend fun getRandomQuestionsList(): List<Question> {
-        val qList = scrapingService.parseRandomQuestionList()
 
-        if (qList.httpStatusCode == 404) throw Exception(qList.httpStatusMessage.ifBlank { "Failed to parse the random question lists." })
-        if (qList.questionLinks.isEmpty() || qList.questions.isEmpty()) throw Exception("No questions were found.")
-        if (qList.questions.size != qList.questionLinks.size) throw Exception("Failed to get answers for some questions")
-
-        val questionAnswer = mutableListOf<Question>()
-        qList.questions.forEachIndexed { index, question ->
-            val answerLink = qList.questionLinks[index]
-            questionAnswer.add(Question(index, question, answerLink))
-        }
-
-        return questionAnswer.ifEmpty { throw Exception("Failed to parse links of the questions") }
-    }
+//    suspend fun getRandomQuestionsList(): List<Question> {
+//        val qList = scrapingService.parseRandomQuestionList()
+//
+//        if (qList.httpStatusCode == 404) throw Exception(qList.httpStatusMessage.ifBlank { "Failed to parse the random question lists." })
+//        if (qList.questionLinks.isEmpty() || qList.questions.isEmpty()) throw Exception("No questions were found.")
+//        if (qList.questions.size != qList.questionLinks.size) throw Exception("Failed to get answers for some questions")
+//
+//        val questionAnswer = mutableListOf<Question>()
+//        qList.questions.forEachIndexed { index, question ->
+//            val answerLink = qList.questionLinks[index]
+//            questionAnswer.add(Question(index, question, answerLink))
+//        }
+//
+//        return questionAnswer.ifEmpty { throw Exception("Failed to parse links of the questions") }
+//    }
 
 
     /**
@@ -49,7 +45,13 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
         val questionAnswer = mutableListOf<Question>()
         qList.questions.forEachIndexed { index, question ->
             val answerLink = qList.questionLinks[index]
-            questionAnswer.add(Question(index, question, answerLink, fiqh.displayName))
+            questionAnswer.add(
+                Question(
+                    question = question,
+                    url = answerLink,
+                    fiqh = fiqh.paramName,
+                )
+            )
         }
         return questionAnswer.ifEmpty { throw Exception("Failed to parse links of the questions") }
 
@@ -104,7 +106,12 @@ class IslamQaRemoteDataSource @Inject constructor(private val scrapingService: S
         val questionAnswer = mutableListOf<Question>()
         searchResult.questions.forEachIndexed { index, question ->
             val answerLink = searchResult.questionLinks[index]
-            questionAnswer.add(Question(index, question, answerLink))
+            questionAnswer.add(
+                Question(
+                    question = question,
+                    url = answerLink,
+                )
+            )
         }
 
         return questionAnswer.ifEmpty { throw Exception("Failed to find any answers.") }

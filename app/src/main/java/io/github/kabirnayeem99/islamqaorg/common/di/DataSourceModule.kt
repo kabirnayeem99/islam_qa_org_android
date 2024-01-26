@@ -9,8 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaLocalDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.IslamQaRemoteDataSource
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.PreferenceDataSource
-import io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb.QuestionDetailDao
-import io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb.QuestionListDao
+import io.github.kabirnayeem99.islamqaorg.data.dataSource.localDb.QuestionAnswerDao
 import io.github.kabirnayeem99.islamqaorg.data.dataSource.service.ScrapingService
 import javax.inject.Singleton
 
@@ -31,12 +30,8 @@ object DataSourceModule {
 
     @Provides
     @Singleton
-    fun provideIslamQaLocalDataSource(
-        dao: QuestionListDao,
-        detailDao: QuestionDetailDao
-    ): IslamQaLocalDataSource {
-        return IslamQaLocalDataSource(dao, detailDao)
-    }
+    fun provideIslamQaLocalDataSource(detailDao: QuestionAnswerDao) =
+        IslamQaLocalDataSource(detailDao)
 
     @Provides
     @Singleton

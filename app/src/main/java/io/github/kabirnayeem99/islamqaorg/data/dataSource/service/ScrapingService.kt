@@ -25,7 +25,6 @@ import it.skrape.selects.html5.ul
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import kotlin.random.Random
 
 private const val baseIslamQaUrl = "https://islamqa.org/"
 
@@ -226,7 +225,6 @@ class ScrapingService {
                             findAll {
                                 map {
                                     Question(
-                                        id = Random.nextInt(50),
                                         question = it.text,
                                         url = it.eachHref.firstOrNull() ?: ""
                                     )

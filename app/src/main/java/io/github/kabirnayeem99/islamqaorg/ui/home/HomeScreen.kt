@@ -1,6 +1,7 @@
 package io.github.kabirnayeem99.islamqaorg.ui.home
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,6 +39,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.destinations.QuestionDetailsScreenD
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.SearchScreenDestination
 import io.github.kabirnayeem99.islamqaorg.ui.destinations.SettingsScreenDestination
 
+@OptIn(ExperimentalFoundationApi::class)
 @RootNavGraph(start = true)
 @Destination
 @Composable
@@ -53,6 +56,8 @@ fun HomeScreen(
 
     val fiqhBasedQuestions = uiState.fiqhBasedQuestions
     val randomQuestions = uiState.randomQuestions
+
+    LaunchedEffect(true) { homeViewModel.fetchData() }
 
     Scaffold(modifier = Modifier
         .fillMaxSize()
@@ -86,7 +91,10 @@ fun HomeScreen(
                 QuestionListHeading(randomQuestionListHeading)
                 Spacer(modifier = Modifier.height(12.dp))
 
-                AnimatedContent(targetState = uiState.isRandomQuestionLoading) { isLoading ->
+                AnimatedContent(
+                    targetState = uiState.isRandomQuestionLoading,
+                    label = "RandomQuestionListSlider"
+                ) { isLoading ->
                     if (isLoading) {
                         RandomQuestionLoadingIndicator()
                         Spacer(modifier = Modifier.height(12.dp))
@@ -113,13 +121,18 @@ fun HomeScreen(
 
             if (uiState.isFiqhBasedQuestionsLoading) items(10) { QuestionItemPlaceholder() }
             else {
+                val lastQuestionUrl = fiqhBasedQuestions.lastOrNull()?.url
                 itemsIndexed(fiqhBasedQuestions, key = { _, item -> item.url }) { _, question ->
                     QuestionItemCard(
-                        question = question,
+                        question = question, modifier = Modifier.animateItemPlacement()
                     ) {
                         navigator.navigate(QuestionDetailsScreenDestination(question.url))
                     }
-                    homeViewModel.loadNextPageIfLastQuestion(question)
+                    LaunchedEffect(lastQuestionUrl) {
+                        if (lastQuestionUrl == question.url) {
+                            homeViewModel.fetchFiqhBasedQuestions(false)
+                        }
+                    }
                 }
             }
         }
@@ -155,6 +168,7 @@ private fun HomeScreenTopAppBar(
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun RandomQuestionSlider(
     randomQuestions: List<Question>,
@@ -168,6 +182,7 @@ private fun RandomQuestionSlider(
     ) {
         itemsIndexed(randomQuestions, key = { _, q -> q.url }) { index, question ->
             QuestionSliderItemCard(
+                modifier = Modifier.animateItemPlacement(),
                 question = question, index = index,
                 onClick = {
                     onQuestionClick(question)

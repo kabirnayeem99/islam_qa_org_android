@@ -14,12 +14,11 @@ class GetFiqhBasedQuestions
 
     suspend operator fun invoke(
         pageNumber: Int,
-        shouldRefresh: Boolean,
     ): Flow<Resource<List<Question>>> {
-        return repository.getFiqhBasedQuestionList(pageNumber, shouldRefresh)
+        return repository.getFiqhBasedQuestionList(pageNumber)
             .map { questions -> mapQuestionsToResources(questions) }
-            .catch { emit(Resource.Error(it.localizedMessage ?: "Error!!!")) }
-            .onStart { if (pageNumber < 1) emit(Resource.Error("Wrong page!")) else emit(Resource.Loading()) }
+            .catch { e -> emit(Resource.Error(e.localizedMessage ?: "Error.")) }
+            .onStart { emit(Resource.Loading()) }
     }
 
     private fun mapQuestionsToResources(questions: List<Question>) =

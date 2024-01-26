@@ -2,14 +2,17 @@ package io.github.kabirnayeem99.islamqaorg.domain.useCase
 
 import androidx.work.WorkManager
 import io.github.kabirnayeem99.islamqaorg.data.workers.BackgroundQAListFetcherWorker
-import kotlinx.coroutines.flow.Flow
+import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerRepository
 import javax.inject.Inject
 
 class FetchAndSavePeriodically
-@Inject constructor(private val workManager: WorkManager) {
+@Inject constructor(
+    private val workManager: WorkManager,
+    private val questionAnswerRepository: QuestionAnswerRepository,
+) {
 
-    operator fun invoke() =
-        BackgroundQAListFetcherWorker.enqueue(workManager)
+    suspend operator fun invoke() =
+        BackgroundQAListFetcherWorker.enqueue(workManager, questionAnswerRepository)
 
 
 }

@@ -44,6 +44,8 @@ object UseCaseModule {
     }
 
     @Provides
-    fun provideFetchAndSavePeriodically(workManager: WorkManager) =
-        FetchAndSavePeriodically(workManager)
+    fun provideFetchAndSavePeriodically(
+        workManager: WorkManager,
+        questionAnswerRepository: QuestionAnswerRepository,
+    ) = FetchAndSavePeriodically(workManager, questionAnswerRepository)
 }

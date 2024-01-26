@@ -42,12 +42,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import io.github.kabirnayeem99.islamqaorg.BuildConfig
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.ui.theme.ArabicFontFamily
 import kotlinx.coroutines.delay
-import timber.log.Timber
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Preview
@@ -58,19 +58,64 @@ fun StartScreen(
     viewModel: StartViewModel = hiltViewModel(),
 ) {
 
+    var centerAppLogoVisibility by remember { mutableStateOf(false) }
+    var appVersionVisibility by remember { mutableStateOf(false) }
+    var geometryVisibility by remember { mutableStateOf(false) }
+    var permissionAccepted by remember { mutableStateOf(false) }
+
 
     if (Build.VERSION.SDK_INT >= 33) {
         val postNotificationPermission =
             rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-
-        LaunchedEffect(key1 = true) {
+        LaunchedEffect(Build.VERSION.SDK_INT) {
             postNotificationPermission.launchPermissionRequest()
         }
+        permissionAccepted = postNotificationPermission.status.isGranted
+    } else {
+        permissionAccepted = true
     }
 
-    var centerAppLogoVisibility by remember { mutableStateOf(false) }
-    var appVersionVisibility by remember { mutableStateOf(false) }
-    var geometryVisibility by remember { mutableStateOf(false) }
+    LaunchedEffect(permissionAccepted) {
+        if (permissionAccepted) {
+            viewModel.syncQuestionsAndAnswers()
+            viewModel.navEvent.collect { navEvent ->
+                when (navEvent) {
+                    NavigationState.CloseApp -> onCloseApp()
+                    NavigationState.GoToHome -> {
+                        delay(SPLASH_SCREEN_DURATION / 8)
+                        centerAppLogoVisibility = true
+                        delay(SPLASH_SCREEN_DURATION / 8)
+                        geometryVisibility = true
+                        delay(SPLASH_SCREEN_DURATION / 8)
+                        appVersionVisibility = true
+                        delay(SPLASH_SCREEN_DURATION / 4)
+                        delay(SPLASH_SCREEN_DURATION / 4)
+                        onTimeUp()
+                    }
+
+                    NavigationState.KeepLoading -> {
+                        delay(SPLASH_SCREEN_DURATION / 6)
+                        centerAppLogoVisibility = true
+                        delay(SPLASH_SCREEN_DURATION / 6)
+                        geometryVisibility = true
+                        delay(SPLASH_SCREEN_DURATION / 6)
+                        appVersionVisibility = true
+                        delay(SPLASH_SCREEN_DURATION / 3)
+                        delay(SPLASH_SCREEN_DURATION / 3)
+                    }
+                }
+            }
+        } else {
+            delay(SPLASH_SCREEN_DURATION / 3)
+            centerAppLogoVisibility = true
+            delay(SPLASH_SCREEN_DURATION / 3)
+            geometryVisibility = true
+            delay(SPLASH_SCREEN_DURATION / 3)
+            appVersionVisibility = true
+            delay(SPLASH_SCREEN_DURATION / 1)
+            delay(SPLASH_SCREEN_DURATION / 1)
+        }
+    }
 
 
     val infiniteTransition = rememberInfiniteTransition(label = "INFINITE_TRANSITION")
@@ -81,24 +126,7 @@ fun StartScreen(
     )
 
     LaunchedEffect(true) {
-        viewModel.syncQuestionsAndAnswers()
-        viewModel.navEvent.collect { navEvent ->
-            Timber.d("Nav event: $navEvent")
-            when (navEvent) {
-                NavigationState.CloseApp -> onCloseApp()
-                NavigationState.GoToHome -> onTimeUp()
-                else -> {
-                    delay(SPLASH_SCREEN_DURATION / 6)
-                    centerAppLogoVisibility = true
-                    delay(SPLASH_SCREEN_DURATION / 6)
-                    geometryVisibility = true
-                    delay(SPLASH_SCREEN_DURATION / 6)
-                    appVersionVisibility = true
-                    delay(SPLASH_SCREEN_DURATION / 3)
-                    delay(SPLASH_SCREEN_DURATION / 3)
-                }
-            }
-        }
+
     }
 
     BoxWithConstraints(

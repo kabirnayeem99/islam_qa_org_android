@@ -3,16 +3,16 @@ package io.github.kabirnayeem99.islamqaorg.data.dto.room
 import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
-import java.util.Date
+
 
 @Keep
 @Entity
 data class QuestionEntity(
-    val id: Int = 0,
-    val question: String = "",
-    @PrimaryKey
-    val url: String = "",
-    val timeInMillis: Long = Date().time,
-    val fiqh: Fiqh = Fiqh.UNKNOWN,
+    @PrimaryKey val originalLink: String = "",
+    val questionTitle: String = "",
+    val detailedQuestion: String = "",
+    val detailedAnswer: String = "",
+    val fiqh: String = "",
+    val source: String = "",
+    val timeInMillis: Long = 0L,
 )

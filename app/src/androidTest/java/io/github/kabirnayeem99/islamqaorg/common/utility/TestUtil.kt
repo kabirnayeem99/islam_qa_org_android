@@ -1,6 +1,5 @@
 package io.github.kabirnayeem99.islamqaorg.common.utility
 
-import io.github.kabirnayeem99.islamqaorg.data.dto.room.QuestionDetailEntity
 import io.github.kabirnayeem99.islamqaorg.data.dto.room.QuestionEntity
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
@@ -78,20 +77,20 @@ fun createMockQuestionEntityList(amount: Int, query: String): List<QuestionEntit
 }
 
 /**
- * Creates a mock `QuestionDetailEntity` object with the given `id` and `randomText` and `fiqh`
+ * Creates a mock `QuestionEntity` object with the given `id` and `randomText` and `fiqh`
  * values
  *
  * @param id The id of the question.
  * @param randomText A random string that will be used to fill in the question and answer text.
  * @param fiqh This is the fiqh that the question belongs to.
- * @return QuestionDetailEntity
+ * @return QuestionEntity
  */
 fun createMockQuestionDetailEntityWithId(
     id: String,
     randomText: String,
     fiqh: Fiqh
-): QuestionDetailEntity {
-    return QuestionDetailEntity(
+): QuestionEntity {
+    return QuestionEntity(
         questionTitle = randomText,
         detailedQuestion = "$randomText $randomText",
         detailedAnswer = "$randomText $randomText",
@@ -105,16 +104,16 @@ fun createMockQuestionDetailEntityWithId(
 
 
 /**
- * Creates a mock `QuestionDetailEntity` object with a given link
+ * Creates a mock `QuestionEntity` object with a given link
  *
  * @param link The link to the question detail page.
- * @return A QuestionDetailEntity
+ * @return A QuestionEntity
  */
 fun createMockQuestionDetailEntityWithId(
     link: String
-): QuestionDetailEntity {
+): QuestionEntity {
     val randomText = "lorem_ispum"
-    return QuestionDetailEntity(
+    return QuestionEntity(
         questionTitle = randomText,
         detailedQuestion = "$randomText $randomText",
         detailedAnswer = "$randomText $randomText",

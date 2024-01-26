@@ -11,8 +11,8 @@ import javax.inject.Inject
 
 class GetRandomQuestion
 @Inject constructor(private val repository: QuestionAnswerRepository) {
-    suspend operator fun invoke(shouldRefresh: Boolean): Flow<Resource<List<Question>>> {
-        return repository.getRandomQuestionList(shouldRefresh).map { validateAndMapToResource(it) }
+    suspend operator fun invoke(): Flow<Resource<List<Question>>> {
+        return repository.getRandomQuestionList().map { validateAndMapToResource(it) }
             .catch { e -> emit(Resource.Error(generateErrorMessage(e.localizedMessage ?: ""))) }
             .onStart { emit(Resource.Loading()) }
     }

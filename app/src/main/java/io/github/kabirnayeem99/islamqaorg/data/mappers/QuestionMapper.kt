@@ -1,22 +1,39 @@
 package io.github.kabirnayeem99.islamqaorg.data.mappers
 
 import io.github.kabirnayeem99.islamqaorg.data.dto.room.QuestionEntity
-import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
+import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
 
 
-fun List<QuestionEntity>.toQuestions(): List<Question> {
-    return map { it.toQuestion() }
+fun List<QuestionEntity>.toQuestions() = map { it.toQuestion() }
+
+fun QuestionEntity.toQuestion() = Question(
+    url = originalLink, question = questionTitle, fiqh = fiqh
+)
+
+fun List<QuestionDetail>.toQuestionEntities(fiqh: String): List<QuestionEntity> {
+    return map { qd -> qd.copy(fiqh = fiqh).toQuestionEntity() }
 }
 
-fun QuestionEntity.toQuestion(): Question {
-    return Question(id, question, url)
-}
+fun QuestionDetail.toQuestionEntity() = QuestionEntity(
+    originalLink = originalLink,
+    questionTitle = questionTitle,
+    detailedAnswer = detailedAnswer,
+    detailedQuestion = detailedQuestion,
+    timeInMillis = System.currentTimeMillis(),
+    fiqh = fiqh,
+    source = source,
+)
 
-fun List<Question>.toQuestionEntities(fiqh: Fiqh): List<QuestionEntity> {
-    return map { it.toQuestionEntity(fiqh) }
-}
-
-fun Question.toQuestionEntity(fiqh: Fiqh): QuestionEntity {
-    return QuestionEntity(id = id, question = question, url = url, fiqh = fiqh)
+suspend fun QuestionEntity.toQuestionDetail(getRandomQuestionList: suspend (fiqh: String) -> List<Question> = { emptyList() }): QuestionDetail {
+    val dto = this
+    return QuestionDetail(
+        questionTitle = dto.questionTitle,
+        detailedQuestion = dto.detailedQuestion,
+        detailedAnswer = dto.detailedAnswer,
+        fiqh = dto.fiqh,
+        source = dto.source,
+        originalLink = dto.originalLink,
+        relevantQuestions = getRandomQuestionList(dto.fiqh),
+    )
 }

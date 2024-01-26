@@ -18,10 +18,6 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import io.github.kabirnayeem99.islamqaorg.R
-import io.github.kabirnayeem99.islamqaorg.data.dataSource.workers.CHANNEL_ID
-import io.github.kabirnayeem99.islamqaorg.data.dataSource.workers.NOTIFICATION_ID
-import io.github.kabirnayeem99.islamqaorg.data.dataSource.workers.SYNC_NOTIFICATION_CHANNEL_DESCRIPTION
-import io.github.kabirnayeem99.islamqaorg.data.dataSource.workers.SYNC_NOTIFICATION_CHANNEL_NAME
 import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -38,30 +34,29 @@ class BackgroundQAListFetcherWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
             createChannel()
-            setForeground(createForegroundInfo(1))
+            val currentFiqh = questionAnswerRepository.getCurrentFiqh()
+            setForeground(createForegroundInfo(1, currentFiqh.displayName))
             val successfullySynced = questionAnswerRepository.fetchAndSaveQuestionListByFiqh { p ->
-                setForeground(createForegroundInfo(p))
+                setForeground(createForegroundInfo(p, currentFiqh.displayName))
             }
             if (successfullySynced) Result.success() else Result.failure()
         }
     }
 
 
-    private fun createForegroundInfo(progress: Int): ForegroundInfo {
-        val title = applicationContext.getString(R.string.notification_title)
+    private fun createForegroundInfo(progress: Int, fiqhName: String): ForegroundInfo {
+        val title = "Syncing Q&A - IslamQAOrg"
         val cancel = applicationContext.getString(R.string.cancel_download)
         val intent = WorkManager.getInstance(applicationContext).createCancelPendingIntent(id)
-        val progressText = "Loading questions: ${progress}%"
+        val progressText =
+            "Loading Q&A for $fiqhName. Currently completed: ${if (progress < 100) progress else 97}%"
         val notification =
             NotificationCompat.Builder(applicationContext, CHANNEL_ID).setContentTitle(title)
                 .setTicker(title).setContentText(progressText).setSmallIcon(R.drawable.ic_islamqa)
                 .setOngoing(true).addAction(R.drawable.ic_arrow_forward, cancel, intent)
-                .setProgress(100, progress, false)
-                .build()
+                .setProgress(100, progress, false).build()
         return ForegroundInfo(
-            NOTIFICATION_ID,
-            notification,
-            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
         )
     }
 
@@ -79,9 +74,18 @@ class BackgroundQAListFetcherWorker @AssistedInject constructor(
 
     companion object {
         private const val TAG = "BackgroundQAListFetcher"
-        private const val SYNC_INTERVAL_HOURS = 4L
-        fun enqueue(workManager: WorkManager) {
+        private const val SYNC_INTERVAL_HOURS = 6L
+        private val SYNC_NOTIFICATION_CHANNEL_NAME: CharSequence = "Background Sync Status"
+        private const val SYNC_NOTIFICATION_CHANNEL_DESCRIPTION =
+            "Shows notification when background syncing starts."
+
+        private const val CHANNEL_ID = "SYNC_NOTIFICATION"
+        private const val NOTIFICATION_ID = 1
+        suspend fun enqueue(
+            workManager: WorkManager, questionAnswerRepository: QuestionAnswerRepository
+        ) {
             try {
+                val fiqh = questionAnswerRepository.getCurrentFiqh()
                 val constraintsBuilder = Constraints.Builder()
                 constraintsBuilder.apply {
                     setRequiredNetworkType(NetworkType.CONNECTED)
@@ -93,13 +97,14 @@ class BackgroundQAListFetcherWorker @AssistedInject constructor(
                 val periodicRequestBuilder = PeriodicWorkRequest.Builder(
                     BackgroundQAListFetcherWorker::class.java, SYNC_INTERVAL_HOURS, TimeUnit.HOURS
                 )
+                val tag = TAG + "->" + fiqh.paramName
                 periodicRequestBuilder.apply {
                     setConstraints(constraints)
-                    addTag(TAG)
+                    addTag(tag)
                 }
                 val request = periodicRequestBuilder.build()
-                workManager.enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.KEEP, request)
-                Timber.d("Scheduled $TAG successfully")
+                workManager.enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.KEEP, request)
+                Timber.d("Scheduled $tag successfully")
             } catch (e: Exception) {
                 Timber.e("schedulePeriodicSync: ${e.localizedMessage}", e)
             }
@@ -109,11 +114,8 @@ class BackgroundQAListFetcherWorker @AssistedInject constructor(
 
 class BackgroundQAListFetcherWorkerFactory @Inject constructor(private val questionAnswerRepository: QuestionAnswerRepository) :
     WorkerFactory() {
-
     override fun createWorker(
         appContext: Context, workerClassName: String, workerParameters: WorkerParameters
     ): ListenableWorker =
         BackgroundQAListFetcherWorker(appContext, workerParameters, questionAnswerRepository)
-
-
 }
