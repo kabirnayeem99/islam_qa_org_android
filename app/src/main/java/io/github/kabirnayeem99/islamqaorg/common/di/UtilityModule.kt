@@ -8,6 +8,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.kabirnayeem99.islamqaorg.common.utility.NetworkUtil
+import io.github.kabirnayeem99.islamqaorg.data.workers.BackgroundQAListFetcherWorkerFactory
+import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerRepository
 import javax.inject.Singleton
 
 @Module
@@ -23,5 +25,11 @@ object UtilityModule {
     @Singleton
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
         return WorkManager.getInstance(context)
+    }
+
+
+    @Provides
+    fun provideWorkerFactory( repository: QuestionAnswerRepository): BackgroundQAListFetcherWorkerFactory {
+        return BackgroundQAListFetcherWorkerFactory(repository)
     }
 }

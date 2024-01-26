@@ -8,7 +8,7 @@ import javax.inject.Inject
 class FetchAndSavePeriodically
 @Inject constructor(private val workManager: WorkManager) {
 
-    operator fun invoke(): Flow<Result<Boolean>>? =
+    operator fun invoke() =
         BackgroundQAListFetcherWorker.enqueue(workManager)
 
 

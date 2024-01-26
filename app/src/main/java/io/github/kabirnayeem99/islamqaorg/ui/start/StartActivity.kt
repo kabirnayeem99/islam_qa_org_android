@@ -12,7 +12,7 @@ import io.github.kabirnayeem99.islamqaorg.ui.MainActivity
 import io.github.kabirnayeem99.islamqaorg.ui.theme.IslamQaTheme
 
 
-const val SPLASH_SCREEN_DURATION: Long = 4000L
+const val SPLASH_SCREEN_DURATION: Long = 2000L
 
 @AndroidEntryPoint
 class StartActivity : AppCompatActivity() {
@@ -21,7 +21,7 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             IslamQaTheme {
-                StartScreen(onTimeUp = { navigateToOtherScreen() }, onCloseApp = {closeApp()})
+                StartScreen(onTimeUp = { navigateToOtherScreen() }, onCloseApp = { closeApp() })
             }
         }
     }

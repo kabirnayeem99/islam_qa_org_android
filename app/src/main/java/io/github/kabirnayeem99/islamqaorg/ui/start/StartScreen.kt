@@ -28,7 +28,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,13 +42,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import io.github.kabirnayeem99.islamqaorg.BuildConfig
 import io.github.kabirnayeem99.islamqaorg.R
 import io.github.kabirnayeem99.islamqaorg.ui.theme.ArabicFontFamily
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Preview
@@ -60,8 +58,6 @@ fun StartScreen(
     viewModel: StartViewModel = hiltViewModel(),
 ) {
 
-    val scope = rememberCoroutineScope()
-
 
     if (Build.VERSION.SDK_INT >= 33) {
         val postNotificationPermission =
@@ -69,11 +65,6 @@ fun StartScreen(
 
         LaunchedEffect(key1 = true) {
             postNotificationPermission.launchPermissionRequest()
-        }
-
-        when (postNotificationPermission.status) {
-            PermissionStatus.Granted -> viewModel.syncQuestionsAndAnswers()
-            else -> onCloseApp()
         }
     }
 
@@ -90,20 +81,21 @@ fun StartScreen(
     )
 
     LaunchedEffect(true) {
-        scope.launch {
-            delay(SPLASH_SCREEN_DURATION / 6)
-            centerAppLogoVisibility = true
-            delay(SPLASH_SCREEN_DURATION / 6)
-            geometryVisibility = true
-            delay(SPLASH_SCREEN_DURATION / 6)
-            appVersionVisibility = true
-            delay(SPLASH_SCREEN_DURATION / 3)
-            delay(SPLASH_SCREEN_DURATION / 3)
-            viewModel.navEvent.collect { navEvent ->
-                when (navEvent) {
-                    NavigationState.CloseApp -> onCloseApp()
-                    NavigationState.GoToHome -> onTimeUp()
-                    else -> Unit
+        viewModel.syncQuestionsAndAnswers()
+        viewModel.navEvent.collect { navEvent ->
+            Timber.d("Nav event: $navEvent")
+            when (navEvent) {
+                NavigationState.CloseApp -> onCloseApp()
+                NavigationState.GoToHome -> onTimeUp()
+                else -> {
+                    delay(SPLASH_SCREEN_DURATION / 6)
+                    centerAppLogoVisibility = true
+                    delay(SPLASH_SCREEN_DURATION / 6)
+                    geometryVisibility = true
+                    delay(SPLASH_SCREEN_DURATION / 6)
+                    appVersionVisibility = true
+                    delay(SPLASH_SCREEN_DURATION / 3)
+                    delay(SPLASH_SCREEN_DURATION / 3)
                 }
             }
         }

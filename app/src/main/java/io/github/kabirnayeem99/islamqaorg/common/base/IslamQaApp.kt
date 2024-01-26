@@ -1,12 +1,13 @@
 package io.github.kabirnayeem99.islamqaorg.common.base
 
 import android.app.Application
-import androidx.hilt.work.HiltWorkerFactory
+import android.util.Log
 import androidx.work.Configuration
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.DynamicColorsOptions
 import dagger.hilt.android.HiltAndroidApp
 import io.github.kabirnayeem99.islamqaorg.R
+import io.github.kabirnayeem99.islamqaorg.data.workers.BackgroundQAListFetcherWorkerFactory
 import timber.log.Timber.DebugTree
 import timber.log.Timber.Forest.plant
 import javax.inject.Inject
@@ -24,9 +25,8 @@ class IslamQaApp : Application(), Configuration.Provider {
      * Sets up the dynamic colors for the app.
      */
     private fun setUpDynamicColors() {
-        val dynamicOptions = DynamicColorsOptions.Builder()
-            .setThemeOverlay(R.style.AppTheme)
-            .build()
+        val dynamicOptions =
+            DynamicColorsOptions.Builder().setThemeOverlay(R.style.AppTheme).build()
         DynamicColors.applyToActivitiesIfAvailable(this, dynamicOptions)
     }
 
@@ -38,13 +38,17 @@ class IslamQaApp : Application(), Configuration.Provider {
     }
 
     @Inject
-    lateinit var workerFactory: HiltWorkerFactory
+    lateinit var workerFactory: BackgroundQAListFetcherWorkerFactory
+
 
     /**
      * Called by the WorkManager library to get the configuration for the WorkManager instance
      */
     override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
+        get() {
+            val builder: Configuration.Builder = Configuration.Builder()
+            builder.setMinimumLoggingLevel(Log.DEBUG)
+            builder.setWorkerFactory(workerFactory)
+            return builder.build()
+        }
 }

@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.kabirnayeem99.islamqaorg.common.base.OneTimeEvent
 import io.github.kabirnayeem99.islamqaorg.domain.useCase.FetchAndSavePeriodically
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,16 +20,9 @@ class StartViewModel @Inject constructor(private val fetchAndSavePeriodically: F
     fun syncQuestionsAndAnswers() {
         viewModelScope.launch(Dispatchers.IO) {
             _navEvent.sendEvent(NavigationState.KeepLoading)
-            fetchAndSavePeriodically()?.collect { result ->
-                result.fold(
-                    onSuccess = {
-                        _navEvent.sendEvent(NavigationState.GoToHome)
-                    },
-                    onFailure = {
-                        _navEvent.sendEvent(NavigationState.CloseApp)
-                    },
-                )
-            }
+            fetchAndSavePeriodically()
+            delay(1000L)
+            _navEvent.sendEvent(NavigationState.GoToHome)
         }
     }
 }

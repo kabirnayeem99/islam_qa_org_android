@@ -67,6 +67,7 @@ class QuestionAnswerRepositoryImpl
                 } else {
                     localDataSource.cacheQuestionList(list)
                     preferenceDataSource.saveCurrentFiqhLastPageSynced(newLastSyncingPage)
+                    Timber.i("fetchAndSaveRandomQuestionList: saved page $page for fiqh ${fiqh.displayName}")
                 }
             }
             return true
