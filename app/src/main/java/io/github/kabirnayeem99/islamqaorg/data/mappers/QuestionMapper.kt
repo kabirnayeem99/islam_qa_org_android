@@ -4,13 +4,17 @@ import io.github.kabirnayeem99.islamqaorg.data.dto.room.QuestionEntity
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
+import timber.log.Timber
 import java.util.Locale
 
 
 fun List<QuestionEntity>.toQuestions() = map { it.toQuestion() }
 
 fun QuestionEntity.toQuestion(): Question {
-    val fiqh = Fiqh.entries.first { f -> f.paramName == fiqh }
+    Timber.d("Fiqh: $fiqh")
+    val trimmedFiqhName = fiqh.replace("fiqh", "").trim()
+    val fiqh = Fiqh.entries.firstOrNull { f -> f.paramName == trimmedFiqhName } ?: Fiqh.UNKNOWN
+    Timber.d("Fiqh: $fiqh")
     return Question(
         url = originalLink,
         question = questionTitle,
