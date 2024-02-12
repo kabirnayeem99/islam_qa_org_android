@@ -58,45 +58,42 @@ class HomeViewModel @Inject constructor(
 
     private var fetchFiqhBasedQuestionsJob: Job? = null
 
-    fun fetchFiqhBasedQuestions(shouldRefresh: Boolean = false) {
+    private fun fetchFiqhBasedQuestions(shouldRefresh: Boolean = false) {
         fetchFiqhBasedQuestionsJob?.cancel()
         fetchFiqhBasedQuestionsJob = viewModelScope.launch(Dispatchers.IO) {
-            val currentPage = uiState.currentPage
-            getFiqhBasedQuestions(currentPage).distinctUntilChanged().collect { resource ->
-                    uiState = when (resource) {
-                        is Resource.Loading -> {
-                            uiState.copy(isFiqhBasedQuestionsLoading = currentPage == 1)
-                        }
+            getFiqhBasedQuestions(1).distinctUntilChanged().collect { resource ->
+                uiState = when (resource) {
+                    is Resource.Loading -> {
+                        uiState.copy(isFiqhBasedQuestionsLoading = true)
+                    }
 
-                        is Resource.Error -> {
-                            showUserMessage(resource.message ?: "")
-                            uiState.copy(isFiqhBasedQuestionsLoading = false)
-                        }
+                    is Resource.Error -> {
+                        showUserMessage(resource.message ?: "")
+                        uiState.copy(isFiqhBasedQuestionsLoading = false)
+                    }
 
-                        is Resource.Success -> {
-                            val newQuestionAnswers = resource.data ?: emptyList()
-                            if (newQuestionAnswers.isNotEmpty()) {
-                                if (shouldRefresh) {
-                                    uiState.copy(
-                                        fiqhBasedQuestions = newQuestionAnswers,
-                                        isFiqhBasedQuestionsLoading = false,
-                                        currentPage = 1,
-                                    )
-                                } else {
-                                    var questionAnswers = uiState.fiqhBasedQuestions.toMutableList()
-                                    questionAnswers.addAll(newQuestionAnswers)
-                                    questionAnswers =
-                                        questionAnswers.distinctBy { it.url }.toMutableList()
-                                    uiState.copy(
-                                        fiqhBasedQuestions = questionAnswers,
-                                        isFiqhBasedQuestionsLoading = questionAnswers.isEmpty(),
-                                        currentPage = currentPage + 1,
-                                    )
-                                }
-                            } else uiState.copy(isFiqhBasedQuestionsLoading = false)
-                        }
+                    is Resource.Success -> {
+                        val newQuestionAnswers = resource.data ?: emptyList()
+                        if (newQuestionAnswers.isNotEmpty()) {
+                            if (shouldRefresh) {
+                                uiState.copy(
+                                    fiqhBasedQuestions = newQuestionAnswers,
+                                    isFiqhBasedQuestionsLoading = false,
+                                )
+                            } else {
+                                var questionAnswers = uiState.fiqhBasedQuestions.toMutableList()
+                                questionAnswers.addAll(newQuestionAnswers)
+                                questionAnswers =
+                                    questionAnswers.distinctBy { it.url }.toMutableList()
+                                uiState.copy(
+                                    fiqhBasedQuestions = questionAnswers,
+                                    isFiqhBasedQuestionsLoading = questionAnswers.isEmpty(),
+                                )
+                            }
+                        } else uiState.copy(isFiqhBasedQuestionsLoading = false)
                     }
                 }
+            }
         }
     }
 

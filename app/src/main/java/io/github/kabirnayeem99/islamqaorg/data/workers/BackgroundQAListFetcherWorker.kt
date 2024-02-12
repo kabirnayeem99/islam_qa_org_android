@@ -101,22 +101,35 @@ class BackgroundQAListFetcherWorker @AssistedInject constructor(
                     BackgroundQAListFetcherWorker::class.java, SYNC_INTERVAL_HOURS, TimeUnit.HOURS
                 )
                 val tag = TAG + "->" + fiqh.paramName
-                val id = UUID.randomUUID()
+                val periodicId = UUID.randomUUID()
                 periodicRequestBuilder.apply {
                     setConstraints(constraints)
                     addTag(tag)
-                    setId(id)
+                    setId(periodicId)
                 }
-                val request = periodicRequestBuilder.build()
+                val periodicRequest = periodicRequestBuilder.build()
                 workManager.enqueueUniquePeriodicWork(
-                    tag, ExistingPeriodicWorkPolicy.KEEP, request
+                    tag, ExistingPeriodicWorkPolicy.KEEP, periodicRequest
                 )
 
                 Timber.d("Scheduled $tag successfully")
 
+                var enqueueCount = 0
+
                 workManager.getWorkInfosByTagFlow(tag).collect { workInfoList ->
-                    when (workInfoList.firstOrNull { workInfo -> workInfo.id == id }?.state) {
+                    val state =
+                        workInfoList.firstOrNull { workInfo -> workInfo.id == periodicId }?.state
+                    Timber.d("State: $state")
+                    when (state) {
                         WorkInfo.State.SUCCEEDED -> onSuccess()
+
+                        WorkInfo.State.ENQUEUED -> {
+                            if (enqueueCount++ == 1) {
+                                Timber.d("Enqueue count $enqueueCount")
+                                onSuccess()
+                            }
+                        }
+
                         WorkInfo.State.FAILED -> onFailure()
                         WorkInfo.State.BLOCKED -> onFailure()
                         WorkInfo.State.CANCELLED -> onFailure()

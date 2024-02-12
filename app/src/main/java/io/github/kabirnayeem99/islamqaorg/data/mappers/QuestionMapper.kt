@@ -1,18 +1,21 @@
 package io.github.kabirnayeem99.islamqaorg.data.mappers
 
 import io.github.kabirnayeem99.islamqaorg.data.dto.room.QuestionEntity
+import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
 import io.github.kabirnayeem99.islamqaorg.domain.entity.Question
 import io.github.kabirnayeem99.islamqaorg.domain.entity.QuestionDetail
+import java.util.Locale
 
 
 fun List<QuestionEntity>.toQuestions() = map { it.toQuestion() }
 
-fun QuestionEntity.toQuestion() = Question(
-    url = originalLink, question = questionTitle, fiqh = fiqh
-)
-
-fun List<QuestionDetail>.toQuestionEntities(fiqh: String): List<QuestionEntity> {
-    return map { qd -> qd.copy(fiqh = fiqh).toQuestionEntity() }
+fun QuestionEntity.toQuestion(): Question {
+    val fiqh = Fiqh.entries.first { f -> f.paramName == fiqh }
+    return Question(
+        url = originalLink,
+        question = questionTitle,
+        fiqh = fiqh.displayName,
+    )
 }
 
 fun QuestionDetail.toQuestionEntity() = QuestionEntity(
@@ -21,7 +24,7 @@ fun QuestionDetail.toQuestionEntity() = QuestionEntity(
     detailedAnswer = detailedAnswer,
     detailedQuestion = detailedQuestion,
     timeInMillis = System.currentTimeMillis(),
-    fiqh = fiqh,
+    fiqh = fiqh.replace("'", "").lowercase(Locale.ROOT),
     source = source,
 )
 

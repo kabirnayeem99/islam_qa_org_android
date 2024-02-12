@@ -9,5 +9,4 @@ data class HomeScreenUiState(
     val messages: List<UserMessage> = emptyList(),
     val randomQuestions: List<Question> = emptyList(),
     val fiqhBasedQuestions: List<Question> = emptyList(),
-    val currentPage: Int = 1,
 )

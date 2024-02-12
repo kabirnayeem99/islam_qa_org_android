@@ -93,76 +93,70 @@ fun StartScreen(
             viewModel.navEvent.collect { navEvent ->
                 when (navEvent) {
                     CloseApp -> {
-                        delay(SPLASH_SCREEN_DURATION / 8)
+                        delayLow()
                         centerAppLogoVisibility = false
-                        delay(SPLASH_SCREEN_DURATION / 8)
+                        delayMedium()
                         geometryVisibility = false
-                        delay(SPLASH_SCREEN_DURATION / 8)
+                        delayLow()
                         appVersionVisibility = false
-                        delay(SPLASH_SCREEN_DURATION / 4)
-                        delay(SPLASH_SCREEN_DURATION / 4)
-                        onTimeUp()
+                        delayHigh()
                         onCloseApp()
                     }
 
                     GoToHome -> {
-                        delay(SPLASH_SCREEN_DURATION / 8)
+                        delayLow()
                         centerAppLogoVisibility = true
-                        delay(SPLASH_SCREEN_DURATION / 8)
+                        delayLow()
                         geometryVisibility = true
-                        delay(SPLASH_SCREEN_DURATION / 8)
+                        delayMedium()
+                        geometryVisibility = true
+                        delayMedium()
                         appVersionVisibility = true
-                        delay(SPLASH_SCREEN_DURATION / 4)
-                        delay(SPLASH_SCREEN_DURATION / 4)
+                        delayHigh()
                         onTimeUp()
                     }
 
                     NonsensicalLoading -> {
-                        delay(SPLASH_SCREEN_DURATION / 6)
+                        delayLow()
                         centerAppLogoVisibility = true
-                        delay(SPLASH_SCREEN_DURATION / 6)
+                        delayMedium()
                         geometryVisibility = true
-                        delay(SPLASH_SCREEN_DURATION / 6)
+                        delayHigh()
                         appVersionVisibility = true
-                        delay(SPLASH_SCREEN_DURATION / 3)
-                        delay(SPLASH_SCREEN_DURATION / 3)
                     }
 
                     ShowFiqhOption -> {
-                        delay(SPLASH_SCREEN_DURATION / 6)
+                        delayLow()
                         centerAppLogoVisibility = false
-                        delay(SPLASH_SCREEN_DURATION / 6)
+                        delayLow()
                         geometryVisibility = false
-                        delay(SPLASH_SCREEN_DURATION / 6)
+                        delayLow()
                         appVersionVisibility = false
-                        delay(SPLASH_SCREEN_DURATION / 3)
-                        delay(SPLASH_SCREEN_DURATION / 3)
+                        delayLow()
                         fiqhOptionVisibility = true
                     }
 
                     FetchingResources -> {
+                        delayLow()
                         fiqhOptionVisibility = false
-                        delay(SPLASH_SCREEN_DURATION / 6)
+                        delayLow()
                         centerAppLogoVisibility = true
-                        delay(SPLASH_SCREEN_DURATION / 6)
+                        delayLow()
                         geometryVisibility = true
-                        delay(SPLASH_SCREEN_DURATION / 6)
+                        delayHigh()
                         appVersionVisibility = false
-                        delay(SPLASH_SCREEN_DURATION / 3)
-                        delay(SPLASH_SCREEN_DURATION / 3)
+                        delayMedium()
                         progressBarVisibility = true
                     }
                 }
             }
         } else {
-            delay(SPLASH_SCREEN_DURATION / 3)
+            delayLow()
             centerAppLogoVisibility = true
-            delay(SPLASH_SCREEN_DURATION / 3)
+            delayMedium()
             geometryVisibility = true
-            delay(SPLASH_SCREEN_DURATION / 3)
+            delayHigh()
             appVersionVisibility = true
-            delay(SPLASH_SCREEN_DURATION / 1)
-            delay(SPLASH_SCREEN_DURATION / 1)
         }
     }
 
@@ -277,4 +271,16 @@ fun StartScreen(
             )
         }
     }
+}
+
+suspend fun delayMedium() {
+    delay(SPLASH_SCREEN_DURATION / 6)
+}
+
+suspend fun delayLow() {
+    delay(SPLASH_SCREEN_DURATION / 8)
+}
+
+suspend fun delayHigh() {
+    delay(SPLASH_SCREEN_DURATION / 2)
 }

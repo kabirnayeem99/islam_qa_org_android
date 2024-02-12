@@ -11,6 +11,7 @@ import io.github.kabirnayeem99.islamqaorg.domain.useCase.OnboardUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -41,7 +42,10 @@ class StartViewModel @Inject constructor(
                 when (res) {
                     is Resource.Success -> _navEvent.sendEvent(NavigationState.GoToHome)
                     is Resource.Loading -> _navEvent.sendEvent(NavigationState.FetchingResources)
-                    is Resource.Error -> _navEvent.sendEvent(NavigationState.CloseApp)
+                    is Resource.Error -> {
+                        Timber.e(res.message)
+                        _navEvent.sendEvent(NavigationState.CloseApp)
+                    }
                 }
             }
         }

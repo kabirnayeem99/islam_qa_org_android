@@ -28,7 +28,7 @@ class IslamQaLocalDataSource @Inject constructor(
 
     fun getFiqhBasedQuestionListByPage(fiqh: Fiqh, pageNumber: Int): Flow<List<Question>> {
         val limit = 10
-        val offset = if (pageNumber != 0) pageNumber * limit else 0
+        val offset = if (pageNumber != 0 && pageNumber > 1) pageNumber * limit else 0
         return questionAnswerDao.getFiqhBasedQuestions(fiqh.paramName, limit, offset)
             .map { qs -> qs.toQuestions() }
     }
