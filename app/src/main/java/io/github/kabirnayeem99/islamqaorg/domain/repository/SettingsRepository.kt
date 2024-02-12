@@ -6,4 +6,8 @@ interface SettingsRepository {
     suspend fun savePreferredFiqh(fiqh: Fiqh)
 
     suspend fun getPreferredFiqh(): Fiqh
+
+    suspend fun determineIfFirstTime(): Boolean
+
+    suspend fun markAsOpened()
 }

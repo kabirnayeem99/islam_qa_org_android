@@ -14,4 +14,8 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun getPreferredFiqh() = preferenceDataSource.getPreferredFiqh()
 
+    override suspend fun determineIfFirstTime() = preferenceDataSource.determineIfFirstTime()
+
+    override suspend fun markAsOpened() = preferenceDataSource.markAsOpened()
+
 }
