@@ -47,11 +47,6 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Saves the preferred fiqh of the user to local storage
-     *
-     * @param fiqh Fiqh - This is the object that contains the fiqh information.
-     */
     suspend fun savePreferredFiqh(fiqh: Fiqh) {
         withContext(Dispatchers.IO) {
             try {
@@ -63,12 +58,6 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Gets the selected [Fiqh] by the user, which can be either Hanafi, Shafii, Maliki, Hanbali
-     * or unknown
-     *
-     * @return Fiqh - the Fiqh the user has selected before.
-     */
     suspend fun getPreferredFiqh(): Fiqh {
         return withContext(Dispatchers.IO) {
             try {
@@ -100,25 +89,17 @@ class PreferenceDataSource @Inject constructor(private val context: Context) {
 
                 isFirstTime || selectedFiqh.isBlank()
             } catch (e: Exception) {
+                Timber.e(e)
                 true
             }
         }
     }
 
 
-    /**
-     * Takes a lambda as a parameter, and calls it with a SharedPreferences.Editor as a parameter
-     *
-     * @param operation This is a lambda function that takes a SharedPreferences.Editor as a parameter
-     * and returns nothing.
-     */
     private inline fun SharedPreferences.edit(operation: (SharedPreferences.Editor) -> Unit) {
         val editor = this.edit()
         operation(editor)
         editor.apply()
     }
 
-
 }
-
-private const val TAG = "PreferenceDataSource"

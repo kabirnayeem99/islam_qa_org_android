@@ -90,7 +90,7 @@ fun SettingsScreen(
 
 
 @Composable
-private fun MadhabSettingsItem(selectedFiqh: Fiqh, onFiqhSelected: (Fiqh) -> Unit) {
+fun MadhabSettingsItem(selectedFiqh: Fiqh, onFiqhSelected: (Fiqh) -> Unit) {
 
     Box(
         modifier = Modifier

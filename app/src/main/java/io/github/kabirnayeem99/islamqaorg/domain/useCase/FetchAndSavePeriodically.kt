@@ -12,7 +12,6 @@ class FetchAndSavePeriodically
 ) {
 
     suspend operator fun invoke() =
-        BackgroundQAListFetcherWorker.enqueue(workManager, questionAnswerRepository)
-
+        BackgroundQAListFetcherWorker.enqueuePeriodically(workManager, questionAnswerRepository)
 
 }

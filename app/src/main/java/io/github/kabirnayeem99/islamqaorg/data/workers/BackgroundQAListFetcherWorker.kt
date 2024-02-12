@@ -12,6 +12,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.ListenableWorker
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
@@ -22,6 +23,7 @@ import io.github.kabirnayeem99.islamqaorg.domain.repository.QuestionAnswerReposi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -81,16 +83,17 @@ class BackgroundQAListFetcherWorker @AssistedInject constructor(
 
         private const val CHANNEL_ID = "SYNC_NOTIFICATION"
         private const val NOTIFICATION_ID = 1
-        suspend fun enqueue(
-            workManager: WorkManager, questionAnswerRepository: QuestionAnswerRepository
+        suspend fun enqueuePeriodically(
+            workManager: WorkManager,
+            questionAnswerRepository: QuestionAnswerRepository,
+            onSuccess: suspend () -> Unit = {},
+            onFailure: suspend () -> Unit = {},
         ) {
             try {
                 val fiqh = questionAnswerRepository.getCurrentFiqh()
                 val constraintsBuilder = Constraints.Builder()
                 constraintsBuilder.apply {
                     setRequiredNetworkType(NetworkType.CONNECTED)
-                    setRequiresBatteryNotLow(true)
-                    setRequiresStorageNotLow(true)
                 }
                 val constraints = constraintsBuilder.build()
 
@@ -98,13 +101,28 @@ class BackgroundQAListFetcherWorker @AssistedInject constructor(
                     BackgroundQAListFetcherWorker::class.java, SYNC_INTERVAL_HOURS, TimeUnit.HOURS
                 )
                 val tag = TAG + "->" + fiqh.paramName
+                val id = UUID.randomUUID()
                 periodicRequestBuilder.apply {
                     setConstraints(constraints)
                     addTag(tag)
+                    setId(id)
                 }
                 val request = periodicRequestBuilder.build()
-                workManager.enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.KEEP, request)
+                workManager.enqueueUniquePeriodicWork(
+                    tag, ExistingPeriodicWorkPolicy.KEEP, request
+                )
+
                 Timber.d("Scheduled $tag successfully")
+
+                workManager.getWorkInfosByTagFlow(tag).collect { workInfoList ->
+                    when (workInfoList.firstOrNull { workInfo -> workInfo.id == id }?.state) {
+                        WorkInfo.State.SUCCEEDED -> onSuccess()
+                        WorkInfo.State.FAILED -> onFailure()
+                        WorkInfo.State.BLOCKED -> onFailure()
+                        WorkInfo.State.CANCELLED -> onFailure()
+                        else -> Unit
+                    }
+                }
             } catch (e: Exception) {
                 Timber.e("schedulePeriodicSync: ${e.localizedMessage}", e)
             }

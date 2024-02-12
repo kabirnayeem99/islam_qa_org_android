@@ -13,6 +13,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -46,6 +49,13 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import io.github.kabirnayeem99.islamqaorg.BuildConfig
 import io.github.kabirnayeem99.islamqaorg.R
+import io.github.kabirnayeem99.islamqaorg.domain.entity.Fiqh
+import io.github.kabirnayeem99.islamqaorg.ui.settings.MadhabSettingsItem
+import io.github.kabirnayeem99.islamqaorg.ui.start.NavigationState.CloseApp
+import io.github.kabirnayeem99.islamqaorg.ui.start.NavigationState.FetchingResources
+import io.github.kabirnayeem99.islamqaorg.ui.start.NavigationState.GoToHome
+import io.github.kabirnayeem99.islamqaorg.ui.start.NavigationState.NonsensicalLoading
+import io.github.kabirnayeem99.islamqaorg.ui.start.NavigationState.ShowFiqhOption
 import io.github.kabirnayeem99.islamqaorg.ui.theme.ArabicFontFamily
 import kotlinx.coroutines.delay
 
@@ -60,6 +70,8 @@ fun StartScreen(
 
     var centerAppLogoVisibility by remember { mutableStateOf(false) }
     var appVersionVisibility by remember { mutableStateOf(false) }
+    var fiqhOptionVisibility by remember { mutableStateOf(false) }
+    var progressBarVisibility by remember { mutableStateOf(false) }
     var geometryVisibility by remember { mutableStateOf(false) }
     var permissionAccepted by remember { mutableStateOf(false) }
 
@@ -80,8 +92,20 @@ fun StartScreen(
             viewModel.syncQuestionsAndAnswers()
             viewModel.navEvent.collect { navEvent ->
                 when (navEvent) {
-                    NavigationState.CloseApp -> onCloseApp()
-                    NavigationState.GoToHome -> {
+                    CloseApp -> {
+                        delay(SPLASH_SCREEN_DURATION / 8)
+                        centerAppLogoVisibility = false
+                        delay(SPLASH_SCREEN_DURATION / 8)
+                        geometryVisibility = false
+                        delay(SPLASH_SCREEN_DURATION / 8)
+                        appVersionVisibility = false
+                        delay(SPLASH_SCREEN_DURATION / 4)
+                        delay(SPLASH_SCREEN_DURATION / 4)
+                        onTimeUp()
+                        onCloseApp()
+                    }
+
+                    GoToHome -> {
                         delay(SPLASH_SCREEN_DURATION / 8)
                         centerAppLogoVisibility = true
                         delay(SPLASH_SCREEN_DURATION / 8)
@@ -93,7 +117,7 @@ fun StartScreen(
                         onTimeUp()
                     }
 
-                    NavigationState.KeepLoading -> {
+                    NonsensicalLoading -> {
                         delay(SPLASH_SCREEN_DURATION / 6)
                         centerAppLogoVisibility = true
                         delay(SPLASH_SCREEN_DURATION / 6)
@@ -102,6 +126,31 @@ fun StartScreen(
                         appVersionVisibility = true
                         delay(SPLASH_SCREEN_DURATION / 3)
                         delay(SPLASH_SCREEN_DURATION / 3)
+                    }
+
+                    ShowFiqhOption -> {
+                        delay(SPLASH_SCREEN_DURATION / 6)
+                        centerAppLogoVisibility = false
+                        delay(SPLASH_SCREEN_DURATION / 6)
+                        geometryVisibility = false
+                        delay(SPLASH_SCREEN_DURATION / 6)
+                        appVersionVisibility = false
+                        delay(SPLASH_SCREEN_DURATION / 3)
+                        delay(SPLASH_SCREEN_DURATION / 3)
+                        fiqhOptionVisibility = true
+                    }
+
+                    FetchingResources -> {
+                        fiqhOptionVisibility = false
+                        delay(SPLASH_SCREEN_DURATION / 6)
+                        centerAppLogoVisibility = true
+                        delay(SPLASH_SCREEN_DURATION / 6)
+                        geometryVisibility = true
+                        delay(SPLASH_SCREEN_DURATION / 6)
+                        appVersionVisibility = false
+                        delay(SPLASH_SCREEN_DURATION / 3)
+                        delay(SPLASH_SCREEN_DURATION / 3)
+                        progressBarVisibility = true
                     }
                 }
             }
@@ -124,10 +173,6 @@ fun StartScreen(
             animation = tween(SPLASH_SCREEN_DURATION.toInt(), easing = FastOutSlowInEasing)
         ), label = "INFINITE_TRANSITION_ANGLE"
     )
-
-    LaunchedEffect(true) {
-
-    }
 
     BoxWithConstraints(
         modifier = Modifier
@@ -187,6 +232,14 @@ fun StartScreen(
         }
 
         AnimatedVisibility(
+            visible = fiqhOptionVisibility, enter = slideInVertically() + fadeIn()
+        ) {
+            MadhabSettingsItem(Fiqh.UNKNOWN) { fiqh ->
+                viewModel.onFiqhOptionSelected(fiqh)
+            }
+        }
+
+        AnimatedVisibility(
             visible = appVersionVisibility, enter = slideInHorizontally() + fadeIn()
         ) {
 
@@ -208,6 +261,20 @@ fun StartScreen(
                     modifier = Modifier.padding(horizontal = 18.dp, vertical = 6.dp)
                 )
             }
+        }
+
+        AnimatedVisibility(
+            visible = progressBarVisibility,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(start = 24.dp, end = 24.dp, bottom = 60.dp),
+            enter = slideInHorizontally() + fadeIn()
+        ) {
+            LinearProgressIndicator(
+                trackColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6F),
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                strokeCap = StrokeCap.Round,
+            )
         }
     }
 }

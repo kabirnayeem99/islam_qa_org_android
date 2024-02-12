@@ -49,8 +49,9 @@ class QuestionAnswerRepositoryImpl
             val fiqh = getCurrentFiqh()
 
             val lastSyncedPage = preferenceDataSource.getCurrentFiqhLastPageSynced()
+            val firstTime = lastSyncedPage < 1
             val newStartingPage = lastSyncedPage + 1
-            val newLastSyncingPage = newStartingPage + 10
+            val newLastSyncingPage = newStartingPage + (if (firstTime) 2 else 10)
 
             for (page in newStartingPage..newLastSyncingPage) {
 
@@ -64,7 +65,7 @@ class QuestionAnswerRepositoryImpl
                     delay(Random.nextLong((index + 1) * 100L))
                     val questionDetailed = remoteDataSource.getDetailedQuestionAndAnswer(q.url)
                     localDataSource.cacheQuestionDetail(questionDetailed)
-                    currentProgress++
+                    if (firstTime) currentProgress += 50 else currentProgress++
                     setProgress(currentProgress)
                 }
 
